@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/Horizon.github.io/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/Horizon.github.io/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/Horizon.github.io/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/Horizon.github.io/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/Horizon.github.io/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/Horizon.github.io/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/Horizon.github.io/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="网络编程," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言Java NIO 由以下几个核心部分组成：  Buffer  Channel Selector  传统的IO操作面向数据流，意味着每次从流中读一个或多个字节，直至完成，数据没有被缓存在任何地方。NIO操作面向缓冲区，数据从Channel读取到Buffer缓冲区，随后在Buffer中处理数据。本文着重介绍Channel和Buffer的概念以及在文件读写方面的应用和内部实现原理。 Buffer A">
+<meta name="keywords" content="网络编程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入浅出NIO Channel和Buffer">
+<meta property="og:url" content="https://originer.github.io/Horizon.github.io/2018/05/01/NIO Channel和Buffer/index.html">
+<meta property="og:site_name" content="Horizon Notes">
+<meta property="og:description" content="前言Java NIO 由以下几个核心部分组成：  Buffer  Channel Selector  传统的IO操作面向数据流，意味着每次从流中读一个或多个字节，直至完成，数据没有被缓存在任何地方。NIO操作面向缓冲区，数据从Channel读取到Buffer缓冲区，随后在Buffer中处理数据。本文着重介绍Channel和Buffer的概念以及在文件读写方面的应用和内部实现原理。 Buffer A">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-30T17:36:28.340Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深入浅出NIO Channel和Buffer">
+<meta name="twitter:description" content="前言Java NIO 由以下几个核心部分组成：  Buffer  Channel Selector  传统的IO操作面向数据流，意味着每次从流中读一个或多个字节，直至完成，数据没有被缓存在任何地方。NIO操作面向缓冲区，数据从Channel读取到Buffer缓冲区，随后在Buffer中处理数据。本文着重介绍Channel和Buffer的概念以及在文件读写方面的应用和内部实现原理。 Buffer A">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/Horizon.github.io/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://originer.github.io/Horizon.github.io/2018/05/01/NIO Channel和Buffer/"/>
+
+
+
+
+
+  <title>深入浅出NIO Channel和Buffer | Horizon Notes</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/Horizon.github.io/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Horizon Notes</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/Horizon.github.io/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/Horizon.github.io/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/05/01/NIO Channel和Buffer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Horizon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/Horizon.github.io/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Horizon Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">深入浅出NIO Channel和Buffer</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-01T01:36:28+08:00">
+                2018-05-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Horizon.github.io/categories/网络编程/" itemprop="url" rel="index">
+                    <span itemprop="name">网络编程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>Java NIO 由以下几个核心部分组成：</p>
+<ol>
+<li>Buffer </li>
+<li>Channel</li>
+<li>Selector</li>
+</ol>
+<p>传统的IO操作面向数据流，意味着每次从流中读一个或多个字节，直至完成，数据没有被缓存在任何地方。NIO操作面向缓冲区，数据从Channel读取到Buffer缓冲区，随后在Buffer中处理数据。本文着重介绍Channel和Buffer的概念以及在文件读写方面的应用和内部实现原理。</p>
+<h3 id="Buffer"><a href="#Buffer" class="headerlink" title="Buffer"></a>Buffer</h3><blockquote>
+<p>A buffer is a linear, finite sequence of elements of a specific primitive type.</p>
+</blockquote>
+<p>一块缓存区，内部使用字节数组存储数据，并维护几个特殊变量，实现数据的反复利用。</p>
+<ul>
+<li><strong>mark</strong>：初始值为-1，用于备份当前的position</li>
+<li><strong>position</strong>：初始值为0。position表示当前可以写入或读取数据的位置。当写入或读取一个数据后， position向前移动到下一个位置。</li>
+<li><strong>limit</strong>：<br>写模式下，limit表示最多能往Buffer里写多少数据，等于capacity值。<br>读模式下，limit表示最多可以读取多少数据。</li>
+<li><strong>capacity</strong>：缓存数组大小</li>
+</ul>
+<p>Buffer.png</p>
+<p><strong>mark()</strong>：把当前的position赋值给mark</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> Buffer <span class="title">mark</span><span class="params">()</span> </span>&#123;</div><div class="line">    mark = position;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>reset()</strong>：把mark值还原给position</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> Buffer <span class="title">reset</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">int</span> m = mark;</div><div class="line">    <span class="keyword">if</span> (m &lt; <span class="number">0</span>)</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> InvalidMarkException();</div><div class="line">    position = m;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>clear()</strong>：一旦读完Buffer中的数据，需要让Buffer准备好再次被写入，clear会恢复状态值，但不会擦除数据。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public final Buffer clear() &#123;</div><div class="line">    position = 0;</div><div class="line">    limit = capacity;</div><div class="line">    mark = -1;</div><div class="line">    return this;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>flip()</strong>：Buffer有两种模式，写模式和读模式，flip后Buffer从写模式变成读模式。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> Buffer <span class="title">flip</span><span class="params">()</span> </span>&#123;</div><div class="line">    limit = position;</div><div class="line">    position = <span class="number">0</span>;</div><div class="line">    mark = -<span class="number">1</span>;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>rewind()</strong>：重置position为0，从头读写数据。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> Buffer <span class="title">rewind</span><span class="params">()</span> </span>&#123;</div><div class="line">    position = <span class="number">0</span>;</div><div class="line">    mark = -<span class="number">1</span>;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>目前Buffer的实现类有以下几种：</p>
+<ul>
+<li>ByteBuffer</li>
+<li>CharBuffer</li>
+<li>DoubleBuffer</li>
+<li>FloatBuffer</li>
+<li>IntBuffer</li>
+<li>LongBuffer</li>
+<li>ShortBuffer</li>
+<li>MappedByteBuffer</li>
+</ul>
+<p>其中MappedByteBuffer实现比较特殊，感兴趣的可以看看 <a href="http://www.jianshu.com/p/f90866dcbffc" target="_blank" rel="external">深入浅出MappedByteBuffer</a></p>
+<p>Paste_Image.png</p>
+<h3 id="ByteBuffer"><a href="#ByteBuffer" class="headerlink" title="ByteBuffer"></a>ByteBuffer</h3><blockquote>
+<p>A byte buffer，extend from Buffer</p>
+</blockquote>
+<p>ByteBuffer的实现类包括HeapByteBuffer和DirectByteBuffer两种。</p>
+<ul>
+<li><p><strong>HeapByteBuffer</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ByteBuffer <span class="title">allocate</span><span class="params">(<span class="keyword">int</span> capacity)</span> </span>&#123;</div><div class="line">  <span class="keyword">if</span> (capacity &lt; <span class="number">0</span>)</div><div class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException();</div><div class="line">  <span class="keyword">return</span> <span class="keyword">new</span> HeapByteBuffer(capacity, capacity);</div><div class="line">&#125;</div><div class="line">HeapByteBuffer(<span class="keyword">int</span> cap, <span class="keyword">int</span> lim) &#123;  </div><div class="line">  <span class="keyword">super</span>(-<span class="number">1</span>, <span class="number">0</span>, lim, cap, <span class="keyword">new</span> <span class="keyword">byte</span>[cap], <span class="number">0</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>HeapByteBuffer通过初始化字节数组hd，在虚拟机堆上申请内存空间。</p>
+</li>
+<li><p><strong>DirectByteBuffer</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ByteBuffer <span class="title">allocateDirect</span><span class="params">(<span class="keyword">int</span> capacity)</span> </span>&#123;</div><div class="line">  <span class="keyword">return</span> <span class="keyword">new</span> DirectByteBuffer(capacity);</div><div class="line">&#125;</div><div class="line">DirectByteBuffer(<span class="keyword">int</span> cap) &#123;</div><div class="line">  <span class="keyword">super</span>(-<span class="number">1</span>, <span class="number">0</span>, cap, cap);</div><div class="line">  <span class="keyword">boolean</span> pa = VM.isDirectMemoryPageAligned();</div><div class="line">  <span class="keyword">int</span> ps = Bits.pageSize();</div><div class="line">  <span class="keyword">long</span> size = Math.max(<span class="number">1L</span>, (<span class="keyword">long</span>)cap + (pa ? ps : <span class="number">0</span>));</div><div class="line">  Bits.reserveMemory(size, cap);</div><div class="line"></div><div class="line">  <span class="keyword">long</span> base = <span class="number">0</span>;</div><div class="line">  <span class="keyword">try</span> &#123;</div><div class="line">      base = unsafe.allocateMemory(size);</div><div class="line">  &#125; <span class="keyword">catch</span> (OutOfMemoryError x) &#123;</div><div class="line">      Bits.unreserveMemory(size, cap);</div><div class="line">      <span class="keyword">throw</span> x;</div><div class="line">  &#125;</div><div class="line">  unsafe.setMemory(base, size, (<span class="keyword">byte</span>) <span class="number">0</span>);</div><div class="line">  <span class="keyword">if</span> (pa &amp;&amp; (base % ps != <span class="number">0</span>)) &#123;</div><div class="line">      <span class="comment">// Round up to page boundary</span></div><div class="line">      address = base + ps - (base &amp; (ps - <span class="number">1</span>));</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">      address = base;</div><div class="line">  &#125;</div><div class="line">  cleaner = Cleaner.create(<span class="keyword">this</span>, <span class="keyword">new</span> Deallocator(base, size, cap));</div><div class="line">  att = <span class="keyword">null</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>DirectByteBuffer通过unsafe.allocateMemory在物理内存中申请地址空间（非jvm堆内存），并在ByteBuffer的address变量中维护指向该内存的地址。<br>unsafe.setMemory(base, size, (byte) 0)方法把新申请的内存数据清零。</p>
+</li>
+</ul>
+<h3 id="Channel"><a href="#Channel" class="headerlink" title="Channel"></a>Channel</h3><blockquote>
+<p>A channel represents an open connection to an entity such as a hardware device, a file, a network socket, or a program component that is capable of performing one or more distinct I/O operations, for example reading or writing.</p>
+</blockquote>
+<p>又称“通道”，NIO把它支持的I/O对象抽象为Channel，类似于原I/O中的流（Stream），但有所区别：</p>
+<ul>
+<li>流是单向的，通道是双向的，可读可写。</li>
+<li>流读写是阻塞的，通道可以异步读写。</li>
+<li>流中的数据可以选择性的先读到缓存中，通道的数据总是要先读到一个缓存中，或从缓存中写入，如下所示：</li>
+</ul>
+<p>Channel.png</p>
+<p>目前已知Channel的实现类有：</p>
+<ul>
+<li>FileChannel</li>
+<li>DatagramChannel</li>
+<li>SocketChannel</li>
+<li>ServerSocketChannel</li>
+</ul>
+<h3 id="FileChannel"><a href="#FileChannel" class="headerlink" title="FileChannel"></a>FileChannel</h3><blockquote>
+<p>A channel for reading, writing, mapping, and manipulating a file.<br>一个用来写、读、映射和操作文件的通道。</p>
+</blockquote>
+<p>FileChannel的read、write和map通过其实现类FileChannelImpl实现。</p>
+<ul>
+<li><p><strong>read实现</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">read</span><span class="params">(ByteBuffer dst)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">  ensureOpen();</div><div class="line">  <span class="keyword">if</span> (!readable)</div><div class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> NonReadableChannelException();</div><div class="line">  <span class="keyword">synchronized</span> (positionLock) &#123;</div><div class="line">      <span class="keyword">int</span> n = <span class="number">0</span>;</div><div class="line">      <span class="keyword">int</span> ti = -<span class="number">1</span>;</div><div class="line">      <span class="keyword">try</span> &#123;</div><div class="line">          begin();</div><div class="line">          ti = threads.add();</div><div class="line">          <span class="keyword">if</span> (!isOpen())</div><div class="line">              <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">          <span class="keyword">do</span> &#123;</div><div class="line">              n = IOUtil.read(fd, dst, -<span class="number">1</span>, nd);</div><div class="line">          &#125; <span class="keyword">while</span> ((n == IOStatus.INTERRUPTED) &amp;&amp; isOpen());</div><div class="line">          <span class="keyword">return</span> IOStatus.normalize(n);</div><div class="line">      &#125; <span class="keyword">finally</span> &#123;</div><div class="line">          threads.remove(ti);</div><div class="line">          end(n &gt; <span class="number">0</span>);</div><div class="line">          <span class="keyword">assert</span> IOStatus.check(n);</div><div class="line">      &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>FileChannelImpl的read方法通过IOUtil的read实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">read</span><span class="params">(FileDescriptor fd, ByteBuffer dst, <span class="keyword">long</span> position,</span></span></div><div class="line"><span class="function"><span class="params">              NativeDispatcher nd)</span> IOException </span>&#123;</div><div class="line">  <span class="keyword">if</span> (dst.isReadOnly())</div><div class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Read-only buffer"</span>);</div><div class="line">  <span class="keyword">if</span> (dst <span class="keyword">instanceof</span> DirectBuffer)</div><div class="line">      <span class="keyword">return</span> readIntoNativeBuffer(fd, dst, position, nd);</div><div class="line"></div><div class="line">  <span class="comment">// Substitute a native buffer</span></div><div class="line">  ByteBuffer bb = Util.getTemporaryDirectBuffer(dst.remaining());</div><div class="line">  <span class="keyword">try</span> &#123;</div><div class="line">      <span class="keyword">int</span> n = readIntoNativeBuffer(fd, bb, position, nd);</div><div class="line">      bb.flip();</div><div class="line">      <span class="keyword">if</span> (n &gt; <span class="number">0</span>)</div><div class="line">          dst.put(bb);</div><div class="line">      <span class="keyword">return</span> n;</div><div class="line">  &#125; <span class="keyword">finally</span> &#123;</div><div class="line">      Util.offerFirstTemporaryDirectBuffer(bb);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>通过上述实现可以看出，基于channel的文件数据读取步骤如下：<br>1、申请一块和缓存同大小的DirectByteBuffer bb。<br>2、读取数据到缓存bb，底层由NativeDispatcher的read实现。<br>3、把bb的数据读取到dst（用户定义的缓存，在jvm中分配内存）。<br><strong>read方法导致数据复制了两次</strong>。</p>
+</li>
+<li><p><strong>write实现</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">write</span><span class="params">(ByteBuffer src)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">  ensureOpen();</div><div class="line">  <span class="keyword">if</span> (!writable)</div><div class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> NonWritableChannelException();</div><div class="line">  <span class="keyword">synchronized</span> (positionLock) &#123;</div><div class="line">      <span class="keyword">int</span> n = <span class="number">0</span>;</div><div class="line">      <span class="keyword">int</span> ti = -<span class="number">1</span>;</div><div class="line">      <span class="keyword">try</span> &#123;</div><div class="line">          begin();</div><div class="line">          ti = threads.add();</div><div class="line">          <span class="keyword">if</span> (!isOpen())</div><div class="line">              <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">          <span class="keyword">do</span> &#123;</div><div class="line">              n = IOUtil.write(fd, src, -<span class="number">1</span>, nd);</div><div class="line">          &#125; <span class="keyword">while</span> ((n == IOStatus.INTERRUPTED) &amp;&amp; isOpen());</div><div class="line">          <span class="keyword">return</span> IOStatus.normalize(n);</div><div class="line">      &#125; <span class="keyword">finally</span> &#123;</div><div class="line">          threads.remove(ti);</div><div class="line">          end(n &gt; <span class="number">0</span>);</div><div class="line">          <span class="keyword">assert</span> IOStatus.check(n);</div><div class="line">      &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>和read实现一样，FileChannelImpl的write方法通过IOUtil的write实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">write</span><span class="params">(FileDescriptor fd, ByteBuffer src, <span class="keyword">long</span> position,</span></span></div><div class="line"><span class="function"><span class="params">               NativeDispatcher nd)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">  <span class="keyword">if</span> (src <span class="keyword">instanceof</span> DirectBuffer)</div><div class="line">      <span class="keyword">return</span> writeFromNativeBuffer(fd, src, position, nd);</div><div class="line">  <span class="comment">// Substitute a native buffer</span></div><div class="line">  <span class="keyword">int</span> pos = src.position();</div><div class="line">  <span class="keyword">int</span> lim = src.limit();</div><div class="line">  <span class="keyword">assert</span> (pos &lt;= lim);</div><div class="line">  <span class="keyword">int</span> rem = (pos &lt;= lim ? lim - pos : <span class="number">0</span>);</div><div class="line">  ByteBuffer bb = Util.getTemporaryDirectBuffer(rem);</div><div class="line">  <span class="keyword">try</span> &#123;</div><div class="line">      bb.put(src);</div><div class="line">      bb.flip();</div><div class="line">      <span class="comment">// Do not update src until we see how many bytes were written</span></div><div class="line">      src.position(pos);</div><div class="line">      <span class="keyword">int</span> n = writeFromNativeBuffer(fd, bb, position, nd);</div><div class="line">      <span class="keyword">if</span> (n &gt; <span class="number">0</span>) &#123;</div><div class="line">          <span class="comment">// now update src</span></div><div class="line">          src.position(pos + n);</div><div class="line">      &#125;</div><div class="line">      <span class="keyword">return</span> n;</div><div class="line">  &#125; <span class="keyword">finally</span> &#123;</div><div class="line">      Util.offerFirstTemporaryDirectBuffer(bb);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>通过上述实现可以看出，基于channel的文件数据写入步骤如下：<br>1、申请一块DirectByteBuffer，bb大小为byteBuffer中的limit - position。<br>2、复制byteBuffer中的数据到bb中。<br>3、把数据从bb中写入到文件，底层由NativeDispatcher的write实现，具体如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">writeFromNativeBuffer</span><span class="params">(FileDescriptor fd, </span></span></div><div class="line"><span class="function"><span class="params">      ByteBuffer bb, <span class="keyword">long</span> position, NativeDispatcher nd)</span></span></div><div class="line"><span class="function">  <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">  <span class="keyword">int</span> pos = bb.position();</div><div class="line">  <span class="keyword">int</span> lim = bb.limit();</div><div class="line">  <span class="keyword">assert</span> (pos &lt;= lim);</div><div class="line">  <span class="keyword">int</span> rem = (pos &lt;= lim ? lim - pos : <span class="number">0</span>);</div><div class="line"></div><div class="line">  <span class="keyword">int</span> written = <span class="number">0</span>;</div><div class="line">  <span class="keyword">if</span> (rem == <span class="number">0</span>)</div><div class="line">      <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">  <span class="keyword">if</span> (position != -<span class="number">1</span>) &#123;</div><div class="line">      written = nd.pwrite(fd,</div><div class="line">                          ((DirectBuffer)bb).address() + pos,</div><div class="line">                          rem, position);</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">      written = nd.write(fd, ((DirectBuffer)bb).address() + pos, rem);</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">if</span> (written &gt; <span class="number">0</span>)</div><div class="line">      bb.position(pos + written);</div><div class="line">  <span class="keyword">return</span> written;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>write方法也导致了数据复制了两次</strong></p>
+</li>
+</ul>
+<h3 id="Channel和Buffer示例"><a href="#Channel和Buffer示例" class="headerlink" title="Channel和Buffer示例"></a>Channel和Buffer示例</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">File file = <span class="keyword">new</span> RandomAccessFile(<span class="string">"data.txt"</span>, <span class="string">"rw"</span>);</div><div class="line">FileChannel channel = file.getChannel();</div><div class="line">ByteBuffer buffer = ByteBuffer.allocate(<span class="number">48</span>);</div><div class="line"></div><div class="line"><span class="keyword">int</span> bytesRead = channel.read(buffer);</div><div class="line"><span class="keyword">while</span> (bytesRead != -<span class="number">1</span>) &#123;</div><div class="line">    System.out.println(<span class="string">"Read "</span> + bytesRead);</div><div class="line">    buffer.flip();</div><div class="line">    <span class="keyword">while</span>(buffer.hasRemaining())&#123;</div><div class="line">        System.out.print((<span class="keyword">char</span>) buffer.get());</div><div class="line">    &#125;</div><div class="line">    buffer.clear();</div><div class="line">    bytesRead = channel.read(buffer);</div><div class="line">&#125;</div><div class="line">file.close();</div></pre></td></tr></table></figure>
+<p>注意buffer.flip() 的调用，首先将数据写入到buffer，然后变成读模式，再从buffer中读取数据。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/Horizon.github.io/tags/网络编程/" rel="tag"># 网络编程</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/Horizon.github.io/2018/05/01/Java虚拟机学习笔记/" rel="next" title="Java虚拟机学习笔记">
+                <i class="fa fa-chevron-left"></i> Java虚拟机学习笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/Horizon.github.io/2018/05/01/jdk代理/" rel="prev" title="JDK代理">
+                JDK代理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Horizon</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/Horizon.github.io/archives/">
+              
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/Horizon.github.io/tags/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Buffer"><span class="nav-number">2.</span> <span class="nav-text">Buffer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ByteBuffer"><span class="nav-number">3.</span> <span class="nav-text">ByteBuffer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Channel"><span class="nav-number">4.</span> <span class="nav-text">Channel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FileChannel"><span class="nav-number">5.</span> <span class="nav-text">FileChannel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Channel和Buffer示例"><span class="nav-number">6.</span> <span class="nav-text">Channel和Buffer示例</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Horizon</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/Horizon.github.io/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/Horizon.github.io/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/Horizon.github.io/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/Horizon.github.io/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/Horizon.github.io/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

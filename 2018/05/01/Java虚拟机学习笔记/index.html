@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/Horizon.github.io/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/Horizon.github.io/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/Horizon.github.io/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/Horizon.github.io/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/Horizon.github.io/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/Horizon.github.io/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/Horizon.github.io/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Java内存区域与内存溢出异常运行时数据区域下图是Java运行时数据区域划分图     区域 是否线程共享 是否会内存溢出     程序计数器 否 不会   java虚拟机栈 否 会   本地方法栈 否 会   堆 是 会   方法区 是 会    1.程序计数器(线程私有) 一块较小的内存，可以看作是当前线程所执行的字节码的行号指示器； 在虚拟机概念模型（各种虚拟机实现可能不一样）中，字节码解释">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java虚拟机学习笔记">
+<meta property="og:url" content="https://originer.github.io/Horizon.github.io/2018/05/01/Java虚拟机学习笔记/index.html">
+<meta property="og:site_name" content="Horizon Notes">
+<meta property="og:description" content="Java内存区域与内存溢出异常运行时数据区域下图是Java运行时数据区域划分图     区域 是否线程共享 是否会内存溢出     程序计数器 否 不会   java虚拟机栈 否 会   本地方法栈 否 会   堆 是 会   方法区 是 会    1.程序计数器(线程私有) 一块较小的内存，可以看作是当前线程所执行的字节码的行号指示器； 在虚拟机概念模型（各种虚拟机实现可能不一样）中，字节码解释">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/12/1604a8492a45653e?imageView2/0/w/1280/h/960/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/12/1604a8492ec41c53?imageView2/0/w/1280/h/960/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/12/1604a8492d4ffe79?imageView2/0/w/1280/h/960/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/12/1604a8492f8c5b5c?imageView2/0/w/1280/h/960/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/12/1604a849305d845e?imageView2/0/w/1280/h/960/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/12/1604a849722ff7b5?imageView2/0/w/1280/h/960/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/12/1604a84972a0a771?imageView2/0/w/1280/h/960/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/12/1604a8497436b487?imageView2/0/w/1280/h/960/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/12/1604a84977b77781?imageView2/0/w/1280/h/960/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/12/1604a84978969475?imageView2/0/w/1280/h/960/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/12/1604a8497cb58693?imageView2/0/w/1280/h/960/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/12/1604a84999e5f1e9?imageView2/0/w/1280/h/960/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/12/1604a849d2efb2e6?imageView2/0/w/1280/h/960/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/12/1604a849a7b21b24?imageView2/0/w/1280/h/960/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/12/1604a8499ea082f5?imageView2/0/w/1280/h/960/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/12/1604a8c58a032b54?imageView2/0/w/1280/h/960/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/12/1604a8c5de316d00?imageView2/0/w/1280/h/960/ignore-error/1">
+<meta property="og:updated_time" content="2018-04-30T17:36:28.332Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java虚拟机学习笔记">
+<meta name="twitter:description" content="Java内存区域与内存溢出异常运行时数据区域下图是Java运行时数据区域划分图     区域 是否线程共享 是否会内存溢出     程序计数器 否 不会   java虚拟机栈 否 会   本地方法栈 否 会   堆 是 会   方法区 是 会    1.程序计数器(线程私有) 一块较小的内存，可以看作是当前线程所执行的字节码的行号指示器； 在虚拟机概念模型（各种虚拟机实现可能不一样）中，字节码解释">
+<meta name="twitter:image" content="https://user-gold-cdn.xitu.io/2017/12/12/1604a8492a45653e?imageView2/0/w/1280/h/960/ignore-error/1">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/Horizon.github.io/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://originer.github.io/Horizon.github.io/2018/05/01/Java虚拟机学习笔记/"/>
+
+
+
+
+
+  <title>Java虚拟机学习笔记 | Horizon Notes</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/Horizon.github.io/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Horizon Notes</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/Horizon.github.io/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/Horizon.github.io/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/05/01/Java虚拟机学习笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Horizon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/Horizon.github.io/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Horizon Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java虚拟机学习笔记</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-01T01:36:28+08:00">
+                2018-05-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Horizon.github.io/categories/JVM/" itemprop="url" rel="index">
+                    <span itemprop="name">JVM</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Java内存区域与内存溢出异常"><a href="#Java内存区域与内存溢出异常" class="headerlink" title="Java内存区域与内存溢出异常"></a>Java内存区域与内存溢出异常</h2><h3 id="运行时数据区域"><a href="#运行时数据区域" class="headerlink" title="运行时数据区域"></a>运行时数据区域</h3><p>下图是Java运行时数据区域划分图</p>
+<p><img src="https://user-gold-cdn.xitu.io/2017/12/12/1604a8492a45653e?imageView2/0/w/1280/h/960/ignore-error/1" alt="运行时数据区域"></p>
+<table>
+<thead>
+<tr>
+<th>区域</th>
+<th>是否线程共享</th>
+<th>是否会内存溢出</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>程序计数器</td>
+<td>否</td>
+<td>不会</td>
+</tr>
+<tr>
+<td>java虚拟机栈</td>
+<td>否</td>
+<td>会</td>
+</tr>
+<tr>
+<td>本地方法栈</td>
+<td>否</td>
+<td>会</td>
+</tr>
+<tr>
+<td>堆</td>
+<td>是</td>
+<td>会</td>
+</tr>
+<tr>
+<td>方法区</td>
+<td>是</td>
+<td>会</td>
+</tr>
+</tbody>
+</table>
+<h4 id="1-程序计数器-线程私有"><a href="#1-程序计数器-线程私有" class="headerlink" title="1.程序计数器(线程私有)"></a>1.程序计数器(线程私有)</h4><ul>
+<li>一块较小的内存，可以看作是当前线程所执行的字节码的行号指示器；</li>
+<li>在虚拟机概念模型（各种虚拟机实现可能不一样）中，字节码解释器工作时就是通过改变这个计数器的值来选取下一条需要执行的字节码指令；</li>
+<li>程序计数器是属于线程私有的内存；</li>
+<li>如果执行的是Java方法，该计数器记录的是正在执行的虚拟机字节码指令的地址；如果是Native方法则为空；</li>
+</ul>
+<h4 id="2-Java虚拟机栈（线程私有）"><a href="#2-Java虚拟机栈（线程私有）" class="headerlink" title="2.Java虚拟机栈（线程私有）"></a>2.Java虚拟机栈（线程私有）</h4><ul>
+<li>Java虚拟机栈也是线程私有的；</li>
+<li>描述的是Java方法执行的内存模型：每个方法在执行的同时都会创建一个栈帧（Stack Frame）用于存储<code>局部变量表</code>、<code>操作数栈</code>、<code>动态链接</code>、<code>方法出口</code>等信息。每一个方法从调用直至执行完成的过程，就对应着一个栈帧在虚拟机中入栈到出栈的过程；</li>
+<li><strong>局部变量表存放了编译器可知的各种基本数据类型、对象引用和returnAddress类型</strong>；其所需的内存空间在编辑期完成分配，不会再运行期改变；</li>
+<li>可能存在两种异常：<code>StackOverflowError</code>(请求栈深度过大)和<code>OutOfMemoryError</code>（内存不够时）；</li>
+</ul>
+<h4 id="3-本地方法栈"><a href="#3-本地方法栈" class="headerlink" title="3.本地方法栈"></a>3.本地方法栈</h4><ul>
+<li>与虚拟机栈非常相似，只不过是为虚拟机使用到的Native方法服务；</li>
+<li>可能存在两种异常：StackOverflowError和OutOfMemoryError；</li>
+</ul>
+<h4 id="4-Java堆（线程共享）"><a href="#4-Java堆（线程共享）" class="headerlink" title="4.Java堆（线程共享）"></a>4.Java堆（线程共享）</h4><ul>
+<li>Java堆是被所有线程共享的，在虚拟机启动时创建；</li>
+<li>此内存区域的唯一目的就是存放对象实例，几乎所有的对象实例都在这分配；</li>
+<li>是垃圾收集器管理的主要区域，可以分为<code>新生代</code>和<code>老年代</code>；</li>
+<li>可以物理不连续，只要逻辑上是连续的即可；</li>
+<li>如果堆中没有内存完成实例分配也无法再扩展时，会抛出OutOfMemoryError异常；</li>
+</ul>
+<h4 id="5-方法区-元空间（永久代）（线程共享）"><a href="#5-方法区-元空间（永久代）（线程共享）" class="headerlink" title="5.方法区/元空间（永久代）（线程共享）"></a>5.方法区/元空间（永久代）（线程共享）</h4><ul>
+<li>是线程共享的区域；</li>
+<li>用于存储已被虚拟机加载的<code>类信息</code>、<code>常量</code>、<code>静态变量</code>、即时编译器编译后的代码等数据；</li>
+<li>该区域对于垃圾收集来说条件比较苛刻，但是还是非常有必要要进行回收处理；</li>
+<li>当无法满足内存分配需求时，将抛出OutOfMemoryError异常；</li>
+</ul>
+<h4 id="6-运行时常量池"><a href="#6-运行时常量池" class="headerlink" title="6.运行时常量池"></a>6.运行时常量池</h4><ul>
+<li>是方法区的一部分；</li>
+<li>Class文件中除了有类的版本、字段、方法、接口等描述信息外，还有一项信息是常量池，用于存放编译器生成的各种字面量和符号引用，这部分内容将在类加载后进入方法区的运行时常量池中存放；</li>
+<li>Java虚拟机规范要求较少，通常还会把翻译出来的直接引用也存储在此；</li>
+<li>另外一个重要特征是具备动态性，可以在运行期间将新的常量放入池中，如String的intern方法；</li>
+<li>可能存在的异常：OutOfMemoryError；</li>
+</ul>
+<h4 id="7-直接内存"><a href="#7-直接内存" class="headerlink" title="7.直接内存"></a>7.直接内存</h4><ul>
+<li>并不是虚拟机运行时数据区的一部分，也不是Java虚拟机规范中定义的内存区域；</li>
+<li>JDK 1.4的NIO引入了基于通道（Channel）和缓冲区（Buffer）的IO方法，可以使用Native函数库直接分配对外内存，然后通过一个存储在Java堆中的DirectByteBuffer对象作为这块内存的引用进行操作以提升性能；</li>
+</ul>
+<h3 id="对象的访问定位"><a href="#对象的访问定位" class="headerlink" title="对象的访问定位"></a>对象的访问定位</h3><ul>
+<li>栈上的reference类型在虚拟机规范中只规定了一个指向对象的引用，并没有定义这个引用应该通过何种方式去定位、访问堆栈对象的具体位置，目前主流的方式方式有<code>句柄</code>和<code>直接指针</code>两种。</li>
+<li>通过句柄：Java堆中划出一块内存作为句柄池，reference中存储的就是对象的句柄地址，而句柄中包含了对象实例数据与类型数据各自的具体地址信息。其最大好处就是reference存储的是稳定的句柄地址，在对象被移动（垃圾收集时移到）只改变实例数据指针，而reference不需要修改；</li>
+</ul>
+<p><img src="https://user-gold-cdn.xitu.io/2017/12/12/1604a8492ec41c53?imageView2/0/w/1280/h/960/ignore-error/1" alt="通过句柄访问对象"></p>
+<ul>
+<li>通过直接指针：Java堆对象的布局中必须考虑如果放置访问类型数据的相关信息，而reference中存在的直接就是对象地址。其最大好处在于速度更快，节省了一次指针定位的时机开销。<strong>HotSpot采用该方式进行对象访问，但其他语言和框架采用句柄的也非常常见。</strong></li>
+</ul>
+<p><img src="https://user-gold-cdn.xitu.io/2017/12/12/1604a8492d4ffe79?imageView2/0/w/1280/h/960/ignore-error/1" alt="通过直接指针"></p>
+<h2 id="Java垃圾回收机器与内存分配策略"><a href="#Java垃圾回收机器与内存分配策略" class="headerlink" title="Java垃圾回收机器与内存分配策略"></a>Java垃圾回收机器与内存分配策略</h2><p>程序计时器、虚拟机栈、本地方法栈：<strong>随线程而灭</strong>，栈帧随方法而进行出栈和入栈，每一个栈帧分配的内存在类结构确定就已知，<strong>因此这几个区域不需要考虑回收</strong>；</p>
+<p>对于Java堆和方法区，只有程序运行期间才知道会创建哪些对象，内存的分配和回收都是动态的，<strong>垃圾收集器所关注的是这部分内存</strong>；</p>
+<h3 id="判断Java中对象存活的算法"><a href="#判断Java中对象存活的算法" class="headerlink" title="判断Java中对象存活的算法"></a>判断Java中对象存活的算法</h3><h4 id="1-引用计数算法"><a href="#1-引用计数算法" class="headerlink" title="1.引用计数算法"></a>1.引用计数算法</h4><p>给对象添加引用计数器，当有地方引用它时就加1，引用失效就减1，为0时就认为对象不再被使用可回收。该算法失效简单，判断高效，但并不被主流虚拟机采用，主要原因是它很难解决对象之间相互循环引用的问题。</p>
+<h4 id="2-可达性分析算法"><a href="#2-可达性分析算法" class="headerlink" title="2.可达性分析算法"></a>2.可达性分析算法</h4><p>通过一系列的称为“GC Roots”的对象作为起点，从这些节点开始向下搜索，搜索所走过的路径称为引用链（Reference Chain），如果一个对象到GC Roots没有引用链相连，则该对象是不可用的。</p>
+<p><strong>在Java语言中，可作为GC Roots的对象包括：</strong></p>
+<ul>
+<li>虚拟机栈（栈帧中的本地变量表）中引用的对象；</li>
+<li>方法区中类静态属性引用的对象；</li>
+<li>方法区中常量引用的对象；</li>
+<li>本地方法栈中JNI（即一般说的Native方法）引用的对象；</li>
+</ul>
+<h3 id="垃圾收集算法"><a href="#垃圾收集算法" class="headerlink" title="垃圾收集算法"></a>垃圾收集算法</h3><ul>
+<li>1.标记-清除算法(Mark-Sweep)：首先标记出所有需要回收的对象，然后统一回收所有被标记的对象；缺点是效率不高且容易产生大量不连续的内存碎片；</li>
+</ul>
+<p><img src="https://user-gold-cdn.xitu.io/2017/12/12/1604a8492f8c5b5c?imageView2/0/w/1280/h/960/ignore-error/1" alt="标记-清除算法"></p>
+<ul>
+<li>复制算法：将可用内存分为大小相等的两块，每次只使用其中一块；当这一块用完了，就将还活着的对象复制到另一块上，然后把已使用过的内存清理掉。在HotSpot里，考虑到大部分对象存活时间很短将内存分为Eden和两块Survivor，默认比例为8:1:1。代价是存在部分内存空间浪费，<strong>适合在新生代使用</strong>；</li>
+</ul>
+<p><img src="https://user-gold-cdn.xitu.io/2017/12/12/1604a849305d845e?imageView2/0/w/1280/h/960/ignore-error/1" alt="复制算法"></p>
+<ul>
+<li><p>标记-整理算法：首先标记出所有需要回收的对象，然后让所有存活的对象都向一端移动，然后直接清理掉端边界以外的内存。<strong>适用于老年代</strong>。</p>
+<p><img src="https://user-gold-cdn.xitu.io/2017/12/12/1604a849722ff7b5?imageView2/0/w/1280/h/960/ignore-error/1" alt="标记-整理算法"></p>
+<p>​</p>
+</li>
+<li><p>分代收集算法：一般把Java堆分新生代和老年代，<strong>在新生代用复制算法</strong>，<strong>在老年代用标记-清理或标记-整理算法</strong>，是现代虚拟机通常采用的算法。</p>
+</li>
+</ul>
+<p><img src="https://user-gold-cdn.xitu.io/2017/12/12/1604a84972a0a771?imageView2/0/w/1280/h/960/ignore-error/1" alt="分代收集算法"></p>
+<h3 id="垃圾收集器"><a href="#垃圾收集器" class="headerlink" title="垃圾收集器"></a>垃圾收集器</h3><ul>
+<li>垃圾收集算法是内存回收的方法论，垃圾收集器就是内存回收的具体实现。</li>
+<li>这里讨论JDK 1.7 Update 14之后的HotSpot虚拟机（此时G1仍处于实验状态），包含的虚拟机如下图所示（<strong>存在连线的表示可以搭配使用</strong>）：</li>
+</ul>
+<p><img src="https://user-gold-cdn.xitu.io/2017/12/12/1604a8497436b487?imageView2/0/w/1280/h/960/ignore-error/1" alt="gc_for_hotspot"></p>
+<h4 id="1-Serial收集器（单线程的收集器）"><a href="#1-Serial收集器（单线程的收集器）" class="headerlink" title="1.Serial收集器（单线程的收集器）"></a>1.Serial收集器（单线程的收集器）</h4><p><img src="https://user-gold-cdn.xitu.io/2017/12/12/1604a84977b77781?imageView2/0/w/1280/h/960/ignore-error/1" alt="Serial收集器"></p>
+<ul>
+<li>最基本、发展历史最悠久，在JDK 1.3之前是新生代收集的唯一选择；</li>
+<li>是一个单线程（并非指一个收集线程，而是会暂停所有工作线程）的收集器，采用的是复制算法;</li>
+<li>现在依然是虚拟机运行在Client模式下的<strong>默认新生代收集器</strong>，主要就是因为它简单而高效（没有线程交互的开销）；</li>
+</ul>
+<h4 id="2-ParNew收集器（Serial收集器的多线程版本）"><a href="#2-ParNew收集器（Serial收集器的多线程版本）" class="headerlink" title="2.ParNew收集器（Serial收集器的多线程版本）"></a>2.ParNew收集器（Serial收集器的多线程版本）</h4><p><img src="https://user-gold-cdn.xitu.io/2017/12/12/1604a84978969475?imageView2/0/w/1280/h/960/ignore-error/1" alt="ParNew收集器"></p>
+<ul>
+<li>其实就是Serial收集器的多线程版本；</li>
+<li>ParNew收集器在单CPU环境中绝对不会有比Serial收集器更好的效果；</li>
+<li>是许多运行在Server模式下虚拟机首选的新生代收集器，重要原因就是<strong>除了Serial收集器外，只有它能与CMS收集器配合工作</strong>；</li>
+<li>并行（Parallel）：指多条垃圾收集线程并行工作，但此时用户线程仍处于等待状态；</li>
+<li>并发（Concurrent）：指用户线程与垃圾收集线程同时执行，用户线程在继续执行而垃圾收集程序运行在另外一个CPU上；</li>
+</ul>
+<h4 id="3-Parallel-Scavenge收集器"><a href="#3-Parallel-Scavenge收集器" class="headerlink" title="3.Parallel Scavenge收集器"></a>3.Parallel Scavenge收集器</h4><blockquote>
+<p>吞吐量=运行用户代码时间/(运行用户代码时间+垃圾收集时间)</p>
+</blockquote>
+<ul>
+<li>新生代收集器，使用复制算法，并行的多线程收集器；</li>
+<li>与<strong>CMS关注于尽可能缩短垃圾收集时用户线程停顿时间</strong>不同，<strong>PS的目标是达到一个可控制的吞吐量</strong>；</li>
+<li>高吞吐量可以高效率利用CPU时间，适合在后台运算而不需要太多交互的任务；</li>
+<li>-XX:MaxGCPauseMillis参数可以设置最大停顿时间，而停顿时间缩短是以牺牲吞吐量和新生代空间来换取的；</li>
+<li>另外它还支持GC自适应的调节策略；</li>
+</ul>
+<h4 id="4-Serial-Old收集器"><a href="#4-Serial-Old收集器" class="headerlink" title="4.Serial Old收集器"></a>4.Serial Old收集器</h4><p><img src="https://user-gold-cdn.xitu.io/2017/12/12/1604a8497cb58693?imageView2/0/w/1280/h/960/ignore-error/1" alt="Serial Old收集器"></p>
+<ul>
+<li>是Serial收集器的老年代版本，同样是单线程，使用标记-整理算法；</li>
+<li>主要是给Client模式下的虚拟机使用的；</li>
+<li>在Server模式下主要是给JDK 1.5及之前<strong>配合Parallel Scavenge使用或作为CMS收集器的后备预案</strong>；</li>
+</ul>
+<h4 id="5-Parallel-Old收集器"><a href="#5-Parallel-Old收集器" class="headerlink" title="5.Parallel Old收集器"></a>5.Parallel Old收集器</h4><p><img src="https://user-gold-cdn.xitu.io/2017/12/12/1604a84999e5f1e9?imageView2/0/w/1280/h/960/ignore-error/1" alt="Parallel Old收集器"></p>
+<ul>
+<li>是Parallel Scavenge的老年代版本，使用多线程和标记-整理算法；</li>
+</ul>
+<h4 id="6-CMS收集器"><a href="#6-CMS收集器" class="headerlink" title="6.CMS收集器"></a>6.CMS收集器</h4><p><img src="https://user-gold-cdn.xitu.io/2017/12/12/1604a849d2efb2e6?imageView2/0/w/1280/h/960/ignore-error/1" alt="CMS收集器"></p>
+<ul>
+<li><strong>是一种以获取最短回收停顿时间为目标的收集器</strong>，特别适合互联网站或者B/S的服务端；</li>
+<li>它是基于标记-清除 算法实现的，主要包括4个步骤：<strong>初始标记</strong>（STW-stop the world，只是初始标记一下GC Roots能直接关联到的对象，速度很快）、<strong>并发标记</strong>（非STW，执行GC RootsTracing，耗时比较长）、<strong>重新标记</strong>（STW，修正并发标记期间因用户程序继续导致变动的那一部分对象标记）和<strong>并发清除</strong>（非STW，耗时较长）；</li>
+<li>还有3个明显的缺点：<strong>CMS收集器对CPU非常敏感</strong>（占用部分线程及CPU资源，影响总吞吐量）、<strong>无法处理浮动垃圾</strong>（默认达到92%就触发垃圾回收）、<strong>大量内存碎片产生</strong>（可以通过参数启动压缩）；</li>
+</ul>
+<h4 id="7-G1收集器"><a href="#7-G1收集器" class="headerlink" title="7.G1收集器"></a>7.G1收集器</h4><p><img src="https://user-gold-cdn.xitu.io/2017/12/12/1604a849a7b21b24?imageView2/0/w/1280/h/960/ignore-error/1" alt="G1收集器"></p>
+<ul>
+<li>一款面向服务端应用的垃圾收集器，后续会替换掉CMS垃圾收集器；</li>
+<li>特点：<strong>并行与并发</strong>（充分利用多核多CPU缩短Stop-The-World时间）、<strong>分代收集</strong>（独立管理整个Java堆，但针对不同年龄的对象采取不同的策略）、<strong>空间整合</strong>（基于标记-整理）、<strong>可预测的停顿</strong>（将堆分为大小相等的独立区域，避免全区域的垃圾收集）；</li>
+<li>关于Region：新生代和老年代不再物理隔离，只是部分Region的集合；G1跟踪各个Region垃圾堆积的价值大小，在后台维护一个优先列表，根据允许的收集时间优先回收价值最大的Region；Region之间的对象引用以及其他收集器中的新生代与老年代之间的对象引用，采用Remembered Set来避免全堆扫描；</li>
+<li>分为几个步骤：<strong>1.初始标记</strong>（标记一下GC Roots能直接关联的对象并修改TAMS值，需要STW但耗时很短）、<strong>2.并发标记</strong>（从GC Root从堆中对象进行可达性分析找存活的对象，耗时较长但可以与用户线程并发执行）、<strong>3.最终标记</strong>（为了修正并发标记期间产生变动的那一部分标记记录，这一期间的变化记录在Remembered Set Log里，然后合并到Remembered Set里，该阶段需要STW但是可并行执行）、<strong>4.筛选回收</strong>（对各个Region回收价值排序，根据用户期望的GC停顿时间制定回收计划来回收）；</li>
+<li><img src="https://user-gold-cdn.xitu.io/2017/12/12/1604a8499ea082f5?imageView2/0/w/1280/h/960/ignore-error/1" alt="img"></li>
+</ul>
+<h3 id="理解GC日志"><a href="#理解GC日志" class="headerlink" title="理解GC日志"></a>理解GC日志</h3><p><img src="https://user-gold-cdn.xitu.io/2017/12/12/1604a8c58a032b54?imageView2/0/w/1280/h/960/ignore-error/1" alt="img"></p>
+<ul>
+<li>最前面的数字代表GC发生的时间（虚拟机启动以后的秒杀）；</li>
+<li>“[GC”和“[Full GC”说明停顿类型，有Full代表的是Stop-The-World的；</li>
+<li>“[DefNew”、“[Tenured”和“[Perm”表示GC发生的区域；</li>
+<li>方括号内部的“3324K -&gt; 152K(3712K)” 含义是 “GC前该内存已使用容量 -&gt; GC后该内存区域已使用容量(该区域总容量)”;</li>
+<li>方括号之外的“3324K -&gt; 152K(11904)” 含义是 “GC前Java堆已使用容量 -&gt; GC后Java堆已使用容量(Java堆总容量)”;</li>
+<li>再往后“0.0025925 secs”表示该内存区域GC所占用的时间；</li>
+</ul>
+<h3 id="内存分配与回收策略"><a href="#内存分配与回收策略" class="headerlink" title="内存分配与回收策略"></a>内存分配与回收策略</h3><ul>
+<li>对象优先在新生代分配</li>
+<li>大对象直接进入老年代</li>
+<li>长期存活的对象将进入老年代</li>
+<li>动态对象年龄判断：如果在Survivor空间中相同年龄所有对象大小总和大于Survivor空间的一半，大于或等于该年龄的对象直接进入老年代；</li>
+<li>空间分配担保：发生Minor GC前，虚拟机会先检查老年代最大可用连续空间是否大于新生代所有对象总空间，如果不成立，虚拟机会查看HandlePromotionFailure设置值是否允许担保失败，如果允许继续检查老年代最大可用的连续空间是否大于历次晋升到老年代的平均大小，如果大于会尝试进行一次Minor GC；如果小于或者不允许冒险，会进行一次Full GC；</li>
+</ul>
+<h2 id="虚拟机类加载机制"><a href="#虚拟机类加载机制" class="headerlink" title="虚拟机类加载机制"></a>虚拟机类加载机制</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><ul>
+<li>虚拟机把描述类的数据从Class文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型，这就是虚拟机的类加载机制。</li>
+<li>在Java语言里面，类型的加载、连接和初始化过程都是在程序运行期间完成，这虽然增量一些性能开销，但是会为Java应用程序提供高度的灵活性。</li>
+</ul>
+<h3 id="类加载的时机"><a href="#类加载的时机" class="headerlink" title="类加载的时机"></a>类加载的时机</h3><ul>
+<li>类的整个生命周期：加载、验证、准备、解析、初始化、使用和卸载；其中验证、准备和解析统称为连接；</li>
+<li>虚拟机规范没有强制约束类加载的时机，但严格规定了有且只有5种情况必须立即对类进行初始化：遇到new、getstatic、putstatic和invokestatic指令；对类进行反射调用时如果类没有进行过初始化；初始化时发现父类还没有进行初始化；虚拟机启动指定的主类；动态语言中MethodHandle实例最后解析结果REF_getStatic等的方法句柄对应的类没有初始化时；</li>
+</ul>
+<h3 id="类加载的过程"><a href="#类加载的过程" class="headerlink" title="类加载的过程"></a>类加载的过程</h3><h4 id="1-加载"><a href="#1-加载" class="headerlink" title="1.加载"></a>1.加载</h4><ul>
+<li>通过一个类的全限定名来获取定义此类的二进制字节流；</li>
+<li>将这个字节流所代表的静态存储结构转化为方法区的运行时数据结构；</li>
+<li>在内存中生成一个代表这个类的java.lang.Class对象，作为方法区这个类的各种数据的访问入口；</li>
+</ul>
+<h4 id="2-验证"><a href="#2-验证" class="headerlink" title="2.验证"></a>2.验证</h4><ul>
+<li>验证是连接阶段的第一步，其目的是确保Class文件的字节流中包含的信息符合当前虚拟机的要求，并且不会危害虚拟机自身的安全；</li>
+<li>验证阶段是非常重要的，这个阶段是否严谨决定了Java虚拟机是否能承受恶意代码的攻击；</li>
+<li>校验动作：文件格式验证（基于二进制字节流）、元数据验证（对类的元数据语义分析）、字节码验证（对方法体语义分析）、符号引用验证（对类自身以外的信息进行匹配性校验）；</li>
+</ul>
+<h4 id="3-准备"><a href="#3-准备" class="headerlink" title="3.准备"></a>3.准备</h4><ul>
+<li>正式为变量分配内存并设置类变量初始值的阶段，这些变量所使用的内存都将在这个方法区中进行分配；</li>
+<li>需要强调两点：这时候内存分配的仅包括类变量，而不包括类实例变量；这里所说的初始化通常情况下是数据类型的零值，真正的赋值是在初始化阶段，如果是static final的则是直接赋值；</li>
+</ul>
+<h4 id="4-解析"><a href="#4-解析" class="headerlink" title="4.解析"></a>4.解析</h4><ul>
+<li>解析阶段是虚拟机将常量池内的符号引用（如<code>CONSTANT_Class_info</code>、<code>CONSTANT_Fieldref_info</code>、<code>CONSTANT_Methodref_info</code>等7种）替换为直接引用的过程；</li>
+<li>符号引用可以是任何形式的字面量，与虚拟机实现的内存布局无关，引用的目标并不一定已经加载到内存中；而直接引用是直接指向目标的指针、相对偏移量或是一个能间接定位到目标的句柄，它和虚拟机实现的内存布局相关，引用的目标必定以及在内存中存在；</li>
+<li>对同一个符号引用进行多次解析请求是很常见的事情，虚拟机实现可以对第一次解析的结果进行缓存；</li>
+</ul>
+<h4 id="5-初始化"><a href="#5-初始化" class="headerlink" title="5.初始化"></a>5.初始化</h4><ul>
+<li>是类加载过程的最后一步，真正开始执行类中定义的Java程序代码（或者说是字节码）；</li>
+<li>初始化阶段是执行类构造器方法的过程，该方法是由编译器自动收集类中的所有类变量的赋值动作和静态语句块中的语句合并产生的；</li>
+<li>方法与类的构造函数（或者说是实例构造器方法）不同，它不需要显式地调用父类构造器，虚拟机会保证在子类的方法执行之前，父类的方法已执行完毕；</li>
+<li>执行接口的方法不需要先执行父接口的方法，只有当父接口中定义的变量使用时父接口才会初始化，接口的实现类在初始化时也一样不会执行接口的方法；</li>
+<li>方法初始化是加锁阻塞等待的，应当避免在方法中有耗时很长的操作；</li>
+</ul>
+<h3 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h3><ul>
+<li>虚拟机设计团队把类加载阶段的“通过一个类的全限定名来获取描述此类的二进制字节流”这个动作放到虚拟机外部去实现，实现这个动作的代码模块称为类加载器；</li>
+<li>这是Java语言的一项创新，也是Java语言流行的重要原因，在类层次划分、OSGI、热部署、代码加密等领域大放异彩</li>
+</ul>
+<h4 id="类与类加载器"><a href="#类与类加载器" class="headerlink" title="类与类加载器"></a>类与类加载器</h4><ul>
+<li>对于任意一个类，都需要由加载它的类加载器和这个类本身一同确立其在Java虚拟机的唯一性，每一个类加载器都拥有一个独立的类名称空间；</li>
+<li>比较两个类是否相等（如Class对象的equals方法、isAssignableFrom方法、isInstance方法），只有在这两个类是由同一个类加载器加载的前提下才有意义；</li>
+</ul>
+<h4 id="双亲委派模型"><a href="#双亲委派模型" class="headerlink" title="双亲委派模型"></a>双亲委派模型</h4><blockquote>
+<p>关于双亲委派模型，这篇文章写得简单易懂:<a href="http://www.jianshu.com/p/acc7595f1b9d" target="_blank" rel="external">http://www.jianshu.com/p/acc7595f1b9d</a></p>
+</blockquote>
+<p><img src="https://user-gold-cdn.xitu.io/2017/12/12/1604a8c5de316d00?imageView2/0/w/1280/h/960/ignore-error/1" alt="image.png"></p>
+<ul>
+<li>三种系统提供的类加载器：启动类加载器（Bootstrap ClassLoader）、扩展类加载器（Extension ClassLoader）、应用程序类加载器（Application ClassLoader）；</li>
+<li>双亲委派模型要求除了顶层的启动类加载器外，其他的类加载器都应当有自己的父类加载器，这里一般不会以继承的关系来实现，而是使用组合的关系来复用父加载器的代码；</li>
+<li>其工作过程是：如果一个类加载器收到了类加载的请求，它首先不会自己去尝试加载这个类，而是把这个请求委派给父类加载器去完成，只有父类加载器反馈自己无法完成这个加载请求时（它的搜索范围中没有找到所需的类），子加载器才会尝试自己去加载；</li>
+<li>这样的好处是Java类随着它的类加载器具备了一种带有优先级的层次关系，对保证Java程序的稳定运作很重要；</li>
+<li>实现双亲委派的代码都集中在java.lang.ClassLoader的loadClass方法中，逻辑清晰易懂；</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/Horizon.github.io/2018/05/01/Java容器/" rel="next" title="Java容器">
+                <i class="fa fa-chevron-left"></i> Java容器
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/Horizon.github.io/2018/05/01/NIO Channel和Buffer/" rel="prev" title="深入浅出NIO Channel和Buffer">
+                深入浅出NIO Channel和Buffer <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Horizon</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/Horizon.github.io/archives/">
+              
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/Horizon.github.io/tags/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Java内存区域与内存溢出异常"><span class="nav-number">1.</span> <span class="nav-text">Java内存区域与内存溢出异常</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#运行时数据区域"><span class="nav-number">1.1.</span> <span class="nav-text">运行时数据区域</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-程序计数器-线程私有"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.程序计数器(线程私有)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Java虚拟机栈（线程私有）"><span class="nav-number">1.1.2.</span> <span class="nav-text">2.Java虚拟机栈（线程私有）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-本地方法栈"><span class="nav-number">1.1.3.</span> <span class="nav-text">3.本地方法栈</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-Java堆（线程共享）"><span class="nav-number">1.1.4.</span> <span class="nav-text">4.Java堆（线程共享）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-方法区-元空间（永久代）（线程共享）"><span class="nav-number">1.1.5.</span> <span class="nav-text">5.方法区/元空间（永久代）（线程共享）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-运行时常量池"><span class="nav-number">1.1.6.</span> <span class="nav-text">6.运行时常量池</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-直接内存"><span class="nav-number">1.1.7.</span> <span class="nav-text">7.直接内存</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对象的访问定位"><span class="nav-number">1.2.</span> <span class="nav-text">对象的访问定位</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java垃圾回收机器与内存分配策略"><span class="nav-number">2.</span> <span class="nav-text">Java垃圾回收机器与内存分配策略</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#判断Java中对象存活的算法"><span class="nav-number">2.1.</span> <span class="nav-text">判断Java中对象存活的算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-引用计数算法"><span class="nav-number">2.1.1.</span> <span class="nav-text">1.引用计数算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-可达性分析算法"><span class="nav-number">2.1.2.</span> <span class="nav-text">2.可达性分析算法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#垃圾收集算法"><span class="nav-number">2.2.</span> <span class="nav-text">垃圾收集算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#垃圾收集器"><span class="nav-number">2.3.</span> <span class="nav-text">垃圾收集器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Serial收集器（单线程的收集器）"><span class="nav-number">2.3.1.</span> <span class="nav-text">1.Serial收集器（单线程的收集器）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-ParNew收集器（Serial收集器的多线程版本）"><span class="nav-number">2.3.2.</span> <span class="nav-text">2.ParNew收集器（Serial收集器的多线程版本）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Parallel-Scavenge收集器"><span class="nav-number">2.3.3.</span> <span class="nav-text">3.Parallel Scavenge收集器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-Serial-Old收集器"><span class="nav-number">2.3.4.</span> <span class="nav-text">4.Serial Old收集器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-Parallel-Old收集器"><span class="nav-number">2.3.5.</span> <span class="nav-text">5.Parallel Old收集器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-CMS收集器"><span class="nav-number">2.3.6.</span> <span class="nav-text">6.CMS收集器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-G1收集器"><span class="nav-number">2.3.7.</span> <span class="nav-text">7.G1收集器</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#理解GC日志"><span class="nav-number">2.4.</span> <span class="nav-text">理解GC日志</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内存分配与回收策略"><span class="nav-number">2.5.</span> <span class="nav-text">内存分配与回收策略</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#虚拟机类加载机制"><span class="nav-number">3.</span> <span class="nav-text">虚拟机类加载机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#概述"><span class="nav-number">3.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类加载的时机"><span class="nav-number">3.2.</span> <span class="nav-text">类加载的时机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类加载的过程"><span class="nav-number">3.3.</span> <span class="nav-text">类加载的过程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-加载"><span class="nav-number">3.3.1.</span> <span class="nav-text">1.加载</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-验证"><span class="nav-number">3.3.2.</span> <span class="nav-text">2.验证</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-准备"><span class="nav-number">3.3.3.</span> <span class="nav-text">3.准备</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-解析"><span class="nav-number">3.3.4.</span> <span class="nav-text">4.解析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-初始化"><span class="nav-number">3.3.5.</span> <span class="nav-text">5.初始化</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类加载器"><span class="nav-number">3.4.</span> <span class="nav-text">类加载器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#类与类加载器"><span class="nav-number">3.4.1.</span> <span class="nav-text">类与类加载器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#双亲委派模型"><span class="nav-number">3.4.2.</span> <span class="nav-text">双亲委派模型</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Horizon</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/Horizon.github.io/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/Horizon.github.io/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/Horizon.github.io/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/Horizon.github.io/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/Horizon.github.io/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
