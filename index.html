@@ -256,7 +256,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/Horizon.github.io/2018/05/17/关于Java值传递和引用传递的思考/" itemprop="url">未命名</a></h1>
+                <a class="post-title-link" href="/Horizon.github.io/2018/05/17/关于Java值传递和引用传递的思考/" itemprop="url">关于Java值传递和引用传递的思考</a></h1>
         
 
         <div class="post-meta">
@@ -278,6 +278,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Horizon.github.io/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -308,10 +330,10 @@
       
         
           
-          title: 记录一些Redis在分布式环境下的实践遇到的问题categories: “redis”
-一直以为Java方法中传递的是对象的引用，然后看了一篇文章，发现自己的理解有些偏差。
+          一直以为Java方法中传递的是对象的引用，然后看了一篇文章，发现自己的理解有些偏差。
 首先先写出结论：
-如果参数是基本类型，传递的是基本类型的字面量值的拷贝。如果参数是引用类型，传递的是该变量所引用
+如果参数是基本类型，传递的是基本类型的字面量值的拷贝。如果参数是引用类型，传递的是该变量所引用的对象在堆中地址值的拷贝。 
+基本类型和引用类型的区别在Java内存模型中把内存分为堆和栈，栈中保存的
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -1780,7 +1802,7 @@ java虚拟机栈
               
               <div class="site-state-item site-state-categories">
                 
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">分类</span>
                 
               </div>
