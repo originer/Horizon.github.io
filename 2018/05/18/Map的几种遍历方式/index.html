@@ -79,14 +79,17 @@
 
 
 
+<meta name="description" content="在开发过程中经常会用到Map的遍历，所以对Map的几种遍历方式做一下整理； KeySet 遍历123456Iterator it = map.keySet().iterator(); 		while (it.hasNext()) &amp;#123;              key = it.next();              value = map.get(key);">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Horizon Notes">
-<meta property="og:url" content="https://originer.github.io/Horizon.github.io/2018/05/18/Java8之lambda/index.html">
+<meta property="og:title" content="Map的几种遍历方式">
+<meta property="og:url" content="https://originer.github.io/Horizon.github.io/2018/05/18/Map的几种遍历方式/index.html">
 <meta property="og:site_name" content="Horizon Notes">
+<meta property="og:description" content="在开发过程中经常会用到Map的遍历，所以对Map的几种遍历方式做一下整理； KeySet 遍历123456Iterator it = map.keySet().iterator(); 		while (it.hasNext()) &amp;#123;              key = it.next();              value = map.get(key);">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-18T09:29:36.739Z">
+<meta property="og:updated_time" content="2018-05-21T10:09:49.515Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Horizon Notes">
+<meta name="twitter:title" content="Map的几种遍历方式">
+<meta name="twitter:description" content="在开发过程中经常会用到Map的遍历，所以对Map的几种遍历方式做一下整理； KeySet 遍历123456Iterator it = map.keySet().iterator(); 		while (it.hasNext()) &amp;#123;              key = it.next();              value = map.get(key);">
 
 
 
@@ -120,7 +123,7 @@
 
 
 
-  <title> | Horizon Notes</title>
+  <title>Map的几种遍历方式 | Horizon Notes</title>
   
 
 
@@ -237,7 +240,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/05/18/Java8之lambda/">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/05/18/Map的几种遍历方式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Horizon">
@@ -254,7 +257,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline"></h1>
+          <h1 class="post-title" itemprop="name headline">Map的几种遍历方式</h1>
         
 
         <div class="post-meta">
@@ -304,7 +307,12 @@
       
 
       
-        
+        <p><em>在开发过程中经常会用到Map的遍历，所以对Map的几种遍历方式做一下整理；</em></p>
+<h4 id="KeySet-遍历"><a href="#KeySet-遍历" class="headerlink" title="KeySet 遍历"></a>KeySet 遍历</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Iterator it = map.keySet().iterator();</div><div class="line"> 		<span class="keyword">while</span> (it.hasNext()) &#123;</div><div class="line">              key = it.next();</div><div class="line">              value = map.get(key);</div><div class="line">              System.out.println(key + <span class="string">":"</span> + value);</div><div class="line">          &#125;</div></pre></td></tr></table></figure>
+<h4 id="EntrySet-遍历"><a href="#EntrySet-遍历" class="headerlink" title="EntrySet 遍历"></a>EntrySet 遍历</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">Iterator it1 = map.entrySet().iterator();</div><div class="line">    <span class="keyword">while</span> (it1.hasNext()) &#123;</div><div class="line">        Map.Entry entry = (Map.Entry) it1.next();</div><div class="line">        key = entry.getKey();</div><div class="line">        value = entry.getValue();</div><div class="line">        System.out.println(key + <span class="string">"="</span> + value);</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<h4 id="Java8-的-lambda-遍历"><a href="#Java8-的-lambda-遍历" class="headerlink" title="Java8 的 lambda 遍历"></a>Java8 的 lambda 遍历</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">map.forEach((k, v) -&gt; &#123;</div><div class="line">            System.out.println(<span class="string">"key="</span>+k+<span class="string">":"</span>+<span class="string">"value="</span>+v);</div><div class="line">        &#125;);</div></pre></td></tr></table></figure>
+<p>使用 EntrySet 效率比 KeySet 高，EntrySet 相比KeySet 少了遍历table的过程。java8 下可以配合lambda直接使用 map.foreach() 实际上还是使用entrySet的方式遍历。</p>
+
       
     </div>
     
@@ -388,8 +396,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -449,6 +466,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#KeySet-遍历"><span class="nav-number">1.</span> <span class="nav-text">KeySet 遍历</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#EntrySet-遍历"><span class="nav-number">2.</span> <span class="nav-text">EntrySet 遍历</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Java8-的-lambda-遍历"><span class="nav-number">3.</span> <span class="nav-text">Java8 的 lambda 遍历</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
