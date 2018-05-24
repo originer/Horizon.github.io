@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="设计模式," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -79,18 +79,17 @@
 
 
 
-<meta name="description" content="命令模式命令模式将“请求”封装成对象，命令模式是数据驱动设计模式，属于行为模式类别。 请求作为命令包装在一个对象下，并传递给调用器对象。 调用者对象查找可以处理此命令的适当对象，并将命令传递到执行命令的相应对象。 下面以灯泡的开关控制为例子来学习命令模式： 先定义一个Light类 12345678public class Light &amp;#123;    public void on()&amp;#123;">
-<meta name="keywords" content="设计模式">
+<meta name="description" content="在开发过程中经常会用到Map的遍历，所以对Map的几种遍历方式做一下整理； KeySet 遍历123456Iterator it = map.keySet().iterator(); 		while (it.hasNext()) &amp;#123;              key = it.next();              value = map.get(key);">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java设计模式：命令模式">
-<meta property="og:url" content="https://originer.github.io/Horizon.github.io/2018/05/01/设计模式：命令模式/index.html">
+<meta property="og:title" content="Map的几种遍历方式">
+<meta property="og:url" content="https://originer.github.io/Horizon.github.io/2018/05/21/Java8之lambda/index.html">
 <meta property="og:site_name" content="Horizon Notes">
-<meta property="og:description" content="命令模式命令模式将“请求”封装成对象，命令模式是数据驱动设计模式，属于行为模式类别。 请求作为命令包装在一个对象下，并传递给调用器对象。 调用者对象查找可以处理此命令的适当对象，并将命令传递到执行命令的相应对象。 下面以灯泡的开关控制为例子来学习命令模式： 先定义一个Light类 12345678public class Light &amp;#123;    public void on()&amp;#123;">
+<meta property="og:description" content="在开发过程中经常会用到Map的遍历，所以对Map的几种遍历方式做一下整理； KeySet 遍历123456Iterator it = map.keySet().iterator(); 		while (it.hasNext()) &amp;#123;              key = it.next();              value = map.get(key);">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-04-30T17:36:28.375Z">
+<meta property="og:updated_time" content="2018-05-21T10:14:45.415Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java设计模式：命令模式">
-<meta name="twitter:description" content="命令模式命令模式将“请求”封装成对象，命令模式是数据驱动设计模式，属于行为模式类别。 请求作为命令包装在一个对象下，并传递给调用器对象。 调用者对象查找可以处理此命令的适当对象，并将命令传递到执行命令的相应对象。 下面以灯泡的开关控制为例子来学习命令模式： 先定义一个Light类 12345678public class Light &amp;#123;    public void on()&amp;#123;">
+<meta name="twitter:title" content="Map的几种遍历方式">
+<meta name="twitter:description" content="在开发过程中经常会用到Map的遍历，所以对Map的几种遍历方式做一下整理； KeySet 遍历123456Iterator it = map.keySet().iterator(); 		while (it.hasNext()) &amp;#123;              key = it.next();              value = map.get(key);">
 
 
 
@@ -124,7 +123,7 @@
 
 
 
-  <title>Java设计模式：命令模式 | Horizon Notes</title>
+  <title>Map的几种遍历方式 | Horizon Notes</title>
   
 
 
@@ -241,7 +240,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/05/01/设计模式：命令模式/">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/05/21/Java8之lambda/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Horizon">
@@ -258,7 +257,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Java设计模式：命令模式</h1>
+          <h1 class="post-title" itemprop="name headline">Map的几种遍历方式</h1>
         
 
         <div class="post-meta">
@@ -270,8 +269,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-01T01:36:28+08:00">
-                2018-05-01
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-21T18:14:45+08:00">
+                2018-05-21
               </time>
             
 
@@ -280,28 +279,6 @@
             
           </span>
 
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/Horizon.github.io/categories/设计模式/" itemprop="url" rel="index">
-                    <span itemprop="name">设计模式</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -330,20 +307,11 @@
       
 
       
-        <h1 id="命令模式"><a href="#命令模式" class="headerlink" title="命令模式"></a>命令模式</h1><p><strong>命令模式将“请求”封装成对象，命令模式是数据驱动设计模式，属于行为模式类别。 请求作为命令包装在一个对象下，并传递给调用器对象。 调用者对象查找可以处理此命令的适当对象，并将命令传递到执行命令的相应对象。</strong></p>
-<p>下面以灯泡的开关控制为例子来学习命令模式：</p>
-<p><em>先定义一个Light类</em></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Light</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">on</span><span class="params">()</span></span>&#123;</div><div class="line">        System.out.println(<span class="string">"light  on"</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">off</span><span class="params">()</span></span>&#123;</div><div class="line">        System.out.println(<span class="string">"light  off"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><em>声明一个Command接口，所有的命令都要实现这个接口</em></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Command</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">execute</span><span class="params">()</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><em>实现一个控制灯泡开关的命令类，既然属于命令自然要实现Command接口</em></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LightOnCommand</span> <span class="keyword">implements</span> <span class="title">Command</span> </span>&#123;</div><div class="line">    Light light;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LightOnCommand</span><span class="params">(Light light)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.light = light;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">()</span> </span>&#123;</div><div class="line">        light.on();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><em>接下来定义一个Controller类，可以理解为灯泡的遥控器</em></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleRemoteController</span> </span>&#123;</div><div class="line">    Command solot;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCommand</span><span class="params">(Command solot)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.solot = solot;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">pressWasPressed</span><span class="params">()</span> </span>&#123;</div><div class="line">        solot.execute();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><em>对SimpleRemoteController做简单的测试</em></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">       SimpleRemoteController remoteController = <span class="keyword">new</span> SimpleRemoteController();</div><div class="line">       Light light = <span class="keyword">new</span> Light();</div><div class="line">       LightOnCommand lightOnCommand = <span class="keyword">new</span> LightOnCommand(light);</div><div class="line"></div><div class="line">       remoteController.setCommand(lightOnCommand);</div><div class="line">       remoteController.pressWasPressed();</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
-<p><strong>可以成功打印出 light on</strong></p>
-<p>从上面的简单例子可以看出灯泡与遥控器通过命令来交互，这两个类互不相干，实现了解耦。</p>
+        <p><em>在开发过程中经常会用到Map的遍历，所以对Map的几种遍历方式做一下整理；</em></p>
+<h4 id="KeySet-遍历"><a href="#KeySet-遍历" class="headerlink" title="KeySet 遍历"></a>KeySet 遍历</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Iterator it = map.keySet().iterator();</div><div class="line"> 		<span class="keyword">while</span> (it.hasNext()) &#123;</div><div class="line">              key = it.next();</div><div class="line">              value = map.get(key);</div><div class="line">              System.out.println(key + <span class="string">":"</span> + value);</div><div class="line">          &#125;</div></pre></td></tr></table></figure>
+<h4 id="EntrySet-遍历"><a href="#EntrySet-遍历" class="headerlink" title="EntrySet 遍历"></a>EntrySet 遍历</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">Iterator it1 = map.entrySet().iterator();</div><div class="line">    <span class="keyword">while</span> (it1.hasNext()) &#123;</div><div class="line">        Map.Entry entry = (Map.Entry) it1.next();</div><div class="line">        key = entry.getKey();</div><div class="line">        value = entry.getValue();</div><div class="line">        System.out.println(key + <span class="string">"="</span> + value);</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<h4 id="Java8-的-lambda-遍历"><a href="#Java8-的-lambda-遍历" class="headerlink" title="Java8 的 lambda 遍历"></a>Java8 的 lambda 遍历</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">map.forEach((k, v) -&gt; &#123;</div><div class="line">            System.out.println(<span class="string">"key="</span>+k+<span class="string">":"</span>+<span class="string">"value="</span>+v);</div><div class="line">        &#125;);</div></pre></td></tr></table></figure>
+<p>使用 EntrySet 效率比 KeySet 高，EntrySet 相比KeySet 少了遍历table的过程。java8 下可以配合lambda直接使用 map.foreach() 实际上还是使用entrySet的方式遍历。</p>
 
       
     </div>
@@ -359,12 +327,6 @@
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/Horizon.github.io/tags/设计模式/" rel="tag"># 设计模式</a>
-          
-        </div>
-      
 
       
       
@@ -374,8 +336,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/Horizon.github.io/2018/05/01/设计模式：单例模式/" rel="next" title="Java设计模式：单例模式">
-                <i class="fa fa-chevron-left"></i> Java设计模式：单例模式
+              <a href="/Horizon.github.io/2018/05/18/Map的几种遍历方式/" rel="next" title="Map的几种遍历方式">
+                <i class="fa fa-chevron-left"></i> Map的几种遍历方式
               </a>
             
           </div>
@@ -384,8 +346,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/Horizon.github.io/2018/05/01/设计模式：适配器模式/" rel="prev" title="Java设计模式：适配器模式">
-                Java设计模式：适配器模式 <i class="fa fa-chevron-right"></i>
+              <a href="/Horizon.github.io/2018/05/22/Java线程池学习/" rel="prev" title="">
+                 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -518,7 +480,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#命令模式"><span class="nav-number">1.</span> <span class="nav-text">命令模式</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#KeySet-遍历"><span class="nav-number">1.</span> <span class="nav-text">KeySet 遍历</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#EntrySet-遍历"><span class="nav-number">2.</span> <span class="nav-text">EntrySet 遍历</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Java8-的-lambda-遍历"><span class="nav-number">3.</span> <span class="nav-text">Java8 的 lambda 遍历</span></a></li></ol></div>
             
 
           </div>
