@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next muse use-motion" lang="zh-Hans">
+<html class="theme-next mist use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -93,7 +93,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/Horizon.github.io/',
-    scheme: 'Muse',
+    scheme: 'Mist',
     version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
     fancybox: true,
@@ -237,7 +237,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/05/01/Netty学习笔记(一)/">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/06/26/ConcurrentHashMap源码研究/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Horizon">
@@ -256,7 +256,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/Horizon.github.io/2018/05/01/Netty学习笔记(一)/" itemprop="url">Netty学习笔记</a></h1>
+                <a class="post-title-link" href="/Horizon.github.io/2018/06/26/ConcurrentHashMap源码研究/" itemprop="url">ConcurrentHashMap源码研究</a></h1>
         
 
         <div class="post-meta">
@@ -268,498 +268,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-01T01:36:28+08:00">
-                2018-05-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/Horizon.github.io/categories/网络编程/" itemprop="url" rel="index">
-                    <span itemprop="name">网络编程</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          这是本人学习Netty过程中记录的笔记，方便以后快速回顾。
-
-          
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/05/01/Netty学习笔记(一)/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/05/01/NIO Channel和Buffer/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Horizon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/Horizon.github.io/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Horizon Notes">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/Horizon.github.io/2018/05/01/NIO Channel和Buffer/" itemprop="url">深入浅出NIO Channel和Buffer</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-01T01:36:28+08:00">
-                2018-05-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/Horizon.github.io/categories/网络编程/" itemprop="url" rel="index">
-                    <span itemprop="name">网络编程</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          前言Java NIO 由以下几个核心部分组成：
-
-Buffer 
-Channel
-Selector
-
-传统的IO操作面向数据流，意味着每次从流中读一个或多个字节，直至完成，数据没有被缓存在任何地方。NIO操作面向缓冲区，数据从Channel读取到Buffer缓冲区，随后在Buffer中处理数据。本文
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/05/01/NIO Channel和Buffer/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/05/01/Java虚拟机学习笔记/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Horizon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/Horizon.github.io/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Horizon Notes">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/Horizon.github.io/2018/05/01/Java虚拟机学习笔记/" itemprop="url">Java虚拟机学习笔记</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-01T01:36:28+08:00">
-                2018-05-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/Horizon.github.io/categories/JVM/" itemprop="url" rel="index">
-                    <span itemprop="name">JVM</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          Java内存区域与内存溢出异常运行时数据区域下图是Java运行时数据区域划分图
-
-
-
-
-区域
-是否线程共享
-是否会内存溢出
-
-
-
-
-程序计数器
-否
-不会
-
-
-java虚拟机栈
-否
-会
-
-
-本地方法栈
-否
-会
-
-
-堆
-是
-会
-
-
-方法区
-是
-会
-
-
-
-1.程序计数器(线程私有)
-一块较小的内存，可以看
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/05/01/Java虚拟机学习笔记/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/05/01/Java容器/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Horizon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/Horizon.github.io/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Horizon Notes">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/Horizon.github.io/2018/05/01/Java容器/" itemprop="url">Java容器</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-01T01:36:28+08:00">
-                2018-05-01
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-26T17:12:47+08:00">
+                2018-06-26
               </time>
             
 
@@ -819,15 +329,14 @@ java虚拟机栈
 
       
         
-          
-          
-Java容器里只能放对象，对于基本类型（int, long, float, double等），需要将其包装成对象类型后（Integer, Long, Float, Double等）才能放到容器里。很多时候拆包装和解包装能够自动完成。这虽然会导致额外的性能和空间开销，但简化了设计和编程。
-
-泛型Ja
-          ...
+          <p><code>HashMap</code>是我们平时开发过程中用的比较多的集合，但它是非线程安全的，在涉及到多线程并发的情况，进行put操作有可能会引起<strong><em><a href="https://blog.csdn.net/zhuqiuhui/article/details/51849692" target="_blank" rel="external">死循环</a></em></strong>，导致CPU利用率接近100%。</p>
+<p><code>ConcurrentHashMap</code>就是一个线程安全版的<code>HashMap</code>，但是这个类和<code>HashMap</code>都在<code>JDK8</code>发生了较大的变化。在这里分析一下源码，来了解一下JDK8下<code>CuncurrentHashMap</code>是如何保证线程安全的。<strong><code>ConcurrentHashMap</code>不支持<code>key</code>或<code>value</code>为<code>null</code>。</strong></p>
+<blockquote>
+<p><em><code>HashTable</code>也是一个线程安全Map，且不能存储<code>Null</code>值。它的操作方法和<code>HashMap</code>很类似，但是所有操作都加上<code>synchronized</code>，而且是将整个<code>HashTable</code>对象加锁，也就是同时只能有一个线程访问、修改<code>HashTable</code>。这样带来的问题就是在多线程环境中代价大、效率低。</em></p>
+</blockquote>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/05/01/Java容器/#more" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/06/26/ConcurrentHashMap源码研究/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -878,7 +387,7 @@ Java容器里只能放对象，对于基本类型（int, long, float, double等�
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/05/01/IDEA部署tomcat/">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/06/19/缓存相关/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Horizon">
@@ -897,7 +406,7 @@ Java容器里只能放对象，对于基本类型（int, long, float, double等�
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/Horizon.github.io/2018/05/01/IDEA部署tomcat/" itemprop="url">总结使用 IDEA 部署web工程到 Tomcat 遇到的一些问题</a></h1>
+                <a class="post-title-link" href="/Horizon.github.io/2018/06/19/缓存相关/" itemprop="url">Java常用的缓存方案</a></h1>
         
 
         <div class="post-meta">
@@ -909,8 +418,8 @@ Java容器里只能放对象，对于基本类型（int, long, float, double等�
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-01T01:36:28+08:00">
-                2018-05-01
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-19T01:10:50+08:00">
+                2018-06-19
               </time>
             
 
@@ -932,8 +441,8 @@ Java容器里只能放对象，对于基本类型（int, long, float, double等�
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/Horizon.github.io/categories/工具/" itemprop="url" rel="index">
-                    <span itemprop="name">工具</span>
+                  <a href="/Horizon.github.io/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
                   </a>
                 </span>
 
@@ -971,19 +480,20 @@ Java容器里只能放对象，对于基本类型（int, long, float, double等�
       
         
           
-          war 和 war exploded的区别
-war模式：将WEB工程以包的形式上传到服务器 ;war exploded模式：将WEB工程以当前文件夹的位置关系上传到服务器 ;
+            <h2 id="缓存命中率"><a href="#缓存命中率" class="headerlink" title="缓存命中率"></a>缓存命中率</h2><p>缓存的设计要考虑到具体的业务场景，一般来说，并发量越大，缓存的收益就越大。</p>
+<h2 id="缓存的分类"><a href="#缓存的分类" class="headerlink" title="缓存的分类"></a>缓存的分类</h2><h3 id="本地缓存"><a href="#本地缓存" class="headerlink" title="本地缓存"></a>本地缓存</h3><p>编程实现（成员变量、局部变量、静态变量）Guava Cache</p>
+<h3 id="分布式缓存"><a href="#分布式缓存" class="headerlink" title="分布式缓存"></a>分布式缓存</h3><p>Memcache、Redis</p>
+<h4 id="Guava-Cache"><a href="#Guava-Cache" class="headerlink" title="Guava Cache"></a>Guava Cache</h4><p><img src="C:\Users\Zz\AppData\Local\Temp\1529342215282.png" alt="1529342215282"></p>
+<p>类似一个ConcurrentHashMap、包含了多余的信息，使用LRU策略来实现缓存。</p>
+<h4 id="Memcache"><a href="#Memcache" class="headerlink" title="Memcache"></a>Memcache</h4><p><img src="C:\Users\Zz\AppData\Local\Temp\1529342293171.png" alt="1529342293171"></p>
+<p>Memcache本身不提供分布式解决方案，需要在应用服务器上进行实现。</p>
+<p>Memcache的内存结构</p>
+<p><img src="C:\Users\Zz\AppData\Local\Temp\1529342483370.png" alt="1529342483370"></p>
+<p>redis</p>
+<p><img src="C:\Users\Zz\AppData\Local\Temp\1529344638979.png" alt="1529344638979"></p>
+<p><img src="C:\Users\Zz\AppData\Local\Temp\1529346488980.png" alt="1529346488980"></p>
 
-（1）war模式这种可以称之为是发布模式，看名字也知道，这是先打成war包，再发布；
-（2）war exploded模式是
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/05/01/IDEA部署tomcat/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+          
         
       
     </div>
@@ -1030,7 +540,7 @@ war模式：将WEB工程以包的形式上传到服务器 ;war exploded模式：
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/05/01/HashSet和HashMap/">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/05/30/四种引用/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Horizon">
@@ -1049,7 +559,7 @@ war模式：将WEB工程以包的形式上传到服务器 ;war exploded模式：
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/Horizon.github.io/2018/05/01/HashSet和HashMap/" itemprop="url">HashSet和HashMap</a></h1>
+                <a class="post-title-link" href="/Horizon.github.io/2018/05/30/四种引用/" itemprop="url">Java的四种引用</a></h1>
         
 
         <div class="post-meta">
@@ -1061,8 +571,8 @@ war模式：将WEB工程以包的形式上传到服务器 ;war exploded模式：
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-01T01:36:28+08:00">
-                2018-05-01
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-30T09:10:08+08:00">
+                2018-05-30
               </time>
             
 
@@ -1084,8 +594,8 @@ war模式：将WEB工程以包的形式上传到服务器 ;war exploded模式：
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/Horizon.github.io/categories/Java集合框架/" itemprop="url" rel="index">
-                    <span itemprop="name">Java集合框架</span>
+                  <a href="/Horizon.github.io/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
                   </a>
                 </span>
 
@@ -1122,14 +632,10 @@ war模式：将WEB工程以包的形式上传到服务器 ;war exploded模式：
 
       
         
-          
-          HashSet and HashMap总体介绍原文github地址
-之所以把HashSet和HashMap放在一起讲解，是因为二者在Java里有着相同的实现，前者仅仅是对后者做了一层包装，也就是说HashSet里面有一个HashMap（适配器模式）*。因此本文将重点分析HashMap*。
-HashM
-          ...
+          <p>首先，先贴上测试代码。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/05/01/HashSet和HashMap/#more" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/05/30/四种引用/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1180,7 +686,7 @@ HashM
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/05/01/HTTP协议相关笔记/">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/05/24/ThreadLocal源码研究/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Horizon">
@@ -1199,7 +705,7 @@ HashM
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/Horizon.github.io/2018/05/01/HTTP协议相关笔记/" itemprop="url">HTTP协议相关笔记</a></h1>
+                <a class="post-title-link" href="/Horizon.github.io/2018/05/24/ThreadLocal源码研究/" itemprop="url">ThreadLocal源码研究</a></h1>
         
 
         <div class="post-meta">
@@ -1211,8 +717,133 @@ HashM
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-01T01:36:28+08:00">
-                2018-05-01
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-24T20:44:43+08:00">
+                2018-05-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p><em>ThreadLocal 是并发编程中经常用到的一个工具类，但是之前对这个类并不是很熟悉，只是觉得很高端。今天在群里看到有人讨论，索性研究一下源码以彻底掌握这个东西</em></p>
+<h2 id="ThreadLocal-是什么"><a href="#ThreadLocal-是什么" class="headerlink" title="ThreadLocal 是什么"></a>ThreadLocal 是什么</h2><p>早在JDK 1.2的版本中就提供java.lang.ThreadLocal，ThreadLocal为解决多线程程序的并发问题提供了一种新的思路。使用这个工具类可以很简洁地编写出优美的多线程程序。 </p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/Horizon.github.io/2018/05/24/ThreadLocal源码研究/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/05/22/Java线程池学习/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Horizon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/Horizon.github.io/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Horizon Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/Horizon.github.io/2018/05/22/Java线程池学习/" itemprop="url">Java线程池学习总结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-22T23:32:26+08:00">
+                2018-05-22
               </time>
             
 
@@ -1234,8 +865,8 @@ HashM
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/Horizon.github.io/categories/HTTP/" itemprop="url" rel="index">
-                    <span itemprop="name">HTTP</span>
+                  <a href="/Horizon.github.io/categories/Java并发编程/" itemprop="url" rel="index">
+                    <span itemprop="name">Java并发编程</span>
                   </a>
                 </span>
 
@@ -1272,13 +903,14 @@ HashM
 
       
         
-          
-          什么是HTTP协议协议是指计算机通信网络中两台计算机之间进行通信所必须共同遵守的规定或规则，超文本传输协议(HTTP)是一种通信协议，它允许将超文本标记语言(HTML)文档从Web服务器传送到客户端的浏览器
-URL详解 URL(Uniform Resource Locator) 地址用于描述一个网络
-          ...
+          <h3 id="为什么不用new-Thread"><a href="#为什么不用new-Thread" class="headerlink" title="为什么不用new Thread()"></a>为什么不用new Thread()</h3><ul>
+<li>每次 new Thread() 都是新建对象，性能差；</li>
+<li>线程缺乏统一管理，可能无限制的新建线程，相互竞争，有可能占用过多的系统资源导致死机或OOM</li>
+<li>功能少，缺少多执行、定期执行、线程中断等功能；</li>
+</ul>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/05/01/HTTP协议相关笔记/#more" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/05/22/Java线程池学习/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1329,7 +961,7 @@ URL详解 URL(Uniform Resource Locator) 地址用于描述一个网络
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/05/01/CopyOnWriteArrayList详解/">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/05/18/Map的几种遍历方式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Horizon">
@@ -1348,7 +980,7 @@ URL详解 URL(Uniform Resource Locator) 地址用于描述一个网络
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/Horizon.github.io/2018/05/01/CopyOnWriteArrayList详解/" itemprop="url">CopyOnWriteArrayList详解</a></h1>
+                <a class="post-title-link" href="/Horizon.github.io/2018/05/18/Map的几种遍历方式/" itemprop="url">Map的几种遍历方式</a></h1>
         
 
         <div class="post-meta">
@@ -1360,8 +992,133 @@ URL详解 URL(Uniform Resource Locator) 地址用于描述一个网络
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-01T01:36:28+08:00">
-                2018-05-01
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-18T17:29:36+08:00">
+                2018-05-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p><em>在开发过程中经常会用到Map的遍历，所以对Map的几种遍历方式做一下整理；</em></p>
+<h4 id="KeySet-遍历"><a href="#KeySet-遍历" class="headerlink" title="KeySet 遍历"></a>KeySet 遍历</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Iterator it = map.keySet().iterator();</div><div class="line"> 		<span class="keyword">while</span> (it.hasNext()) &#123;</div><div class="line">              key = it.next();</div><div class="line">              value = map.get(key);</div><div class="line">              System.out.println(key + <span class="string">":"</span> + value);</div><div class="line">          &#125;</div></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/Horizon.github.io/2018/05/18/Map的几种遍历方式/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/05/17/关于Java值传递和引用传递的思考/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Horizon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/Horizon.github.io/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Horizon Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/Horizon.github.io/2018/05/17/关于Java值传递和引用传递的思考/" itemprop="url">关于Java值传递和引用传递的思考</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-17T11:11:28+08:00">
+                2018-05-17
               </time>
             
 
@@ -1383,8 +1140,8 @@ URL详解 URL(Uniform Resource Locator) 地址用于描述一个网络
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/Horizon.github.io/categories/Java集合框架/" itemprop="url" rel="index">
-                    <span itemprop="name">Java集合框架</span>
+                  <a href="/Horizon.github.io/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
                   </a>
                 </span>
 
@@ -1421,13 +1178,13 @@ URL详解 URL(Uniform Resource Locator) 地址用于描述一个网络
 
       
         
-          
-          CopyOnWriteArrayList与JMM一 CopyOnWriteArrayList与JMM说明：本文代码均以JDK1.8的源码为准。
-1 什么是CopyOnWriteArrayList关于CopyOnWriteArrayList是什么以及基本用法，在这里不多说，网上可以搜到大量这方面的文章
-          ...
+          <p><em>一直以为Java方法中传递的是对象的引用，然后看了一篇文章，发现自己的理解有些偏差。</em></p>
+<p>首先先写出结论：</p>
+<p><strong>如果参数是基本类型，传递的是基本类型的字面量值的拷贝。</strong><br><strong>如果参数是引用类型，传递的是该变量所引用的对象在堆中地址值的拷贝。</strong> </p>
+<h4 id="基本类型和引用类型的区别"><a href="#基本类型和引用类型的区别" class="headerlink" title="基本类型和引用类型的区别"></a>基本类型和引用类型的区别</h4><p>在Java内存模型中把内存分为堆和栈，栈中保存的就是我们声明的变量，对象保存在堆中。栈中的引用变量指向堆中的实际对象。当一个对象没有被任何变量引用时会被垃圾回收。在jvm内存模型中，基本类型值存在变量中。引用类型的变量只是保存了那个值的引用地址，引用指向实际对象。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/05/01/CopyOnWriteArrayList详解/#more" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/05/17/关于Java值传递和引用传递的思考/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1478,7 +1235,7 @@ URL详解 URL(Uniform Resource Locator) 地址用于描述一个网络
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/05/01/CGlib动态代理/">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/05/01/设计模式：适配器模式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Horizon">
@@ -1497,7 +1254,7 @@ URL详解 URL(Uniform Resource Locator) 地址用于描述一个网络
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/Horizon.github.io/2018/05/01/CGlib动态代理/" itemprop="url">CGLIB动态代理</a></h1>
+                <a class="post-title-link" href="/Horizon.github.io/2018/05/01/设计模式：适配器模式/" itemprop="url">Java设计模式：适配器模式</a></h1>
         
 
         <div class="post-meta">
@@ -1570,13 +1327,309 @@ URL详解 URL(Uniform Resource Locator) 地址用于描述一个网络
 
       
         
-          
-          
-cglib is a powerful, high performance and quality Code Generation Library, It is used to extend JAVA classes and implements interfaces at runtime.在Sp
-          ...
+          <h3 id="适配器模式"><a href="#适配器模式" class="headerlink" title="适配器模式"></a>适配器模式</h3><p>　模式所涉及的角色有：</p>
+<p>　　●　　<strong>目标(Target)角色：</strong>这就是所期待得到的接口。注意：由于这里讨论的是类适配器模式，因此目标不可以是类。</p>
+<p>　　●　　<strong>源(Adapee)角色：</strong>现在需要适配的接口。</p>
+<p>　　●　　<strong>适配器(Adaper)角色：</strong>适配器类是本模式的核心。适配器把源接口转换成目标接口。显然，这一角色不可以是接口，而必须是具体类。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/05/01/CGlib动态代理/#more" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/05/01/设计模式：适配器模式/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/05/01/设计模式：命令模式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Horizon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/Horizon.github.io/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Horizon Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/Horizon.github.io/2018/05/01/设计模式：命令模式/" itemprop="url">Java设计模式：命令模式</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-01T01:36:28+08:00">
+                2018-05-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Horizon.github.io/categories/设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">设计模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="命令模式"><a href="#命令模式" class="headerlink" title="命令模式"></a>命令模式</h1><p><strong>命令模式将“请求”封装成对象，命令模式是数据驱动设计模式，属于行为模式类别。 请求作为命令包装在一个对象下，并传递给调用器对象。 调用者对象查找可以处理此命令的适当对象，并将命令传递到执行命令的相应对象。</strong></p>
+<p>下面以灯泡的开关控制为例子来学习命令模式：</p>
+<p><em>先定义一个Light类</em></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Light</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">on</span><span class="params">()</span></span>&#123;</div><div class="line">        System.out.println(<span class="string">"light  on"</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">off</span><span class="params">()</span></span>&#123;</div><div class="line">        System.out.println(<span class="string">"light  off"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/Horizon.github.io/2018/05/01/设计模式：命令模式/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/05/01/设计模式：单例模式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Horizon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/Horizon.github.io/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Horizon Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/Horizon.github.io/2018/05/01/设计模式：单例模式/" itemprop="url">Java设计模式：单例模式</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-01T01:36:28+08:00">
+                2018-05-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Horizon.github.io/categories/设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">设计模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p><strong>饿汉模式</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Sigleton</span> </span>&#123;</div><div class="line">    <span class="comment">//饿汉模式 outInstance是私有的</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Sigleton ourInstance = <span class="keyword">new</span> Sigleton();</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 此实现是线程安全的  JVM在加载此类时，因为对于static属性的初始化只能由一个线程执行且仅执行一次</span></div><div class="line"><span class="comment">     * 缺点：instance在类装载时就实例化 这时候初始化instance显然没有达到lazy loading的效果</span></div><div class="line"><span class="comment">     * <span class="doctag">@return</span></span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Sigleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> ourInstance;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">//把构造函数声明为private 客户对象无法创建该实例</span></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Sigleton</span><span class="params">()</span> </span>&#123;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/Horizon.github.io/2018/05/01/设计模式：单例模式/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1618,7 +1671,7 @@ cglib is a powerful, high performance and quality Code Generation Library, It is
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/Horizon.github.io/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/Horizon.github.io/">1</a><span class="page-number current">2</span>
+    <a class="extend prev" rel="prev" href="/Horizon.github.io/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/Horizon.github.io/">1</a><span class="page-number current">2</span><a class="page-number" href="/Horizon.github.io/page/3/">3</a><a class="page-number" href="/Horizon.github.io/page/4/">4</a><a class="extend next" rel="next" href="/Horizon.github.io/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1664,7 +1717,7 @@ cglib is a powerful, high performance and quality Code Generation Library, It is
               
                 <a href="/Horizon.github.io/archives/">
               
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">31</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1675,7 +1728,7 @@ cglib is a powerful, high performance and quality Code Generation Library, It is
               
               <div class="site-state-item site-state-categories">
                 
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">分类</span>
                 
               </div>
@@ -1685,10 +1738,10 @@ cglib is a powerful, high performance and quality Code Generation Library, It is
               
               
               <div class="site-state-item site-state-tags">
-                <a href="/Horizon.github.io/tags/index.html">
-                  <span class="site-state-item-count">5</span>
+                
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">标签</span>
-                </a>
+                
               </div>
             
 

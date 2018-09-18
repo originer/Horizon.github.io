@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next muse use-motion" lang="zh-Hans">
+<html class="theme-next mist use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -79,12 +79,12 @@
 
 
 
-<meta name="description" content="Java内存区域与内存溢出异常运行时数据区域下图是Java运行时数据区域划分图     区域 是否线程共享 是否会内存溢出     程序计数器 否 不会   java虚拟机栈 否 会   本地方法栈 否 会   堆 是 会   方法区 是 会    1.程序计数器(线程私有) 一块较小的内存，可以看作是当前线程所执行的字节码的行号指示器； 在虚拟机概念模型（各种虚拟机实现可能不一样）中，字节码解释">
+<meta name="description" content="Java内存区域与内存溢出异常运行时数据区域下图是Java运行时数据区域划分图     区域 是否线程共享 是否会内存溢出     程序计数器 否 不会   java虚拟机栈 否 会   本地方法栈 否 会   堆 是 会   方法区 是 会">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java虚拟机学习笔记">
 <meta property="og:url" content="https://originer.github.io/Horizon.github.io/2018/05/01/Java虚拟机学习笔记/index.html">
 <meta property="og:site_name" content="Horizon Notes">
-<meta property="og:description" content="Java内存区域与内存溢出异常运行时数据区域下图是Java运行时数据区域划分图     区域 是否线程共享 是否会内存溢出     程序计数器 否 不会   java虚拟机栈 否 会   本地方法栈 否 会   堆 是 会   方法区 是 会    1.程序计数器(线程私有) 一块较小的内存，可以看作是当前线程所执行的字节码的行号指示器； 在虚拟机概念模型（各种虚拟机实现可能不一样）中，字节码解释">
+<meta property="og:description" content="Java内存区域与内存溢出异常运行时数据区域下图是Java运行时数据区域划分图     区域 是否线程共享 是否会内存溢出     程序计数器 否 不会   java虚拟机栈 否 会   本地方法栈 否 会   堆 是 会   方法区 是 会">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/12/1604a8492a45653e?imageView2/0/w/1280/h/960/ignore-error/1">
 <meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/12/1604a8492ec41c53?imageView2/0/w/1280/h/960/ignore-error/1">
@@ -103,10 +103,10 @@
 <meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/12/1604a8499ea082f5?imageView2/0/w/1280/h/960/ignore-error/1">
 <meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/12/1604a8c58a032b54?imageView2/0/w/1280/h/960/ignore-error/1">
 <meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/12/1604a8c5de316d00?imageView2/0/w/1280/h/960/ignore-error/1">
-<meta property="og:updated_time" content="2018-04-30T17:36:28.332Z">
+<meta property="og:updated_time" content="2018-06-25T12:43:55.764Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java虚拟机学习笔记">
-<meta name="twitter:description" content="Java内存区域与内存溢出异常运行时数据区域下图是Java运行时数据区域划分图     区域 是否线程共享 是否会内存溢出     程序计数器 否 不会   java虚拟机栈 否 会   本地方法栈 否 会   堆 是 会   方法区 是 会    1.程序计数器(线程私有) 一块较小的内存，可以看作是当前线程所执行的字节码的行号指示器； 在虚拟机概念模型（各种虚拟机实现可能不一样）中，字节码解释">
+<meta name="twitter:description" content="Java内存区域与内存溢出异常运行时数据区域下图是Java运行时数据区域划分图     区域 是否线程共享 是否会内存溢出     程序计数器 否 不会   java虚拟机栈 否 会   本地方法栈 否 会   堆 是 会   方法区 是 会">
 <meta name="twitter:image" content="https://user-gold-cdn.xitu.io/2017/12/12/1604a8492a45653e?imageView2/0/w/1280/h/960/ignore-error/1">
 
 
@@ -115,7 +115,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/Horizon.github.io/',
-    scheme: 'Muse',
+    scheme: 'Mist',
     version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
     fancybox: true,
@@ -385,6 +385,7 @@
 </tr>
 </tbody>
 </table>
+<a id="more"></a> 
 <h4 id="1-程序计数器-线程私有"><a href="#1-程序计数器-线程私有" class="headerlink" title="1.程序计数器(线程私有)"></a>1.程序计数器(线程私有)</h4><ul>
 <li>一块较小的内存，可以看作是当前线程所执行的字节码的行号指示器；</li>
 <li>在虚拟机概念模型（各种虚拟机实现可能不一样）中，字节码解释器工作时就是通过改变这个计数器的值来选取下一条需要执行的字节码指令；</li>
@@ -697,7 +698,7 @@
               
                 <a href="/Horizon.github.io/archives/">
               
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">31</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -708,7 +709,7 @@
               
               <div class="site-state-item site-state-categories">
                 
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">分类</span>
                 
               </div>
@@ -718,10 +719,10 @@
               
               
               <div class="site-state-item site-state-tags">
-                <a href="/Horizon.github.io/tags/index.html">
-                  <span class="site-state-item-count">5</span>
+                
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">标签</span>
-                </a>
+                
               </div>
             
 

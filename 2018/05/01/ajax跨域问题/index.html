@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next muse use-motion" lang="zh-Hans">
+<html class="theme-next mist use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="为什么会出现跨域跨域问题来源于JavaScript的同源策略，即只有 协议+主机名+端口号(如存在)相同，则允许相互访问。也就是说JavaScript只能访问和操作自己域下的资源，不能访问和操作其他域下的资源。跨域问题是针对JS和ajax的，html本身没有跨域问题，比如a标签、script标签、甚至form标签（可以直接跨域发送数据并接收数据）等  说白了，产生跨域的主要原因就是浏览器的限制。">
+<meta name="description" content="为什么会出现跨域跨域问题来源于JavaScript的同源策略，即只有 协议+主机名+端口号(如存在)相同，则允许相互访问。也就是说JavaScript只能访问和操作自己域下的资源，不能访问和操作其他域下的资源。跨域问题是针对JS和ajax的，html本身没有跨域问题，比如a标签、script标签、甚至form标签（可以直接跨域发送数据并接收数据）等。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ajax跨域问题整理">
+<meta property="og:title" content="Ajax跨域解决方案">
 <meta property="og:url" content="https://originer.github.io/Horizon.github.io/2018/05/01/ajax跨域问题/index.html">
 <meta property="og:site_name" content="Horizon Notes">
-<meta property="og:description" content="为什么会出现跨域跨域问题来源于JavaScript的同源策略，即只有 协议+主机名+端口号(如存在)相同，则允许相互访问。也就是说JavaScript只能访问和操作自己域下的资源，不能访问和操作其他域下的资源。跨域问题是针对JS和ajax的，html本身没有跨域问题，比如a标签、script标签、甚至form标签（可以直接跨域发送数据并接收数据）等  说白了，产生跨域的主要原因就是浏览器的限制。">
+<meta property="og:description" content="为什么会出现跨域跨域问题来源于JavaScript的同源策略，即只有 协议+主机名+端口号(如存在)相同，则允许相互访问。也就是说JavaScript只能访问和操作自己域下的资源，不能访问和操作其他域下的资源。跨域问题是针对JS和ajax的，html本身没有跨域问题，比如a标签、script标签、甚至form标签（可以直接跨域发送数据并接收数据）等。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://okydwk9zh.bkt.clouddn.com/17-5-28/79583948.jpg">
-<meta property="og:updated_time" content="2018-04-30T17:36:28.350Z">
+<meta property="og:updated_time" content="2018-07-03T12:14:40.732Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ajax跨域问题整理">
-<meta name="twitter:description" content="为什么会出现跨域跨域问题来源于JavaScript的同源策略，即只有 协议+主机名+端口号(如存在)相同，则允许相互访问。也就是说JavaScript只能访问和操作自己域下的资源，不能访问和操作其他域下的资源。跨域问题是针对JS和ajax的，html本身没有跨域问题，比如a标签、script标签、甚至form标签（可以直接跨域发送数据并接收数据）等  说白了，产生跨域的主要原因就是浏览器的限制。">
+<meta name="twitter:title" content="Ajax跨域解决方案">
+<meta name="twitter:description" content="为什么会出现跨域跨域问题来源于JavaScript的同源策略，即只有 协议+主机名+端口号(如存在)相同，则允许相互访问。也就是说JavaScript只能访问和操作自己域下的资源，不能访问和操作其他域下的资源。跨域问题是针对JS和ajax的，html本身没有跨域问题，比如a标签、script标签、甚至form标签（可以直接跨域发送数据并接收数据）等。">
 <meta name="twitter:image" content="http://okydwk9zh.bkt.clouddn.com/17-5-28/79583948.jpg">
 
 
@@ -99,7 +99,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/Horizon.github.io/',
-    scheme: 'Muse',
+    scheme: 'Mist',
     version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
     fancybox: true,
@@ -125,7 +125,7 @@
 
 
 
-  <title>ajax跨域问题整理 | Horizon Notes</title>
+  <title>Ajax跨域解决方案 | Horizon Notes</title>
   
 
 
@@ -259,7 +259,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">ajax跨域问题整理</h1>
+          <h1 class="post-title" itemprop="name headline">Ajax跨域解决方案</h1>
         
 
         <div class="post-meta">
@@ -281,6 +281,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Horizon.github.io/categories/前端相关/" itemprop="url" rel="index">
+                    <span itemprop="name">前端相关</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -309,26 +331,36 @@
       
 
       
-        <h3 id="为什么会出现跨域"><a href="#为什么会出现跨域" class="headerlink" title="为什么会出现跨域"></a>为什么会出现跨域</h3><p>跨域问题来源于JavaScript的同源策略，即只有 协议+主机名+端口号<br>(如存在)相同，则允许相互访问。也就是说JavaScript只能访问和操作自己域下的资源，不能访问和操作其他域下的资源。跨域问题是针对JS和ajax的，html本身没有跨域问题，比如a标签、script标签、甚至form标签（可以直接跨域发送数据并接收数据）等</p>
+        <h2 id="为什么会出现跨域"><a href="#为什么会出现跨域" class="headerlink" title="为什么会出现跨域"></a>为什么会出现跨域</h2><p>跨域问题来源于JavaScript的同源策略，即只有 协议+主机名+端口号<br>(如存在)相同，则允许相互访问。也就是说JavaScript只能访问和操作自己域下的资源，不能访问和操作其他域下的资源。跨域问题是针对JS和ajax的，html本身没有跨域问题，比如a标签、script标签、甚至form标签（可以直接跨域发送数据并接收数据）等。</p>
+<a id="more"></a>
 <p><img src="http://okydwk9zh.bkt.clouddn.com/17-5-28/79583948.jpg" alt="img"></p>
 <p>说白了，产生跨域的主要原因就是浏览器的限制。</p>
-<h3 id="如何解决跨域问题"><a href="#如何解决跨域问题" class="headerlink" title="如何解决跨域问题"></a>如何解决跨域问题</h3><ul>
-<li><p>JSONP </p>
-<p>　　JSONP是JSON with Padding的略称。它是一个非官方的协议，它允许在服务器端集成Script<br>  tags返回至客户端，通过javascript<br>  callback的形式实现跨域访问（这仅仅是JSONP简单的实现形式）。关于jsonp的使用方式，可以参考<a href="http://blog.csdn.net/alen1985/article/details/6365394" target="_blank" rel="external">http://blog.csdn.net/alen1985/article/details/6365394</a>，优缺点可以参考<a href="http://blog.csdn.net/z69183787/article/details/19191385" target="_blank" rel="external">http://blog.csdn.net/z69183787/article/details/19191385</a>　　</p>
-</li>
+<p>出现跨域的主要三种原因：</p>
+<ul>
+<li>浏览器限制</li>
+<li>请求是XHR请求</li>
+<li>请求是跨域的</li>
+</ul>
+<h2 id="如何解决跨域问题"><a href="#如何解决跨域问题" class="headerlink" title="如何解决跨域问题"></a>如何解决跨域问题</h2><p><em>解决跨域问题可以从产生跨域的源头来解决。</em></p>
+<h3 id="浏览器解除限制"><a href="#浏览器解除限制" class="headerlink" title="浏览器解除限制"></a>浏览器解除限制</h3><p>最简单暴力也是最不实用的一种解决方案，不可能去要求每个用户都设置浏览器。</p>
+<h3 id="XHR请求"><a href="#XHR请求" class="headerlink" title="XHR请求"></a>XHR请求</h3><p>请求本身是<code>XHR</code>请求，此时可以通过<code>JSONP</code>的请求方式来实现跨域：</p>
+<p><code>JSONP</code>是<code>JSON</code>with Padding的略称。它是一个非官方的协议，它允许在服务器端集成Script tags返回至客户端，通过javascript callback的形式实现跨域访问（这仅仅是<code>JSONP</code>简单的实现形式）。简单的来说就是把原来要返回的<code>JSON</code>数据封装成一个<code>JS</code>请求。</p>
+<p>弊端：只支持<code>Get</code>请求，需要改动后台代码。</p>
+<h3 id="请求本身是跨域"><a href="#请求本身是跨域" class="headerlink" title="请求本身是跨域"></a>请求本身是跨域</h3><p>请求本身是跨域的，关于跨域的定义可以参考上文：</p>
+<ul>
 <li><p>添加响应头，允许跨域 </p>
-<p>　　addHeader(‘Access-Control-Allow-Origin:*’);//允许所有来源访问 </p>
+<p>  addHeader(‘Access-Control-Allow-Origin:*’);//允许所有来源访问 </p>
 <p>　　addHeader(‘Access-Control-Allow-Method:POST,GET’);//允许访问的方式</p>
 </li>
 <li><p>代理的方式 </p>
 <p>服务器A的test01.html页面想访问服务器B的后台action，返回“test”字符串，此时就出现跨域请求，浏览器控制台会出现报错提示，由于跨域是浏览器的同源策略造成的，对于服务器后台不存在该问题，可以在服务器A中添加一个代理action，在该action中完成对服务器B中action数据的请求，然后在返回到test01.html页面。</p>
 </li>
 </ul>
-<h4 id="JSONP"><a href="#JSONP" class="headerlink" title="JSONP"></a>JSONP</h4><p>JSONP的最基本的原理是：动态添加一个<script>标签，而script标签的src属性是没有跨域的限制的。这样说来，这种跨域方式其实与ajax XmlHttpRequest协议无关了。</p>
+<h2 id="JSONP解决方案"><a href="#JSONP解决方案" class="headerlink" title="JSONP解决方案"></a>JSONP解决方案</h2><p>JSONP的最基本的原理是：动态添加一个<script>标签，而script标签的src属性是没有跨域的限制的。这样说来，这种跨域方式其实与ajax XmlHttpRequest协议无关了。</p>
 <p><strong>JSONP的优点</strong>：它不像XMLHttpRequest对象实现的Ajax请求那样受到同源策略的限制；它的兼容性更好，在更加古老的浏览器中都 可以运行，不需要XMLHttpRequest或ActiveX的支持；并且在请求完毕后可以通过调用callback的方式回传结果。</p>
 <p><strong>JSONP的缺点</strong>：它只支持GET请求而不支持POST等其它类型的HTTP请求；它只支持跨域HTTP请求这种情况，不能解决不同域的两个页面之间如何进行JavaScript调用的问题。</p>
 <p>Jsonp的执行过程如下：</p>
-<p><em>首先在客户端注册一个callback (如:’jsoncallback’),</em><br><em>然后把callback的名字(如:jsonp1236827957501)传给服务器。注意：服务端得到callback的数值后，要用jsonp1236827957501(……)把将要输出的json内容包括起来，此时，服务器生成</em><br> json 数据才能被客户端正确接收。</p>
+<p><em>首先在客户端注册一个callback (如:’jsoncallback’),</em> <em>然后把callback的名字(如:jsonp1236827957501)传给服务器。注意：服务端得到callback的数值后，要用jsonp1236827957501(……)把将要输出的json内容包括起来，此时，服务器生成</em><br> json 数据才能被客户端正确接收。</p>
 <p><em>然后以 javascript 语法的方式，生成一个function， function 名字就是传递上来的参数 ‘jsoncallback’的值 jsonp1236827957501 .</em></p>
 <p><em>最后将 json 数据直接以入参的方式，放置到 function 中，这样就生成了一段 js 语法的文档，返回给客户端。</em></p>
 <p>客户端浏览器，解析script标签，并执行返回的 javascript 文档，此时javascript文档数据，作为参数，<br>传入到了客户端预先定义好的 callback 函数(如上例中jquery $.ajax()方法封装的的success: function<br><em>(json))里。</em></p>
@@ -364,8 +396,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/Horizon.github.io/2018/05/01/Netty学习笔记(一)/" rel="next" title="Netty学习笔记">
-                <i class="fa fa-chevron-left"></i> Netty学习笔记
+              <a href="/Horizon.github.io/2018/05/01/NIO Channel和Buffer/" rel="next" title="深入浅出NIO Channel和Buffer">
+                <i class="fa fa-chevron-left"></i> 深入浅出NIO Channel和Buffer
               </a>
             
           </div>
@@ -453,7 +485,7 @@
               
                 <a href="/Horizon.github.io/archives/">
               
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">31</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -464,7 +496,7 @@
               
               <div class="site-state-item site-state-categories">
                 
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">分类</span>
                 
               </div>
@@ -474,10 +506,10 @@
               
               
               <div class="site-state-item site-state-tags">
-                <a href="/Horizon.github.io/tags/index.html">
-                  <span class="site-state-item-count">5</span>
+                
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">标签</span>
-                </a>
+                
               </div>
             
 
@@ -508,7 +540,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么会出现跨域"><span class="nav-number">1.</span> <span class="nav-text">为什么会出现跨域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何解决跨域问题"><span class="nav-number">2.</span> <span class="nav-text">如何解决跨域问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#JSONP"><span class="nav-number">2.1.</span> <span class="nav-text">JSONP</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么会出现跨域"><span class="nav-number">1.</span> <span class="nav-text">为什么会出现跨域</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何解决跨域问题"><span class="nav-number">2.</span> <span class="nav-text">如何解决跨域问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#浏览器解除限制"><span class="nav-number">2.1.</span> <span class="nav-text">浏览器解除限制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#XHR请求"><span class="nav-number">2.2.</span> <span class="nav-text">XHR请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#请求本身是跨域"><span class="nav-number">2.3.</span> <span class="nav-text">请求本身是跨域</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JSONP解决方案"><span class="nav-number">3.</span> <span class="nav-text">JSONP解决方案</span></a></li></ol></div>
             
 
           </div>

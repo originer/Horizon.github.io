@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/Horizon.github.io/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/Horizon.github.io/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/Horizon.github.io/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/Horizon.github.io/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/Horizon.github.io/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/Horizon.github.io/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/Horizon.github.io/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Java集合框架," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="HashMap是我们平时开发过程中用的比较多的集合，但它是非线程安全的，在涉及到多线程并发的情况，进行put操作有可能会引起死循环，导致CPU利用率接近100%。 ConcurrentHashMap就是一个线程安全版的HashMap，但是这个类和HashMap都在JDK8发生了较大的变化。在这里分析一下源码，来了解一下JDK8下CuncurrentHashMap是如何保证线程安全的。Concurr">
+<meta name="keywords" content="Java集合框架">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ConcurrentHashMap源码研究">
+<meta property="og:url" content="https://originer.github.io/Horizon.github.io/2018/06/26/ConcurrentHashMap源码研究/index.html">
+<meta property="og:site_name" content="Horizon Notes">
+<meta property="og:description" content="HashMap是我们平时开发过程中用的比较多的集合，但它是非线程安全的，在涉及到多线程并发的情况，进行put操作有可能会引起死循环，导致CPU利用率接近100%。 ConcurrentHashMap就是一个线程安全版的HashMap，但是这个类和HashMap都在JDK8发生了较大的变化。在这里分析一下源码，来了解一下JDK8下CuncurrentHashMap是如何保证线程安全的。Concurr">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://segmentfault.com/img/remote/1460000009001471?w=1188&h=664">
+<meta property="og:image" content="https://segmentfault.com/img/remote/1460000009001472?w=630&h=567">
+<meta property="og:updated_time" content="2018-09-16T14:50:18.299Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ConcurrentHashMap源码研究">
+<meta name="twitter:description" content="HashMap是我们平时开发过程中用的比较多的集合，但它是非线程安全的，在涉及到多线程并发的情况，进行put操作有可能会引起死循环，导致CPU利用率接近100%。 ConcurrentHashMap就是一个线程安全版的HashMap，但是这个类和HashMap都在JDK8发生了较大的变化。在这里分析一下源码，来了解一下JDK8下CuncurrentHashMap是如何保证线程安全的。Concurr">
+<meta name="twitter:image" content="https://segmentfault.com/img/remote/1460000009001471?w=1188&h=664">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/Horizon.github.io/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+
+
+
+
+  <title>ConcurrentHashMap源码研究 | Horizon Notes</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/Horizon.github.io/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Horizon Notes</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/Horizon.github.io/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/Horizon.github.io/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/Horizon.github.io/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/06/26/ConcurrentHashMap源码研究/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Horizon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/Horizon.github.io/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Horizon Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ConcurrentHashMap源码研究</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-26T17:12:47+08:00">
+                2018-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Horizon.github.io/categories/Java集合框架/" itemprop="url" rel="index">
+                    <span itemprop="name">Java集合框架</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><code>HashMap</code>是我们平时开发过程中用的比较多的集合，但它是非线程安全的，在涉及到多线程并发的情况，进行put操作有可能会引起<strong><em><a href="https://blog.csdn.net/zhuqiuhui/article/details/51849692" target="_blank" rel="external">死循环</a></em></strong>，导致CPU利用率接近100%。</p>
+<p><code>ConcurrentHashMap</code>就是一个线程安全版的<code>HashMap</code>，但是这个类和<code>HashMap</code>都在<code>JDK8</code>发生了较大的变化。在这里分析一下源码，来了解一下JDK8下<code>CuncurrentHashMap</code>是如何保证线程安全的。<strong><code>ConcurrentHashMap</code>不支持<code>key</code>或<code>value</code>为<code>null</code>。</strong></p>
+<blockquote>
+<p><em><code>HashTable</code>也是一个线程安全Map，且不能存储<code>Null</code>值。它的操作方法和<code>HashMap</code>很类似，但是所有操作都加上<code>synchronized</code>，而且是将整个<code>HashTable</code>对象加锁，也就是同时只能有一个线程访问、修改<code>HashTable</code>。这样带来的问题就是在多线程环境中代价大、效率低。</em></p>
+</blockquote>
+<a id="more"></a>
+<h2 id="JDK6-的实现"><a href="#JDK6-的实现" class="headerlink" title="JDK6 的实现"></a>JDK6 的实现</h2><p><img src="https://segmentfault.com/img/remote/1460000009001471?w=1188&amp;h=664" alt="JDK1.6下ConcurrentHashMap结构"> </p>
+<p>ConcurrentHashMap引入了Segement数据结构</p>
+<h2 id="Segement"><a href="#Segement" class="headerlink" title="Segement"></a>Segement</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Segment</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; <span class="keyword">extends</span> <span class="title">ReentrantLock</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = <span class="number">2249069246763182397L</span>;</div><div class="line">    <span class="keyword">final</span> <span class="keyword">float</span> loadFactor;</div><div class="line">    Segment(<span class="keyword">float</span> lf) &#123; <span class="keyword">this</span>.loadFactor = lf; &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="数据节点"><a href="#数据节点" class="headerlink" title="数据节点"></a>数据节点</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">HashEntry</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; </span>&#123;</div><div class="line">    <span class="keyword">final</span> K key;</div><div class="line">    <span class="keyword">final</span> <span class="keyword">int</span> hash;</div><div class="line">    <span class="keyword">volatile</span> V value;</div><div class="line">    <span class="keyword">final</span> HashEntry&lt;K,V&gt; next;</div><div class="line"></div><div class="line">    HashEntry(K key, <span class="keyword">int</span> hash, HashEntry&lt;K,V&gt; next, V value) &#123;</div><div class="line">        <span class="keyword">this</span>.key = key;</div><div class="line">        <span class="keyword">this</span>.hash = hash;</div><div class="line">        <span class="keyword">this</span>.next = next;</div><div class="line">        <span class="keyword">this</span>.value = value;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">ConcurrentHashMap</span><span class="params">(<span class="keyword">int</span> initialCapacity,</span></span></div><div class="line"><span class="function"><span class="params">                         <span class="keyword">float</span> loadFactor, <span class="keyword">int</span> concurrencyLevel)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (!(loadFactor &gt; <span class="number">0</span>) || initialCapacity &lt; <span class="number">0</span> || concurrencyLevel &lt;= <span class="number">0</span>)</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException();</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (concurrencyLevel &gt; MAX_SEGMENTS)</div><div class="line">        concurrencyLevel = MAX_SEGMENTS;</div><div class="line"></div><div class="line">    <span class="comment">// Find power-of-two sizes best matching arguments</span></div><div class="line">    <span class="keyword">int</span> sshift = <span class="number">0</span>;</div><div class="line">    <span class="keyword">int</span> ssize = <span class="number">1</span>;</div><div class="line">    <span class="keyword">while</span> (ssize &lt; concurrencyLevel) &#123;</div><div class="line">        ++sshift;</div><div class="line">        ssize &lt;&lt;= <span class="number">1</span>;</div><div class="line">    &#125;</div><div class="line">    segmentShift = <span class="number">32</span> - sshift;</div><div class="line">    segmentMask = ssize - <span class="number">1</span>;</div><div class="line">    <span class="keyword">this</span>.segments = Segment.newArray(ssize);</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (initialCapacity &gt; MAXIMUM_CAPACITY)</div><div class="line">        initialCapacity = MAXIMUM_CAPACITY;</div><div class="line">    <span class="keyword">int</span> c = initialCapacity / ssize;</div><div class="line">    <span class="keyword">if</span> (c * ssize &lt; initialCapacity)</div><div class="line">        ++c;</div><div class="line">    <span class="keyword">int</span> cap = <span class="number">1</span>;</div><div class="line">    <span class="keyword">while</span> (cap &lt; c)</div><div class="line">        cap &lt;&lt;= <span class="number">1</span>;</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="keyword">this</span>.segments.length; ++i)</div><div class="line">        <span class="keyword">this</span>.segments[i] = <span class="keyword">new</span> Segment&lt;K,V&gt;(cap, loadFactor);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="JDK8-的实现"><a href="#JDK8-的实现" class="headerlink" title="JDK8 的实现"></a>JDK8 的实现</h2><p>JDK 1.8取消类<code>segments</code>字段，直接用table数组存储键值对，JDK1.6中每个bucket中键值对组织方式是单向链表，查找复杂度是<code>O(n)</code>，JDK1.8中当链表长度超过<code>TREEIFY_THRESHOLD</code>时，链表转换为红黑树，查询复杂度可以降低到O(log n)，改进性能； </p>
+<p><img src="https://segmentfault.com/img/remote/1460000009001472?w=630&amp;h=567" alt="HashMap结构"> </p>
+<p>首先先了解一下ConcurrentHashMap中的几个重要的参数：</p>
+<ul>
+<li><code>transient volatile Node&lt;K,V&gt;[] table</code>：键值对桶数组</li>
+<li><code>private transient volatile Node&lt;K,V&gt;[] nextTable</code>： rehash扩容时用到的新键值对数组</li>
+<li><code>private transient volatile long baseCount</code>：<span id="jump1"></span>记录当前键值对总数，通过CAS更新，对所有线程可见</li>
+<li><code>private transient volatile int sizeCtl</code></li>
+<li><code>sizeCtl</code>表示键值对总数阈值，通过CAS更新, 对所有线程可见<ul>
+<li>当<code>sizeCtl</code> &lt; 0时，表示多个线程在等待扩容；</li>
+<li>当<code>sizeCtl</code> = 0时，默认值；</li>
+<li>当<code>sizeCtl</code> &gt; 0时，表示扩容的阈值；</li>
+</ul>
+</li>
+<li><code>private transient volatile int cellBusy</code>：自旋锁；</li>
+<li><code>private transient volatile CounterCell[] counterCells</code>: counter cell表，长度总为2的幂次；</li>
+<li><code>static class Segment&lt;K,V&gt;</code>：在JDK1.8中，Segment类仅仅在序列化和反序列化时发挥作用；</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * races. Updated via CAS.</span></div><div class="line"><span class="comment"> * 记录容器的容量大小，通过CAS更新</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">transient</span> <span class="keyword">volatile</span> <span class="keyword">long</span> baseCount;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 这个sizeCtl是volatile的，那么他是线程可见的，一个思考:它是所有修改都在CAS中进行，但是sizeCtl为什么不设计成LongAdder(jdk8出现的)类型呢？</span></div><div class="line"><span class="comment"> * 或者设计成AtomicLong(在高并发的情况下比LongAdder低效)，这样就能减少自己操作CAS了。</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> * 来看下注释，当sizeCtl小于0说明有多个线程正则等待扩容结果，参考transfer函数</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> * sizeCtl等于0是默认值，大于0是扩容的阀值</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">transient</span> <span class="keyword">volatile</span> <span class="keyword">int</span> sizeCtl;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> *  自旋锁 （锁定通过 CAS） 在调整大小和/或创建 CounterCells 时使用。 在CounterCell类更新value中会使用，功能类似显示锁和内置锁，性能更好</span></div><div class="line"><span class="comment"> *  在Striped64类也有应用</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">transient</span> <span class="keyword">volatile</span> <span class="keyword">int</span> cellsBusy;</div></pre></td></tr></table></figure>
+<h3 id="数据节点-1"><a href="#数据节点-1" class="headerlink" title="数据节点"></a>数据节点</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; <span class="keyword">implements</span> <span class="title">Map</span>.<span class="title">Entry</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; </span>&#123;</div><div class="line">    <span class="keyword">final</span> <span class="keyword">int</span> hash;</div><div class="line">    <span class="keyword">final</span> K key;</div><div class="line">    <span class="keyword">volatile</span> V val;</div><div class="line">    <span class="keyword">volatile</span> Node&lt;K,V&gt; next;</div><div class="line"></div><div class="line">    Node(<span class="keyword">int</span> hash, K key, V val, Node&lt;K,V&gt; next) &#123;</div><div class="line">        <span class="keyword">this</span>.hash = hash;</div><div class="line">        <span class="keyword">this</span>.key = key;</div><div class="line">        <span class="keyword">this</span>.val = val;</div><div class="line">        <span class="keyword">this</span>.next = next;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="构造函数-1"><a href="#构造函数-1" class="headerlink" title="构造函数"></a>构造函数</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// cap 是 &gt;= initialCapacity的最小二次幂</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">ConcurrentHashMap</span><span class="params">(<span class="keyword">int</span> initialCapacity)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (initialCapacity &lt; <span class="number">0</span>)</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException();</div><div class="line">    <span class="keyword">int</span> cap = ((initialCapacity &gt;= (MAXIMUM_CAPACITY &gt;&gt;&gt; <span class="number">1</span>)) ?</div><div class="line">               MAXIMUM_CAPACITY :</div><div class="line">               tableSizeFor(initialCapacity + (initialCapacity &gt;&gt;&gt; <span class="number">1</span>) + <span class="number">1</span>));</div><div class="line">    <span class="keyword">this</span>.sizeCtl = cap;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="put-过程分析"><a href="#put-过程分析" class="headerlink" title="put 过程分析"></a>put 过程分析</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> V <span class="title">put</span><span class="params">(K key, V value)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> putVal(key, value, <span class="keyword">false</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>put</code>方法是直接调用<code>putVal</code>方法，其中<code>onlyIfAbsent</code>的作用是，如果为<code>true</code>，那么当值相等[<code>hash &amp;&amp; equals</code>]都满足条件时，值不会被覆盖。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">final</span> V <span class="title">putVal</span><span class="params">(K key, V value, <span class="keyword">boolean</span> onlyIfAbsent)</span> </span>&#123;</div><div class="line">    <span class="comment">//key 或 value 为null会直接抛出异常。</span></div><div class="line">    <span class="keyword">if</span> (key == <span class="keyword">null</span> || value == <span class="keyword">null</span>) <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</div><div class="line">    <span class="keyword">int</span> hash = spread(key.hashCode());</div><div class="line">    <span class="keyword">int</span> binCount = <span class="number">0</span>;</div><div class="line">    <span class="comment">//这边加了一个循环，就是不断的尝试，因为在table的初始化和casTabAt用到了compareAndSwapInt、compareAndSwapObject</span></div><div class="line">    <span class="comment">//因为如果其他线程正在修改tab，那么尝试就会失败，所以这边要加一个for循环，不断的尝试</span></div><div class="line">    <span class="keyword">for</span> (Node &lt; K, V &gt; [] tab = table;;) &#123;</div><div class="line">        Node &lt; K, V &gt; f;</div><div class="line">        <span class="keyword">int</span> n, i, fh;</div><div class="line">        <span class="keyword">if</span> (tab == <span class="keyword">null</span> || (n = tab.length) == <span class="number">0</span>)</div><div class="line">            tab = initTable();</div><div class="line">        <span class="comment">// 如果tab中不存在我们要存的值，就使用CAS的方式把值放入到tab中。</span></div><div class="line">        <span class="keyword">else</span> <span class="keyword">if</span> ((f = tabAt(tab, i = (n - <span class="number">1</span>) &amp; hash)) == <span class="keyword">null</span>) &#123; <span class="comment">//1</span></div><div class="line">            <span class="keyword">if</span> (casTabAt(tab, i, <span class="keyword">null</span>,</div><div class="line">                    <span class="keyword">new</span> Node &lt; K, V &gt; (hash, key, value, <span class="keyword">null</span>))) <span class="comment">//2</span></div><div class="line">                <span class="keyword">break</span>; <span class="comment">// no lock when adding to empty bin</span></div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> ((fh = f.hash) == MOVED) <span class="comment">// a</span></div><div class="line">            <span class="comment">// 如果走到这里，说明有其他线程正在进行扩容操作，这是一个辅助类。</span></div><div class="line">            tab = helpTransfer(tab, f);</div><div class="line">        <span class="keyword">else</span> &#123;</div><div class="line">            V oldVal = <span class="keyword">null</span>;</div><div class="line">            <span class="comment">//这个地方设计非常的巧妙，内置锁synchronized锁住了f,因为f是指定特定的tab[i]的，</span></div><div class="line">            <span class="comment">// 所以就锁住了整行链表,这个设计跟分段锁有异曲同工之妙，只是其他读取操作需要用cas来保证</span></div><div class="line">            <span class="keyword">synchronized</span>(f) &#123;</div><div class="line">                <span class="keyword">if</span> (tabAt(tab, i) == f) &#123; <span class="comment">//3</span></div><div class="line">                    <span class="keyword">if</span> (fh &gt;= <span class="number">0</span>) &#123;</div><div class="line">                        binCount = <span class="number">1</span>;</div><div class="line">                        <span class="keyword">for</span> (Node &lt; K, V &gt; e = f;; ++binCount) &#123;</div><div class="line">                            K ek;</div><div class="line">                            <span class="keyword">if</span> (e.hash == hash &amp;&amp;</div><div class="line">                                ((ek = e.key) == key ||</div><div class="line">                                    (ek != <span class="keyword">null</span> &amp;&amp; key.equals(ek)))) &#123;</div><div class="line">                                oldVal = e.val;</div><div class="line">                                <span class="keyword">if</span> (!onlyIfAbsent)</div><div class="line">                                    e.val = value;</div><div class="line">                                <span class="keyword">break</span>;</div><div class="line">                            &#125;</div><div class="line">                            Node &lt; K, V &gt; pred = e;</div><div class="line">                            <span class="keyword">if</span> ((e = e.next) == <span class="keyword">null</span>) &#123;</div><div class="line">                                pred.next = <span class="keyword">new</span> Node &lt; K, V &gt; (hash, key,</div><div class="line">                                    value, <span class="keyword">null</span>);</div><div class="line">                                <span class="keyword">break</span>;</div><div class="line">                            &#125;</div><div class="line">                        &#125;</div><div class="line">                    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (f <span class="keyword">instanceof</span> TreeBin) &#123; <span class="comment">//</span></div><div class="line">                        Node &lt; K, V &gt; p;</div><div class="line">                        binCount = <span class="number">2</span>;</div><div class="line">                        <span class="keyword">if</span> ((p = ((TreeBin &lt; K, V &gt; ) f).putTreeVal(hash, key,</div><div class="line">                                value)) != <span class="keyword">null</span>) &#123;</div><div class="line">                            oldVal = p.val;</div><div class="line">                            <span class="keyword">if</span> (!onlyIfAbsent)</div><div class="line">                                p.val = value;</div><div class="line">                        &#125;</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">if</span> (binCount != <span class="number">0</span>) &#123;</div><div class="line">                <span class="keyword">if</span> (binCount &gt;= TREEIFY_THRESHOLD)</div><div class="line">                    treeifyBin(tab, i); <span class="comment">//转化为红黑树</span></div><div class="line">                <span class="keyword">if</span> (oldVal != <span class="keyword">null</span>)</div><div class="line">                    <span class="keyword">return</span> oldVal;</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    addCount(<span class="number">1</span> L, binCount);</div><div class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>synchronized (f) {}</code>操作通过对桶的首元素 = 链表表头 Or 红黑树根节点加锁，从而实现对整个桶进行加锁，有锁分离思想的体现； </p>
+<h3 id="get-过程分析"><a href="#get-过程分析" class="headerlink" title="get 过程分析"></a>get 过程分析</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> V <span class="title">get</span><span class="params">(Object key)</span> </span>&#123;</div><div class="line">    Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; e, p; <span class="keyword">int</span> n, eh; K ek;</div><div class="line">    <span class="keyword">int</span> h = spread(key.hashCode());</div><div class="line">    <span class="comment">// 先获得存储链表的table</span></div><div class="line">    <span class="keyword">if</span> ((tab = table) != <span class="keyword">null</span> &amp;&amp; (n = tab.length) &gt; <span class="number">0</span> &amp;&amp;</div><div class="line">        (e = tabAt(tab, (n - <span class="number">1</span>) &amp; h)) != <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="comment">//判断hash equals是否满足条件，如果符合就直接返回值</span></div><div class="line">        <span class="keyword">if</span> ((eh = e.hash) == h) &#123;</div><div class="line">            <span class="keyword">if</span> ((ek = e.key) == key || (ek != <span class="keyword">null</span> &amp;&amp; key.equals(ek)))</div><div class="line">                <span class="keyword">return</span> e.val;</div><div class="line">        &#125;</div><div class="line"><span class="comment">//如果eh=-1就说明e节点为ForWordingNode,这说明什么，说明这个节点已经不存在了，被另一个线程正则扩容所以要查找key对应的值的话，直接到新newtable找</span></div><div class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (eh &lt; <span class="number">0</span>)</div><div class="line">            <span class="keyword">return</span> (p = e.find(h, key)) != <span class="keyword">null</span> ? p.val : <span class="keyword">null</span>;</div><div class="line">        <span class="comment">// 对bucket中的链表进行遍历，找到满足条件的数据</span></div><div class="line">        <span class="keyword">while</span> ((e = e.next) != <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">if</span> (e.hash == h &amp;&amp;</div><div class="line">                ((ek = e.key) == key || (ek != <span class="keyword">null</span> &amp;&amp; key.equals(ek))))</div><div class="line">                <span class="keyword">return</span> e.val;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="remove-过程分析"><a href="#remove-过程分析" class="headerlink" title="remove 过程分析"></a>remove 过程分析</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">remove</span><span class="params">(Object key, Object value)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (key == <span class="keyword">null</span>)</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</div><div class="line">    <span class="keyword">return</span> value != <span class="keyword">null</span> &amp;&amp; replaceNode(key, <span class="keyword">null</span>, value) != <span class="keyword">null</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="table原子操作方法"><a href="#table原子操作方法" class="headerlink" title="table原子操作方法"></a>table原子操作方法</h3><h4 id="获取tab-i-：tabAt"><a href="#获取tab-i-：tabAt" class="headerlink" title="获取tab[i]：tabAt"></a>获取tab[i]：tabAt</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="keyword">final</span> &lt;K,V&gt; <span class="function">Node&lt;K,V&gt; <span class="title">tabAt</span><span class="params">(Node&lt;K,V&gt;[] tab, <span class="keyword">int</span> i)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> (Node&lt;K,V&gt;)U.getObjectVolatile(tab, ((<span class="keyword">long</span>)i &lt;&lt; ASHIFT) + ABASE);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>tabAt方法原子读取table[i]</strong>；调用<code>Unsafe</code>对象的<code>getObjectVolatile</code>方法获取tab[i]，<strong>由于对volatile写操作happen-before于volatile读操作</strong>，因此其他线程对table的修改均对get读取可见；<br><code>((long)i &lt;&lt; ASHIFT) + ABASE)</code>计算i元素的地址</p>
+<h3 id="与JDK1-6对比"><a href="#与JDK1-6对比" class="headerlink" title="与JDK1.6对比"></a>与JDK1.6对比</h3><p>JDK 1.8取消类<code>segments</code>字段，直接用table数组存储键值对，JDK1.6中每个bucket中键值对组织方式是单向链表，查找复杂度是<code>O(n)</code>，JDK1.8中当链表长度超过<code>TREEIFY_THRESHOLD</code>时，链表转换为红黑树，查询复杂度可以降低到O(log n)，改进性能；</p>
+<h3 id="锁分离"><a href="#锁分离" class="headerlink" title="锁分离"></a>锁分离</h3><p>JDK1.8中，一个线程每次对一个桶（链表 or 红黑树）进行加锁，其他线程仍然可以访问其他桶，本质是减小锁的粒度，在线程操作不同的Entry时不需要上锁；</p>
+<h3 id="线程安全"><a href="#线程安全" class="headerlink" title="线程安全"></a>线程安全</h3><p>ConcurrentHashMap底层数据结构与HashMap相同，仍然采用<strong>table数组+链表+红黑树</strong>结构；<br>一个线程进行put/remove操作时，对桶（链表 or 红黑树）加上<code>synchronized</code>独占锁；<br>ConcurrentHashMap<strong>采用CAS算法保证线程安全</strong>；</p>
+<p><strong>总结：JDK8之后取消了segment，采用同步和cas算法来保证线程安全。底层增加了红黑树结构提升了性能。</strong></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/Horizon.github.io/tags/Java集合框架/" rel="tag"># Java集合框架</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/Horizon.github.io/2018/06/19/缓存相关/" rel="next" title="Java常用的缓存方案">
+                <i class="fa fa-chevron-left"></i> Java常用的缓存方案
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/Horizon.github.io/2018/06/29/Netty核心组件：Channel与Pipline/" rel="prev" title="Netty核心组件：Channel和Pipline">
+                Netty核心组件：Channel和Pipline <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Horizon</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/Horizon.github.io/archives/">
+              
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JDK6-的实现"><span class="nav-number">1.</span> <span class="nav-text">JDK6 的实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Segement"><span class="nav-number">2.</span> <span class="nav-text">Segement</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据节点"><span class="nav-number">2.1.</span> <span class="nav-text">数据节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#构造函数"><span class="nav-number">2.2.</span> <span class="nav-text">构造函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JDK8-的实现"><span class="nav-number">3.</span> <span class="nav-text">JDK8 的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据节点-1"><span class="nav-number">3.1.</span> <span class="nav-text">数据节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#构造函数-1"><span class="nav-number">3.2.</span> <span class="nav-text">构造函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#put-过程分析"><span class="nav-number">3.3.</span> <span class="nav-text">put 过程分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#get-过程分析"><span class="nav-number">3.4.</span> <span class="nav-text">get 过程分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#remove-过程分析"><span class="nav-number">3.5.</span> <span class="nav-text">remove 过程分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#table原子操作方法"><span class="nav-number">3.6.</span> <span class="nav-text">table原子操作方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#获取tab-i-：tabAt"><span class="nav-number">3.6.1.</span> <span class="nav-text">获取tab[i]：tabAt</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#与JDK1-6对比"><span class="nav-number">3.7.</span> <span class="nav-text">与JDK1.6对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#锁分离"><span class="nav-number">3.8.</span> <span class="nav-text">锁分离</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线程安全"><span class="nav-number">3.9.</span> <span class="nav-text">线程安全</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Horizon</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/Horizon.github.io/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/Horizon.github.io/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/Horizon.github.io/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/Horizon.github.io/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/Horizon.github.io/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

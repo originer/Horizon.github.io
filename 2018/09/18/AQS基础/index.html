@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/Horizon.github.io/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/Horizon.github.io/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/Horizon.github.io/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/Horizon.github.io/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/Horizon.github.io/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/Horizon.github.io/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/Horizon.github.io/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Java并发包（JUC）中提供了很多并发工具，这其中，很多我们耳熟能详的并发工具，譬如ReentrangLock、Semaphore，它们的实现都用到了一个共同的基类–AbstractQueuedSynchronizer,简称AQS。AQS是一个用来构建锁和同步器的框架，使用AQS能简单且高效地构造出应用广泛的大量的同步器，比如我们提到的ReentrantLock，Semaphore，其他的诸如">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java并发核心-AQS">
+<meta property="og:url" content="https://originer.github.io/Horizon.github.io/2018/09/18/AQS基础/index.html">
+<meta property="og:site_name" content="Horizon Notes">
+<meta property="og:description" content="Java并发包（JUC）中提供了很多并发工具，这其中，很多我们耳熟能详的并发工具，譬如ReentrangLock、Semaphore，它们的实现都用到了一个共同的基类–AbstractQueuedSynchronizer,简称AQS。AQS是一个用来构建锁和同步器的框架，使用AQS能简单且高效地构造出应用广泛的大量的同步器，比如我们提到的ReentrantLock，Semaphore，其他的诸如">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://images2015.cnblogs.com/blog/1024555/201707/1024555-20170717114859238-311670115.png">
+<meta property="og:image" content="c:/Users/hspcadmin/AppData/Roaming/Typora/typora-user-images/1537262227804.png">
+<meta property="og:updated_time" content="2018-09-18T12:58:35.298Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java并发核心-AQS">
+<meta name="twitter:description" content="Java并发包（JUC）中提供了很多并发工具，这其中，很多我们耳熟能详的并发工具，譬如ReentrangLock、Semaphore，它们的实现都用到了一个共同的基类–AbstractQueuedSynchronizer,简称AQS。AQS是一个用来构建锁和同步器的框架，使用AQS能简单且高效地构造出应用广泛的大量的同步器，比如我们提到的ReentrantLock，Semaphore，其他的诸如">
+<meta name="twitter:image" content="https://images2015.cnblogs.com/blog/1024555/201707/1024555-20170717114859238-311670115.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/Horizon.github.io/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+
+
+
+
+  <title>Java并发核心-AQS | Horizon Notes</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/Horizon.github.io/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Horizon Notes</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/Horizon.github.io/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/Horizon.github.io/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/Horizon.github.io/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/09/18/AQS基础/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Horizon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/Horizon.github.io/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Horizon Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java并发核心-AQS</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-18T14:10:09+08:00">
+                2018-09-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Horizon.github.io/categories/Java并发编程/" itemprop="url" rel="index">
+                    <span itemprop="name">Java并发编程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>Java并发包（JUC）中提供了很多并发工具，这其中，很多我们耳熟能详的并发工具，譬如ReentrangLock、Semaphore，它们的实现都用到了一个共同的基类–<strong>AbstractQueuedSynchronizer</strong>,简称AQS。AQS是一个用来构建锁和同步器的框架，使用AQS能简单且高效地构造出应用广泛的大量的同步器，比如我们提到的ReentrantLock，Semaphore，其他的诸如ReentrantReadWriteLock，SynchronousQueue，FutureTask等等皆是基于AQS的。当然，我们自己也能利用AQS非常轻松容易地构造出符合我们自己需求的同步器。</p>
+</blockquote>
+<a id="more"></a>
+<h2 id="AQS实现原理"><a href="#AQS实现原理" class="headerlink" title="AQS实现原理"></a>AQS实现原理</h2><p><img src="https://images2015.cnblogs.com/blog/1024555/201707/1024555-20170717114859238-311670115.png" alt="img"></p>
+<p>AQS的底层是使用一个int变量表示同步状态，有一个内置的FIFO的队列用来完成获取资源线程的排队工作。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * The synchronization state.</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">int</span> state;</div></pre></td></tr></table></figure>
+<p>state可以通过以下的方式进行操作：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">compareAndSetState</span><span class="params">(<span class="keyword">int</span> expect, <span class="keyword">int</span> update)</span> </span>&#123;</div><div class="line">    <span class="comment">// See below for intrinsics setup to support this</span></div><div class="line">    <span class="keyword">return</span> unsafe.compareAndSwapInt(<span class="keyword">this</span>, stateOffset, expect, update);</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">setState</span><span class="params">(<span class="keyword">int</span> newState)</span> </span>&#123;</div><div class="line">        state = newState;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">getState</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> state;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="内置队列"><a href="#内置队列" class="headerlink" title="内置队列"></a>内置队列</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span> </span>&#123;</div><div class="line">        <span class="comment">/** waitStatus值，表示线程已被取消（等待超时或者被中断）*/</span></div><div class="line">        <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CANCELLED =  <span class="number">1</span>;</div><div class="line">        <span class="comment">/** waitStatus值，表示后继线程需要被唤醒（unpaking）*/</span></div><div class="line">        <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> SIGNAL    = -<span class="number">1</span>;</div><div class="line">        <span class="comment">/**waitStatus值，表示结点线程等待在condition上，当被signal后，会从等待队列转移到同步到队列中 */</span></div><div class="line">        <span class="comment">/** waitStatus value to indicate thread is waiting on condition */</span></div><div class="line">        <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CONDITION = -<span class="number">2</span>;</div><div class="line">       <span class="comment">/** waitStatus值，表示下一次共享式同步状态会被无条件地传播下去</span></div><div class="line"><span class="comment">        static final int PROPAGATE = -3;</span></div><div class="line"><span class="comment">        /** 等待状态，初始为0 */</span></div><div class="line">        <span class="keyword">volatile</span> <span class="keyword">int</span> waitStatus;</div><div class="line">        <span class="comment">/**当前结点的前驱结点 */</span></div><div class="line">        <span class="keyword">volatile</span> Node prev;</div><div class="line">        <span class="comment">/** 当前结点的后继结点 */</span></div><div class="line">        <span class="keyword">volatile</span> Node next;</div><div class="line">        <span class="comment">/** 与当前结点关联的排队中的线程 */</span></div><div class="line">        <span class="keyword">volatile</span> Thread thread;</div><div class="line">        <span class="comment">/** ...... */</span></div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<h2 id="同步方式"><a href="#同步方式" class="headerlink" title="同步方式"></a>同步方式</h2><ul>
+<li><p>　<strong>protected boolean tryAcquire(int arg) : 独占式获取同步状态，试着获取，成功返回true，反之为false</strong></p>
+</li>
+<li><p>　<strong>protected boolean tryRelease(int arg) ：独占式释放同步状态，等待中的其他线程此时将有机会获取到同步状态；</strong></p>
+</li>
+<li><p>　<strong>protected int tryAcquireShared(int arg) ：共享式获取同步状态，返回值大于等于0，代表获取成功；反之获取失败；</strong></p>
+</li>
+<li><p>　<strong>protected boolean tryReleaseShared(int arg) ：共享式释放同步状态，成功为true，失败为false</strong></p>
+</li>
+<li><p>　<strong>protected boolean isHeldExclusively() ： 是否在独占模式下被线程占用。</strong></p>
+</li>
+</ul>
+<h3 id="共享式"><a href="#共享式" class="headerlink" title="共享式"></a>共享式</h3><p>共享式锁的实现有：Semaphore，CountDownLatch<br>上面的方法都是没有默认实现的，需要自己实现。可以以CountDownLatch为例看一下如何自定义一个同步锁：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * Synchronization control For CountDownLatch.</span></div><div class="line"><span class="comment"> * Uses AQS state to represent count.</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Sync</span> <span class="keyword">extends</span> <span class="title">AbstractQueuedSynchronizer</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = <span class="number">4982264981922014374L</span>;</div><div class="line">	<span class="comment">//在这里初始化state进行上锁</span></div><div class="line">    Sync(<span class="keyword">int</span> count) &#123;</div><div class="line">        setState(count);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">int</span> <span class="title">getCount</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> getState();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">int</span> <span class="title">tryAcquireShared</span><span class="params">(<span class="keyword">int</span> acquires)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> (getState() == <span class="number">0</span>) ? <span class="number">1</span> : -<span class="number">1</span>;</div><div class="line">    &#125;</div><div class="line">	<span class="comment">//共享锁是可重入的，这里是对state-1，代表释放锁</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">tryReleaseShared</span><span class="params">(<span class="keyword">int</span> releases)</span> </span>&#123;</div><div class="line">        <span class="comment">// Decrement count; signal when transition to zero</span></div><div class="line">        <span class="keyword">for</span> (;;) &#123;</div><div class="line">            <span class="keyword">int</span> c = getState();</div><div class="line">            <span class="keyword">if</span> (c == <span class="number">0</span>)</div><div class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">            <span class="keyword">int</span> nextc = c-<span class="number">1</span>;</div><div class="line">            <span class="keyword">if</span> (compareAndSetState(c, nextc))</div><div class="line">                <span class="keyword">return</span> nextc == <span class="number">0</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="独占式"><a href="#独占式" class="headerlink" title="独占式"></a>独占式</h3><p>独占式的实现有：ReentrantLock</p>
+<p><img src="C:\Users\hspcadmin\AppData\Roaming\Typora\typora-user-images\1537262227804.png" alt="1537262227804"></p>
+<p>下面是ReentrantLock中自定义的独占式锁：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">abstract</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Sync</span> <span class="keyword">extends</span> <span class="title">AbstractQueuedSynchronizer</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = -<span class="number">5179523762034025860L</span>;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 这个方法是抽象的，实现在NonfairSync和FairSync中。调用这个方法时会代理给acquirer()方法</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="function"><span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">lock</span><span class="params">()</span></span>;</div><div class="line"></div><div class="line">    <span class="comment">//这里acquires=1是写死的</span></div><div class="line">    <span class="function"><span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">nonfairTryAcquire</span><span class="params">(<span class="keyword">int</span> acquires)</span> </span>&#123;</div><div class="line">        <span class="keyword">final</span> Thread current = Thread.currentThread();</div><div class="line">        <span class="keyword">int</span> c = getState();</div><div class="line">        <span class="keyword">if</span> (c == <span class="number">0</span>) &#123;</div><div class="line">            <span class="comment">//采用CAS机制更新state</span></div><div class="line">            <span class="keyword">if</span> (compareAndSetState(<span class="number">0</span>, acquires)) &#123;</div><div class="line">                <span class="comment">//把当前线程设置为独占线程</span></div><div class="line">                setExclusiveOwnerThread(current);</div><div class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="comment">//判断请求锁的线程是不是独占的线程，这里可以看出这个锁是可以重入的</span></div><div class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (current == getExclusiveOwnerThread()) &#123;</div><div class="line">            <span class="keyword">int</span> nextc = c + acquires;</div><div class="line">            <span class="keyword">if</span> (nextc &lt; <span class="number">0</span>) <span class="comment">// overflow</span></div><div class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> Error(<span class="string">"Maximum lock count exceeded"</span>);</div><div class="line">            setState(nextc);</div><div class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">tryRelease</span><span class="params">(<span class="keyword">int</span> releases)</span> </span>&#123;</div><div class="line">        <span class="keyword">int</span> c = getState() - releases;</div><div class="line">        <span class="keyword">if</span> (Thread.currentThread() != getExclusiveOwnerThread())</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalMonitorStateException();</div><div class="line">        <span class="keyword">boolean</span> free = <span class="keyword">false</span>;</div><div class="line">        <span class="keyword">if</span> (c == <span class="number">0</span>) &#123;</div><div class="line">            free = <span class="keyword">true</span>;</div><div class="line">            setExclusiveOwnerThread(<span class="keyword">null</span>);</div><div class="line">        &#125;</div><div class="line">        setState(c);</div><div class="line">        <span class="keyword">return</span> free;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">	...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>公平锁与非公平锁的实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line">  <span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">NonfairSync</span> <span class="keyword">extends</span> <span class="title">Sync</span> </span>&#123;</div><div class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = <span class="number">7316153563782823691L</span>;</div><div class="line"></div><div class="line">    	<span class="comment">//直接利用CAS进行上锁，如果失败了就交给acquire处理</span></div><div class="line">        <span class="function"><span class="keyword">final</span> <span class="keyword">void</span> <span class="title">lock</span><span class="params">()</span> </span>&#123;</div><div class="line">            <span class="keyword">if</span> (compareAndSetState(<span class="number">0</span>, <span class="number">1</span>))</div><div class="line">                setExclusiveOwnerThread(Thread.currentThread());</div><div class="line">            <span class="keyword">else</span></div><div class="line">                acquire(<span class="number">1</span>);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">tryAcquire</span><span class="params">(<span class="keyword">int</span> acquires)</span> </span>&#123;</div><div class="line">            <span class="keyword">return</span> nonfairTryAcquire(acquires);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">FairSync</span> <span class="keyword">extends</span> <span class="title">Sync</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = -<span class="number">3000897897090466540L</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">final</span> <span class="keyword">void</span> <span class="title">lock</span><span class="params">()</span> </span>&#123;</div><div class="line">        acquire(<span class="number">1</span>);</div><div class="line">    &#125;</div><div class="line">	<span class="comment">//公平锁与非公平锁的区别就是非公平锁在state=0，也就是没上锁时，会优先从队列头部取出一个等待的线程获取锁</span></div><div class="line">    <span class="comment">//只有队列为空才会进行CAS更新</span></div><div class="line">    <span class="comment">//非公平锁是可重入的，如果请求上锁的线程与锁定的线程是同一个，就把state累加</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">tryAcquire</span><span class="params">(<span class="keyword">int</span> acquires)</span> </span>&#123;</div><div class="line">        <span class="keyword">final</span> Thread current = Thread.currentThread();</div><div class="line">        <span class="keyword">int</span> c = getState();</div><div class="line">        <span class="keyword">if</span> (c == <span class="number">0</span>) &#123;</div><div class="line">            <span class="keyword">if</span> (!hasQueuedPredecessors() &amp;&amp;</div><div class="line">                compareAndSetState(<span class="number">0</span>, acquires)) &#123;</div><div class="line">                setExclusiveOwnerThread(current);</div><div class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (current == getExclusiveOwnerThread()) &#123;</div><div class="line">            <span class="keyword">int</span> nextc = c + acquires;</div><div class="line">            <span class="keyword">if</span> (nextc &lt; <span class="number">0</span>)</div><div class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> Error(<span class="string">"Maximum lock count exceeded"</span>);</div><div class="line">            setState(nextc);</div><div class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>从上面代码可以看出，上锁操作都代理给了<code>acquire</code>方法，下面分析一下这个方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//acquire方法在AQS类中，首先会进行tryAcquire方法，而tryAcquire是由AQS的子类实现的，也就是绕了一圈</span></div><div class="line"><span class="comment">//调用的其实还是 FairSync、NonfairSync类中的方法</span></div><div class="line"><span class="comment">//调用过程 :</span></div><div class="line"><span class="comment">//         [ReentrantLock]lock-&gt;[ReentrantLock.Sync]lock-&gt;[Sync.FairSync]acquire-&gt;</span></div><div class="line"><span class="comment">//         [AQS]tryAcquire-&gt;[Sync.FairSync]tryAcquire</span></div><div class="line"><span class="comment">//如果获取锁失败了，就把线程加到队列中</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">acquire</span><span class="params">(<span class="keyword">int</span> arg)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (!tryAcquire(arg) &amp;&amp;</div><div class="line">        acquireQueued(addWaiter(Node.EXCLUSIVE), arg))</div><div class="line">        selfInterrupt();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/Horizon.github.io/2018/09/07/生产者消费者模型-并发框架Disruptor/" rel="next" title="并发框架Disruptor学习">
+                <i class="fa fa-chevron-left"></i> 并发框架Disruptor学习
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Horizon</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/Horizon.github.io/archives/">
+              
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#AQS实现原理"><span class="nav-number">1.</span> <span class="nav-text">AQS实现原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内置队列"><span class="nav-number">2.</span> <span class="nav-text">内置队列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#同步方式"><span class="nav-number">3.</span> <span class="nav-text">同步方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#共享式"><span class="nav-number">3.1.</span> <span class="nav-text">共享式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#独占式"><span class="nav-number">3.2.</span> <span class="nav-text">独占式</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Horizon</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/Horizon.github.io/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/Horizon.github.io/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/Horizon.github.io/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/Horizon.github.io/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/Horizon.github.io/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

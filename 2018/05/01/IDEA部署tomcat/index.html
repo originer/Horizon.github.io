@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next muse use-motion" lang="zh-Hans">
+<html class="theme-next mist use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -88,7 +88,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://images2015.cnblogs.com/blog/720608/201610/720608-20161022144618263-1826871960.png">
 <meta property="og:image" content="https://images2015.cnblogs.com/blog/720608/201610/720608-20161022145110170-405477147.png">
-<meta property="og:updated_time" content="2018-04-30T17:36:28.322Z">
+<meta property="og:updated_time" content="2018-08-26T11:41:20.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="总结使用 IDEA 部署web工程到 Tomcat 遇到的一些问题">
 <meta name="twitter:description" content="war 和 war exploded的区别 war模式：将WEB工程以包的形式上传到服务器 ;war exploded模式：将WEB工程以当前文件夹的位置关系上传到服务器 ;  （1）war模式这种可以称之为是发布模式，看名字也知道，这是先打成war包，再发布； （2）war exploded模式是直接把文件夹、jsp页面 、classes等等移到Tomcat 部署文件夹里面，进行加载部署。因此这">
@@ -100,7 +100,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/Horizon.github.io/',
-    scheme: 'Muse',
+    scheme: 'Mist',
     version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
     fancybox: true,
@@ -338,6 +338,7 @@
 <p>（1）war模式这种可以称之为是发布模式，看名字也知道，这是先打成war包，再发布；</p>
 <p>（2）war exploded模式是直接把文件夹、jsp页面 、classes等等移到Tomcat 部署文件夹里面，进行加载部署。因此这种方式支持热部署，一般在开发的时候也是用这种方式。</p>
 <p>（3）在平时开发的时候，使用热部署的话，应该对Tomcat进行相应的设置，这样的话修改的jsp界面什么的东西才可以及时的显示出来。</p>
+<a id="more"></a>
 <p>注意： <strong>String contextPath = request.getSession().getServletContext().getRealPath(“/“);</strong></p>
 <p><u>war模式下获取的是Tomcat所在的位置;</u></p>
 <p><u>war exploded模式下获取的是项目target的位置;</u></p>
@@ -358,6 +359,7 @@
 <p>总结: CATALINA_HOME就是你的Tomcat安装的位置，CATALINA_BASE就是你的这个实例的位置，默认的话这两个值是一样的。</p>
 <p> IDEA启动时改变了CATALINA_BASE的设置,所以跑起来的实例的位置就不在Tomcat的路径下了,但是启动的其实还是原来的Tomcat;</p>
 </blockquote>
+<p><em>有些项目获取静态资源文件的路径是从tomcat的webapps下面找的，如果找不到可以自己手动配置项目的输出路径，把项目输出到tomcat的webapps下面。</em></p>
 
       
     </div>
@@ -382,8 +384,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/Horizon.github.io/2018/05/01/HashSet和HashMap/" rel="next" title="HashSet和HashMap">
-                <i class="fa fa-chevron-left"></i> HashSet和HashMap
+              <a href="/Horizon.github.io/2018/05/01/HashSet和HashMap/" rel="next" title="HashSet和HashMap源码研究">
+                <i class="fa fa-chevron-left"></i> HashSet和HashMap源码研究
               </a>
             
           </div>
@@ -471,7 +473,7 @@
               
                 <a href="/Horizon.github.io/archives/">
               
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">31</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -482,7 +484,7 @@
               
               <div class="site-state-item site-state-categories">
                 
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">分类</span>
                 
               </div>
@@ -492,10 +494,10 @@
               
               
               <div class="site-state-item site-state-tags">
-                <a href="/Horizon.github.io/tags/index.html">
-                  <span class="site-state-item-count">5</span>
+                
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">标签</span>
-                </a>
+                
               </div>
             
 

@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next muse use-motion" lang="zh-Hans">
+<html class="theme-next mist use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Horizon Notes">
 <meta property="og:description" content="Java中代理的实现一般分为三种：JDK静态代理、JDK动态代理以及CGLIB动态代理。在Spring的AOP实现中，主要应用了JDK动态代理以及CGLIB动态代理。但是本文着重介绍JDK动态代理机制，CGLIB动态代理后面会接着探究。代理一般实现的模式为JDK静态代理：创建一个接口，然后创建被代理的类实现该接口并且实现该接口中的抽象方法。之后再创建一个代理类，同时使其也实现这个接口。在代理类中持">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-04-30T17:36:28.359Z">
+<meta property="og:updated_time" content="2018-06-25T12:44:01.538Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JDK代理">
 <meta name="twitter:description" content="Java中代理的实现一般分为三种：JDK静态代理、JDK动态代理以及CGLIB动态代理。在Spring的AOP实现中，主要应用了JDK动态代理以及CGLIB动态代理。但是本文着重介绍JDK动态代理机制，CGLIB动态代理后面会接着探究。代理一般实现的模式为JDK静态代理：创建一个接口，然后创建被代理的类实现该接口并且实现该接口中的抽象方法。之后再创建一个代理类，同时使其也实现这个接口。在代理类中持">
@@ -98,7 +98,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/Horizon.github.io/',
-    scheme: 'Muse',
+    scheme: 'Mist',
     version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
     fancybox: true,
@@ -331,6 +331,7 @@
 
       
         <p>Java中代理的实现一般分为三种：JDK静态代理、JDK动态代理以及CGLIB动态代理。在Spring的AOP实现中，主要应用了JDK动态代理以及CGLIB动态代理。但是本文着重介绍JDK动态代理机制，CGLIB动态代理后面会接着探究。<br>代理一般实现的模式为JDK静态代理：创建一个接口，然后创建被代理的类实现该接口并且实现该接口中的抽象方法。之后再创建一个代理类，同时使其也实现这个接口。在代理类中持有一个被代理对象的引用，而后在代理类方法中调用该对象的方法。<br>其实就是代理类为被代理类预处理消息、过滤消息并在此之后将消息转发给被代理类，之后还能进行消息的后置处理。代理类和被代理类通常会存在关联关系(即上面提到的持有的被带离对象的引用)，代理类本身不实现服务，而是通过调用被代理类中的方法来提供服务。</p>
+<a id="more"></a>
 <h2 id="JDK一般代理"><a href="#JDK一般代理" class="headerlink" title="JDK一般代理"></a>JDK一般代理</h2><p>jdk一般代理比较简单，我们只需要 </p>
 <ol>
 <li>定义一个接口 A </li>
@@ -384,8 +385,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/Horizon.github.io/2018/05/01/ajax跨域问题/" rel="next" title="ajax跨域问题整理">
-                <i class="fa fa-chevron-left"></i> ajax跨域问题整理
+              <a href="/Horizon.github.io/2018/05/01/ajax跨域问题/" rel="next" title="Ajax跨域解决方案">
+                <i class="fa fa-chevron-left"></i> Ajax跨域解决方案
               </a>
             
           </div>
@@ -473,7 +474,7 @@
               
                 <a href="/Horizon.github.io/archives/">
               
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">31</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -484,7 +485,7 @@
               
               <div class="site-state-item site-state-categories">
                 
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">分类</span>
                 
               </div>
@@ -494,10 +495,10 @@
               
               
               <div class="site-state-item site-state-tags">
-                <a href="/Horizon.github.io/tags/index.html">
-                  <span class="site-state-item-count">5</span>
+                
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">标签</span>
-                </a>
+                
               </div>
             
 

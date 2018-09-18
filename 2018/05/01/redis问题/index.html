@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next muse use-motion" lang="zh-Hans">
+<html class="theme-next mist use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="Horizon Notes">
 <meta property="og:description" content="利用redis实现分布式集群的单点登陆功能;session作为一般的登陆凭证，在集群环境下会遇到一些问题： 1、如果服务器分布在多个Tomcat服务器上，那么用户每次登陆都未必访问同一个服务器。 2、如果Tomcat服务器挂掉，用户也会受到影响。 所以就想出以下解决方案：使用一个Redis服务器用来解决用户的单点登陆问题。这样，无论用户被负载均衡到哪个Tomcat服务器都可以通过redis服务器验">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-04-30T17:36:28.364Z">
+<meta property="og:updated_time" content="2018-08-03T02:25:29.442Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="记录一些Redis在分布式环境下的实践遇到的问题">
 <meta name="twitter:description" content="利用redis实现分布式集群的单点登陆功能;session作为一般的登陆凭证，在集群环境下会遇到一些问题： 1、如果服务器分布在多个Tomcat服务器上，那么用户每次登陆都未必访问同一个服务器。 2、如果Tomcat服务器挂掉，用户也会受到影响。 所以就想出以下解决方案：使用一个Redis服务器用来解决用户的单点登陆问题。这样，无论用户被负载均衡到哪个Tomcat服务器都可以通过redis服务器验">
@@ -97,7 +97,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/Horizon.github.io/',
-    scheme: 'Muse',
+    scheme: 'Mist',
     version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
     fancybox: true,
@@ -335,6 +335,7 @@
 <p>所以就想出以下解决方案：使用一个Redis服务器用来解决用户的单点登陆问题。这样，无论用户被负载均衡到哪个Tomcat服务器都可以通过redis服务器验证身份；</p>
 <p>但是又会产生一个新的问题，如果一个redis服务器不够用怎么办?</p>
 <p>很自然的能够想到添加redis服务器的解决方案，但是在增加redis服务器时遇到 了一些疑惑，以下作为记录：</p>
+<a id="more"></a>
 <h3 id="ShardedJedis"><a href="#ShardedJedis" class="headerlink" title="ShardedJedis"></a>ShardedJedis</h3><p>ShardedJedis是通过<strong>一致性哈希</strong>来实现分布式缓存的，通过一定的策略把不同的key分配到不同的redis server上，达到横向扩展的目的；</p>
 <p>ShardedJedis的使用方法除了配置时有点区别，其他和Jedis基本类似，有一点要注意的是 ShardedJedis<strong>不支持多命令操作，</strong>像mget、mset、brpop等可以在redis命令后一次性操作多个key的命令，具体包括哪些，大家可以看Jedis下的 <strong>MultiKeyCommands </strong>这个类，这里面就包含了所有的多命令操作。很贴心的是，Redis作者已经把这些命令从ShardedJedis过滤掉了;</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * <span class="doctag">@author</span> Zz</span></div><div class="line"><span class="comment"> **/</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RedisShardedPool</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> ShardedJedisPool pool;<span class="comment">//sharded jedis连接池</span></div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Integer maxTotal = Integer.parseInt(PropertiesUtil.getProperty(<span class="string">"redis.max.total"</span>, <span class="string">"20"</span>));    <span class="comment">//最大连接数</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Integer maxIdle = Integer.parseInt(PropertiesUtil.getProperty(<span class="string">"redis.max.idle"</span>, <span class="string">"10"</span>));</div><div class="line">    <span class="comment">//在jedispool中最大的idle状态的（空闲的）jedis实例个数</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Integer minIdle = Integer.parseInt(PropertiesUtil.getProperty(<span class="string">"redis.min.idle"</span>, <span class="string">"2"</span>));</div><div class="line">    <span class="comment">//在jedispool中最小的idle状态的（空闲的）jedis实例个数</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Boolean testOnBorrow = Boolean.parseBoolean(PropertiesUtil.getProperty(<span class="string">"redis.test.borrow"</span>, <span class="string">"true"</span>));</div><div class="line">    <span class="comment">//在borrow一个jedis实例的时候，是否要进行验证操作，如果赋值true，则得到的jedis实例是可用的</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Boolean testOnReturn = Boolean.parseBoolean(PropertiesUtil.getProperty(<span class="string">"redis.test.return"</span>, <span class="string">"true"</span>));</div><div class="line">    <span class="comment">//在return一个jedis实例的时候，是否要进行验证操作，如果赋值true，则返回成功</span></div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> String redis1Ip = PropertiesUtil.getProperty(<span class="string">"redis1.ip"</span>);</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Integer redis1Port = Integer.parseInt(PropertiesUtil.getProperty(<span class="string">"redis1.port"</span>));</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> String redis2Ip = PropertiesUtil.getProperty(<span class="string">"redis2.ip"</span>);</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Integer redis2Port = Integer.parseInt(PropertiesUtil.getProperty(<span class="string">"redis2.port"</span>));</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">initPool</span><span class="params">()</span> </span>&#123;</div><div class="line">        JedisPoolConfig config = <span class="keyword">new</span> JedisPoolConfig();</div><div class="line">        config.setMaxIdle(maxTotal);</div><div class="line">        config.setMaxIdle(maxIdle);</div><div class="line">        config.setMinIdle(minIdle);</div><div class="line"></div><div class="line">        config.setTestOnBorrow(testOnBorrow);</div><div class="line">        config.setTestOnReturn(testOnReturn);</div><div class="line"></div><div class="line">        config.setBlockWhenExhausted(<span class="keyword">true</span>);<span class="comment">//连接耗尽时是否阻塞，false会抛出异常，true阻塞直到超时</span></div><div class="line"></div><div class="line"><span class="comment">//        pool = new JedisPool(config, redisIp, redisPort, 1000 * 2);</span></div><div class="line">        JedisShardInfo info1 = <span class="keyword">new</span> JedisShardInfo(redis1Ip, redis1Port, <span class="number">1000</span> * <span class="number">2</span>);</div><div class="line">        JedisShardInfo info2 = <span class="keyword">new</span> JedisShardInfo(redis2Ip, redis2Port, <span class="number">1000</span> * <span class="number">2</span>);</div><div class="line"></div><div class="line">        List&lt;JedisShardInfo&gt; jedisShardInfos = <span class="keyword">new</span> ArrayList&lt;&gt;(<span class="number">2</span>);</div><div class="line"></div><div class="line">        jedisShardInfos.add(info1);</div><div class="line">        jedisShardInfos.add(info2);</div><div class="line"></div><div class="line">        pool = <span class="keyword">new</span> ShardedJedisPool(config, jedisShardInfos, Hashing.MURMUR_HASH, Sharded.DEFAULT_KEY_TAG_PATTERN);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">//静态加载</span></div><div class="line">    <span class="keyword">static</span> &#123;</div><div class="line">        initPool();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ShardedJedis <span class="title">getJedis</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> pool.getResource();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">returnResource</span><span class="params">(ShardedJedis jedis)</span> </span>&#123;</div><div class="line">        pool.returnResource(jedis);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">returnBrokeResource</span><span class="params">(ShardedJedis jedis)</span> </span>&#123;</div><div class="line">        pool.returnBrokenResource(jedis);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line"></div><div class="line">        ShardedJedis shardedJedis = pool.getResource();</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</div><div class="line">            shardedJedis.set(<span class="string">"key"</span> + i, <span class="string">"value"</span> + i);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</div><div class="line">            System.out.println(shardedJedis.get(<span class="string">"key"</span> + i));</div><div class="line">        &#125;</div><div class="line">        returnResource(shardedJedis);</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -459,7 +460,7 @@
               
                 <a href="/Horizon.github.io/archives/">
               
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">31</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -470,7 +471,7 @@
               
               <div class="site-state-item site-state-categories">
                 
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">分类</span>
                 
               </div>
@@ -480,10 +481,10 @@
               
               
               <div class="site-state-item site-state-tags">
-                <a href="/Horizon.github.io/tags/index.html">
-                  <span class="site-state-item-count">5</span>
+                
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">标签</span>
-                </a>
+                
               </div>
             
 

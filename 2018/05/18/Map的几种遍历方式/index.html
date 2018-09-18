@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next muse use-motion" lang="zh-Hans">
+<html class="theme-next mist use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="Horizon Notes">
 <meta property="og:description" content="在开发过程中经常会用到Map的遍历，所以对Map的几种遍历方式做一下整理； KeySet 遍历123456Iterator it = map.keySet().iterator(); 		while (it.hasNext()) &amp;#123;              key = it.next();              value = map.get(key);">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-21T10:09:49.515Z">
+<meta property="og:updated_time" content="2018-06-25T12:44:05.044Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Map的几种遍历方式">
 <meta name="twitter:description" content="在开发过程中经常会用到Map的遍历，所以对Map的几种遍历方式做一下整理； KeySet 遍历123456Iterator it = map.keySet().iterator(); 		while (it.hasNext()) &amp;#123;              key = it.next();              value = map.get(key);">
@@ -97,7 +97,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/Horizon.github.io/',
-    scheme: 'Muse',
+    scheme: 'Mist',
     version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
     fancybox: true,
@@ -309,6 +309,7 @@
       
         <p><em>在开发过程中经常会用到Map的遍历，所以对Map的几种遍历方式做一下整理；</em></p>
 <h4 id="KeySet-遍历"><a href="#KeySet-遍历" class="headerlink" title="KeySet 遍历"></a>KeySet 遍历</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Iterator it = map.keySet().iterator();</div><div class="line"> 		<span class="keyword">while</span> (it.hasNext()) &#123;</div><div class="line">              key = it.next();</div><div class="line">              value = map.get(key);</div><div class="line">              System.out.println(key + <span class="string">":"</span> + value);</div><div class="line">          &#125;</div></pre></td></tr></table></figure>
+<a id="more"></a>
 <h4 id="EntrySet-遍历"><a href="#EntrySet-遍历" class="headerlink" title="EntrySet 遍历"></a>EntrySet 遍历</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">Iterator it1 = map.entrySet().iterator();</div><div class="line">    <span class="keyword">while</span> (it1.hasNext()) &#123;</div><div class="line">        Map.Entry entry = (Map.Entry) it1.next();</div><div class="line">        key = entry.getKey();</div><div class="line">        value = entry.getValue();</div><div class="line">        System.out.println(key + <span class="string">"="</span> + value);</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
 <h4 id="Java8-的-lambda-遍历"><a href="#Java8-的-lambda-遍历" class="headerlink" title="Java8 的 lambda 遍历"></a>Java8 的 lambda 遍历</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">map.forEach((k, v) -&gt; &#123;</div><div class="line">            System.out.println(<span class="string">"key="</span>+k+<span class="string">":"</span>+<span class="string">"value="</span>+v);</div><div class="line">        &#125;);</div></pre></td></tr></table></figure>
 <p>使用 EntrySet 效率比 KeySet 高，EntrySet 相比KeySet 少了遍历table的过程。java8 下可以配合lambda直接使用 map.foreach() 实际上还是使用entrySet的方式遍历。</p>
@@ -425,7 +426,7 @@
               
                 <a href="/Horizon.github.io/archives/">
               
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">31</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -436,7 +437,7 @@
               
               <div class="site-state-item site-state-categories">
                 
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">分类</span>
                 
               </div>
@@ -446,10 +447,10 @@
               
               
               <div class="site-state-item site-state-tags">
-                <a href="/Horizon.github.io/tags/index.html">
-                  <span class="site-state-item-count">5</span>
+                
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">标签</span>
-                </a>
+                
               </div>
             
 

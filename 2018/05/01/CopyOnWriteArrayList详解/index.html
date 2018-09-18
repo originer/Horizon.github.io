@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next muse use-motion" lang="zh-Hans">
+<html class="theme-next mist use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Horizon Notes">
 <meta property="og:description" content="CopyOnWriteArrayList与JMM一 CopyOnWriteArrayList与JMM说明：本文代码均以JDK1.8的源码为准。 1 什么是CopyOnWriteArrayList关于CopyOnWriteArrayList是什么以及基本用法，在这里不多说，网上可以搜到大量这方面的文章。在这里只做简要说明：CopyOnWriteArrayList相当于线程安全的ArrayList，是">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-24T06:14:17.127Z">
+<meta property="og:updated_time" content="2018-06-25T12:43:34.082Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CopyOnWriteArrayList详解">
 <meta name="twitter:description" content="CopyOnWriteArrayList与JMM一 CopyOnWriteArrayList与JMM说明：本文代码均以JDK1.8的源码为准。 1 什么是CopyOnWriteArrayList关于CopyOnWriteArrayList是什么以及基本用法，在这里不多说，网上可以搜到大量这方面的文章。在这里只做简要说明：CopyOnWriteArrayList相当于线程安全的ArrayList，是">
@@ -98,7 +98,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/Horizon.github.io/',
-    scheme: 'Muse',
+    scheme: 'Mist',
     version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
     fancybox: true,
@@ -337,6 +337,7 @@
 <li>写操作会复制整个基础数组，因此写操作开销很大</li>
 <li>适用于如下情况：数组大小较小，并且读操作比写操作多很多的情形</li>
 </ul>
+<a id="more"></a>
 <h2 id="2-CopyOnWriteArrayList的设计原理与JMM"><a href="#2-CopyOnWriteArrayList的设计原理与JMM" class="headerlink" title="2 CopyOnWriteArrayList的设计原理与JMM"></a>2 CopyOnWriteArrayList的设计原理与JMM</h2><p>下面我们分析CopyOnWriteArrayList的设计原理，结合JMM的基础知识，分析CopyOnWriteArrayList是如何保证线程安全的。</p>
 <p>首先看用来实际保存数据的数组：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/** The array, accessed only via getArray/setArray. */</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">transient</span> <span class="keyword">volatile</span> Object[] array;</div></pre></td></tr></table></figure>
@@ -519,7 +520,7 @@
               
                 <a href="/Horizon.github.io/archives/">
               
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">31</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -530,7 +531,7 @@
               
               <div class="site-state-item site-state-categories">
                 
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">分类</span>
                 
               </div>
@@ -540,10 +541,10 @@
               
               
               <div class="site-state-item site-state-tags">
-                <a href="/Horizon.github.io/tags/index.html">
-                  <span class="site-state-item-count">5</span>
+                
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">标签</span>
-                </a>
+                
               </div>
             
 

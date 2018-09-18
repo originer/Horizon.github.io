@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next muse use-motion" lang="zh-Hans">
+<html class="theme-next mist use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="Horizon Notes">
 <meta property="og:description" content="一直以为Java方法中传递的是对象的引用，然后看了一篇文章，发现自己的理解有些偏差。 首先先写出结论： 如果参数是基本类型，传递的是基本类型的字面量值的拷贝。如果参数是引用类型，传递的是该变量所引用的对象在堆中地址值的拷贝。  基本类型和引用类型的区别在Java内存模型中把内存分为堆和栈，栈中保存的就是我们声明的变量，对象保存在堆中。栈中的引用变量指向堆中的实际对象。当一个对象没有被任何变量引用时">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-18T01:40:16.517Z">
+<meta property="og:updated_time" content="2018-06-25T12:44:19.061Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="关于Java值传递和引用传递的思考">
 <meta name="twitter:description" content="一直以为Java方法中传递的是对象的引用，然后看了一篇文章，发现自己的理解有些偏差。 首先先写出结论： 如果参数是基本类型，传递的是基本类型的字面量值的拷贝。如果参数是引用类型，传递的是该变量所引用的对象在堆中地址值的拷贝。  基本类型和引用类型的区别在Java内存模型中把内存分为堆和栈，栈中保存的就是我们声明的变量，对象保存在堆中。栈中的引用变量指向堆中的实际对象。当一个对象没有被任何变量引用时">
@@ -97,7 +97,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/Horizon.github.io/',
-    scheme: 'Muse',
+    scheme: 'Mist',
     version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
     fancybox: true,
@@ -333,6 +333,7 @@
 <p>首先先写出结论：</p>
 <p><strong>如果参数是基本类型，传递的是基本类型的字面量值的拷贝。</strong><br><strong>如果参数是引用类型，传递的是该变量所引用的对象在堆中地址值的拷贝。</strong> </p>
 <h4 id="基本类型和引用类型的区别"><a href="#基本类型和引用类型的区别" class="headerlink" title="基本类型和引用类型的区别"></a>基本类型和引用类型的区别</h4><p>在Java内存模型中把内存分为堆和栈，栈中保存的就是我们声明的变量，对象保存在堆中。栈中的引用变量指向堆中的实际对象。当一个对象没有被任何变量引用时会被垃圾回收。在jvm内存模型中，基本类型值存在变量中。引用类型的变量只是保存了那个值的引用地址，引用指向实际对象。</p>
+<a id="more"></a>
 <h4 id="基本类型和引用类型在方法传参时传递了什么？"><a href="#基本类型和引用类型在方法传参时传递了什么？" class="headerlink" title="基本类型和引用类型在方法传参时传递了什么？"></a>基本类型和引用类型在方法传参时传递了什么？</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">      <span class="keyword">int</span> num = <span class="number">100</span>;</div><div class="line">      String str = <span class="string">"hello"</span>;</div><div class="line">      StringBuilder sb = <span class="keyword">new</span> StringBuilder(<span class="string">"hello"</span>);</div><div class="line">      add(num); <span class="comment">//1</span></div><div class="line">      System.out.println(num);</div><div class="line">      change(str); <span class="comment">//2</span></div><div class="line">      System.out.println(str);</div><div class="line">      change2(sb); <span class="comment">//3</span></div><div class="line">      System.out.println(sb);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> a)</span> </span>&#123;</div><div class="line">      a = a + <span class="number">1</span>;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">change</span><span class="params">(String a)</span> </span>&#123;</div><div class="line">      a = a + <span class="string">"tt"</span>;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">change2</span><span class="params">(StringBuilder a)</span> </span>&#123;</div><div class="line">      a = a.append(<span class="string">"tt"</span>);</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
 <p>代码运行结果：</p>
 <p>100<br>hello<br>hellott</p>
@@ -450,7 +451,7 @@
               
                 <a href="/Horizon.github.io/archives/">
               
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">31</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -461,7 +462,7 @@
               
               <div class="site-state-item site-state-categories">
                 
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">分类</span>
                 
               </div>
@@ -471,10 +472,10 @@
               
               
               <div class="site-state-item site-state-tags">
-                <a href="/Horizon.github.io/tags/index.html">
-                  <span class="site-state-item-count">5</span>
+                
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">标签</span>
-                </a>
+                
               </div>
             
 

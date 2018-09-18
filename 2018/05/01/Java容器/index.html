@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next muse use-motion" lang="zh-Hans">
+<html class="theme-next mist use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -79,20 +79,20 @@
 
 
 
-<meta name="description" content="Java容器里只能放对象，对于基本类型（int, long, float, double等），需要将其包装成对象类型后（Integer, Long, Float, Double等）才能放到容器里。很多时候拆包装和解包装能够自动完成。这虽然会导致额外的性能和空间开销，但简化了设计和编程。  泛型Java容器能够容纳任何类型的对象，这一点表面上是通过泛型机制完成，Java泛型不是什么神奇的东西，只是">
+<meta name="description" content="Java容器里只能放对象，对于基本类型（int, long, float, double等），需要将其包装成对象类型后（Integer, Long, Float, Double等）才能放到容器里。很多时候拆包装和解包装能够自动完成。这虽然会导致额外的性能和空间开销，但简化了设计和编程。">
 <meta name="keywords" content="Java集合框架">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java容器">
 <meta property="og:url" content="https://originer.github.io/Horizon.github.io/2018/05/01/Java容器/index.html">
 <meta property="og:site_name" content="Horizon Notes">
-<meta property="og:description" content="Java容器里只能放对象，对于基本类型（int, long, float, double等），需要将其包装成对象类型后（Integer, Long, Float, Double等）才能放到容器里。很多时候拆包装和解包装能够自动完成。这虽然会导致额外的性能和空间开销，但简化了设计和编程。  泛型Java容器能够容纳任何类型的对象，这一点表面上是通过泛型机制完成，Java泛型不是什么神奇的东西，只是">
+<meta property="og:description" content="Java容器里只能放对象，对于基本类型（int, long, float, double等），需要将其包装成对象类型后（Integer, Long, Float, Double等）才能放到容器里。很多时候拆包装和解包装能够自动完成。这虽然会导致额外的性能和空间开销，但简化了设计和编程。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://oyop6c8p9.bkt.clouddn.com/Image%2817%29.png">
 <meta property="og:image" content="http://oyop6c8p9.bkt.clouddn.com/Image%2819%29.png">
-<meta property="og:updated_time" content="2018-04-30T17:36:28.328Z">
+<meta property="og:updated_time" content="2018-06-25T12:43:48.118Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java容器">
-<meta name="twitter:description" content="Java容器里只能放对象，对于基本类型（int, long, float, double等），需要将其包装成对象类型后（Integer, Long, Float, Double等）才能放到容器里。很多时候拆包装和解包装能够自动完成。这虽然会导致额外的性能和空间开销，但简化了设计和编程。  泛型Java容器能够容纳任何类型的对象，这一点表面上是通过泛型机制完成，Java泛型不是什么神奇的东西，只是">
+<meta name="twitter:description" content="Java容器里只能放对象，对于基本类型（int, long, float, double等），需要将其包装成对象类型后（Integer, Long, Float, Double等）才能放到容器里。很多时候拆包装和解包装能够自动完成。这虽然会导致额外的性能和空间开销，但简化了设计和编程。">
 <meta name="twitter:image" content="http://oyop6c8p9.bkt.clouddn.com/Image%2817%29.png">
 
 
@@ -101,7 +101,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/Horizon.github.io/',
-    scheme: 'Muse',
+    scheme: 'Mist',
     version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
     fancybox: true,
@@ -336,6 +336,7 @@
         <blockquote>
 <p>Java容器里只能放对象，对于基本类型（int, long, float, double等），需要将其包装成对象类型后（Integer, Long, Float, Double等）才能放到容器里。很多时候拆包装和解包装能够自动完成。这虽然会导致额外的性能和空间开销，但简化了设计和编程。</p>
 </blockquote>
+<a id="more"></a>
 <h1 id="泛型"><a href="#泛型" class="headerlink" title="泛型"></a>泛型</h1><p>Java容器能够容纳任何类型的对象，这一点表面上是通过泛型机制完成，Java泛型不是什么神奇的东西，只是编译器为我们提供的一个“语法糖”，泛型本身并不需要Java虚拟机的支持，只需要在编译阶段做一下简单的字符串替换即可。实质上Java的单继承机制才是保证这一特性的根本，因为所有的对象都是Object的子类，容器里只要能够存放Object对象就行了。事实上，所有容器的内部存放的都是Object对象，泛型机制只是简化了编程，由编译器自动帮我们完成了强制类型转换而已。JDK 1.4以及之前版本不支持泛型，类型转换需要程序员显式完成。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//JDK 1.4 or beforeArray</span></div><div class="line">ArrayList list = <span class="keyword">new</span> ArrayList();</div><div class="line">list.add(<span class="keyword">new</span> String(<span class="string">"Monday"</span>));</div><div class="line">list.add(<span class="keyword">new</span> String(<span class="string">"Tuesday"</span>));</div><div class="line">list.add(<span class="keyword">new</span> String(<span class="string">"Wensday"</span>));</div><div class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; list.size(); i++)&#123;</div><div class="line">    String weekday = (String)list.get(i);<span class="comment">//显式类型转换</span></div><div class="line">    System.out.println(weekday.toUpperCase());</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//JDK 1.5 or latter</span></div><div class="line">ArrayList&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;String&gt;();<span class="comment">//参数化类型</span></div><div class="line">list.add(<span class="keyword">new</span> String(<span class="string">"Monday"</span>));</div><div class="line">list.add(<span class="keyword">new</span> String(<span class="string">"Tuesday"</span>));</div><div class="line">list.add(<span class="keyword">new</span> String(<span class="string">"Wensday"</span>));</div><div class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; list.size(); i++)&#123;</div><div class="line">    String weekday = list.get(i);<span class="comment">//隐式类型转换，编译器自动完成</span></div><div class="line">    System.out.println(weekday.toUpperCase());</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -467,7 +468,7 @@
               
                 <a href="/Horizon.github.io/archives/">
               
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">31</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -478,7 +479,7 @@
               
               <div class="site-state-item site-state-categories">
                 
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">分类</span>
                 
               </div>
@@ -488,10 +489,10 @@
               
               
               <div class="site-state-item site-state-tags">
-                <a href="/Horizon.github.io/tags/index.html">
-                  <span class="site-state-item-count">5</span>
+                
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">标签</span>
-                </a>
+                
               </div>
             
 

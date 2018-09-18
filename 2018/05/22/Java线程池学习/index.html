@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next muse use-motion" lang="zh-Hans">
+<html class="theme-next mist use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="为什么不用new Thread() 每次 new Thread() 都是新建对象，性能差；  线程缺乏统一管理，可能无限制的新建线程，相互竞争，有可能占用过多的系统资源导致死机或OOM  功能少，缺少多执行、定期执行、线程中断等功能；   线程池的优势 重用存在的线程，减少对象的创建，消亡的开销；  可以控制最大并发线程数，提高系统资源利用率，同时可以避免过多资源竞争，避免阻塞；  提供定期执行、">
+<meta name="description" content="为什么不用new Thread() 每次 new Thread() 都是新建对象，性能差； 线程缺乏统一管理，可能无限制的新建线程，相互竞争，有可能占用过多的系统资源导致死机或OOM 功能少，缺少多执行、定期执行、线程中断等功能；">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java线程池学习总结">
 <meta property="og:url" content="https://originer.github.io/Horizon.github.io/2018/05/22/Java线程池学习/index.html">
 <meta property="og:site_name" content="Horizon Notes">
-<meta property="og:description" content="为什么不用new Thread() 每次 new Thread() 都是新建对象，性能差；  线程缺乏统一管理，可能无限制的新建线程，相互竞争，有可能占用过多的系统资源导致死机或OOM  功能少，缺少多执行、定期执行、线程中断等功能；   线程池的优势 重用存在的线程，减少对象的创建，消亡的开销；  可以控制最大并发线程数，提高系统资源利用率，同时可以避免过多资源竞争，避免阻塞；  提供定期执行、">
+<meta property="og:description" content="为什么不用new Thread() 每次 new Thread() 都是新建对象，性能差； 线程缺乏统一管理，可能无限制的新建线程，相互竞争，有可能占用过多的系统资源导致死机或OOM 功能少，缺少多执行、定期执行、线程中断等功能；">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-24T11:24:51.069Z">
+<meta property="og:updated_time" content="2018-06-25T12:43:51.104Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java线程池学习总结">
-<meta name="twitter:description" content="为什么不用new Thread() 每次 new Thread() 都是新建对象，性能差；  线程缺乏统一管理，可能无限制的新建线程，相互竞争，有可能占用过多的系统资源导致死机或OOM  功能少，缺少多执行、定期执行、线程中断等功能；   线程池的优势 重用存在的线程，减少对象的创建，消亡的开销；  可以控制最大并发线程数，提高系统资源利用率，同时可以避免过多资源竞争，避免阻塞；  提供定期执行、">
+<meta name="twitter:description" content="为什么不用new Thread() 每次 new Thread() 都是新建对象，性能差； 线程缺乏统一管理，可能无限制的新建线程，相互竞争，有可能占用过多的系统资源导致死机或OOM 功能少，缺少多执行、定期执行、线程中断等功能；">
 
 
 
@@ -97,7 +97,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/Horizon.github.io/',
-    scheme: 'Muse',
+    scheme: 'Mist',
     version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
     fancybox: true,
@@ -330,13 +330,11 @@
 
       
         <h3 id="为什么不用new-Thread"><a href="#为什么不用new-Thread" class="headerlink" title="为什么不用new Thread()"></a>为什么不用new Thread()</h3><ul>
-<li><p>每次 new Thread() 都是新建对象，性能差；</p>
-</li>
-<li><p>线程缺乏统一管理，可能无限制的新建线程，相互竞争，有可能占用过多的系统资源导致死机或OOM</p>
-</li>
-<li><p>功能少，缺少多执行、定期执行、线程中断等功能；</p>
-</li>
+<li>每次 new Thread() 都是新建对象，性能差；</li>
+<li>线程缺乏统一管理，可能无限制的新建线程，相互竞争，有可能占用过多的系统资源导致死机或OOM</li>
+<li>功能少，缺少多执行、定期执行、线程中断等功能；</li>
 </ul>
+<a id="more"></a>
 <h3 id="线程池的优势"><a href="#线程池的优势" class="headerlink" title="线程池的优势"></a>线程池的优势</h3><ul>
 <li><p>重用存在的线程，减少对象的创建，消亡的开销；</p>
 </li>
@@ -478,7 +476,7 @@
               
                 <a href="/Horizon.github.io/archives/">
               
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">31</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -489,7 +487,7 @@
               
               <div class="site-state-item site-state-categories">
                 
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">分类</span>
                 
               </div>
@@ -499,10 +497,10 @@
               
               
               <div class="site-state-item site-state-tags">
-                <a href="/Horizon.github.io/tags/index.html">
-                  <span class="site-state-item-count">5</span>
+                
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">标签</span>
-                </a>
+                
               </div>
             
 

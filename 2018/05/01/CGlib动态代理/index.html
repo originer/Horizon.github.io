@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next muse use-motion" lang="zh-Hans">
+<html class="theme-next mist use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="Horizon Notes">
 <meta property="og:description" content="cglib is a powerful, high performance and quality Code Generation Library, It is used to extend JAVA classes and implements interfaces at runtime.在Spring AOP中，通常会用它来生成AopProxy对象。不仅如此，在Hibernate中PO(Pe">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-04-30T17:36:28.300Z">
+<meta property="og:updated_time" content="2018-06-27T05:38:58.331Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CGLIB动态代理">
 <meta name="twitter:description" content="cglib is a powerful, high performance and quality Code Generation Library, It is used to extend JAVA classes and implements interfaces at runtime.在Spring AOP中，通常会用它来生成AopProxy对象。不仅如此，在Hibernate中PO(Pe">
@@ -97,7 +97,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/Horizon.github.io/',
-    scheme: 'Muse',
+    scheme: 'Mist',
     version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
     fancybox: true,
@@ -332,6 +332,7 @@
         <blockquote>
 <p>cglib is a powerful, high performance and quality Code Generation Library, It is used to extend JAVA classes and implements interfaces at runtime.<br>在Spring AOP中，通常会用它来生成AopProxy对象。不仅如此，在Hibernate中PO(Persistant Object 持久化对象)字节码的生成工作也要靠它来完成。</p>
 </blockquote>
+<a id="more"></a>
 <h2 id="CGLIB动态代理示例"><a href="#CGLIB动态代理示例" class="headerlink" title="CGLIB动态代理示例"></a>CGLIB动态代理示例</h2><p>被代理类</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloServiceImpl</span> <span class="keyword">implements</span> <span class="title">HelloService</span></span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">hello</span><span class="params">(String name)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="string">"Hello! "</span> + name;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Slf</span>4j</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CGlibTest</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 实现MethodInterceptor接口生成方法拦截器</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloMethodInterceptor</span> <span class="keyword">implements</span> <span class="title">MethodInterceptor</span> </span>&#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> Object <span class="title">intercept</span><span class="params">(Object o, Method method, Object[] objects, MethodProxy methodProxy)</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line">            log.info(<span class="string">"Before: &#123;&#125;"</span>,method.getName());</div><div class="line">            Object object = methodProxy.invokeSuper(o,objects);</div><div class="line">            log.info(<span class="string">"After: &#123;&#125;"</span>,method.getName());</div><div class="line">            <span class="keyword">return</span> object;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Test</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testProxy</span><span class="params">()</span></span>&#123;</div><div class="line">        Enhancer enhancer = <span class="keyword">new</span> Enhancer();</div><div class="line">        enhancer.setSuperclass(HelloServiceImpl.class); <span class="comment">//继承被代理类</span></div><div class="line">        enhancer.setCallback(<span class="keyword">new</span> HelloMethodInterceptor()); <span class="comment">//设置回调</span></div><div class="line">        HelloServiceImpl helloService = (HelloServiceImpl) enhancer.create(); <span class="comment">//生成代理类对象</span></div><div class="line"></div><div class="line">        String s = helloService.hello(<span class="string">"123"</span>);</div><div class="line">        System.out.println(s);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -455,7 +456,7 @@
               
                 <a href="/Horizon.github.io/archives/">
               
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">31</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -466,7 +467,7 @@
               
               <div class="site-state-item site-state-categories">
                 
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">分类</span>
                 
               </div>
@@ -476,10 +477,10 @@
               
               
               <div class="site-state-item site-state-tags">
-                <a href="/Horizon.github.io/tags/index.html">
-                  <span class="site-state-item-count">5</span>
+                
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">标签</span>
-                </a>
+                
               </div>
             
 
