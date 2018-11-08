@@ -79,20 +79,20 @@
 
 
 
-<meta name="description" content="Disruptor 是一个基于生产者消费者模型的高性能并发框架，可以用来代替Java内置的阻塞队列实现的生产者消费者模型。">
+<meta name="description" content="Disruptor 是一个基于生产者消费者模型的高性能并发框架，可以用来代替Java内置的阻塞队列实现的生产者消费者模型。  Disruptor高效的原因Disruptor通过以下设计来解决队列速度慢的问题：  环形数组结构  为了避免垃圾回收，采用数组而非链表。同时，数组对处理器的缓存机制更加友好。  元素位置定位  数组长度2^n，通过位运算，加快定位的速度。下标采取递增的形式。不用担心in">
 <meta property="og:type" content="article">
 <meta property="og:title" content="并发框架Disruptor学习">
 <meta property="og:url" content="https://originer.github.io/Horizon.github.io/2018/09/07/生产者消费者模型-并发框架Disruptor/index.html">
 <meta property="og:site_name" content="Horizon Notes">
-<meta property="og:description" content="Disruptor 是一个基于生产者消费者模型的高性能并发框架，可以用来代替Java内置的阻塞队列实现的生产者消费者模型。">
+<meta property="og:description" content="Disruptor 是一个基于生产者消费者模型的高性能并发框架，可以用来代替Java内置的阻塞队列实现的生产者消费者模型。  Disruptor高效的原因Disruptor通过以下设计来解决队列速度慢的问题：  环形数组结构  为了避免垃圾回收，采用数组而非链表。同时，数组对处理器的缓存机制更加友好。  元素位置定位  数组长度2^n，通过位运算，加快定位的速度。下标采取递增的形式。不用担心in">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://oyop6c8p9.bkt.clouddn.com/1540471442295.png">
 <meta property="og:image" content="http://oyop6c8p9.bkt.clouddn.com/1540365643162.png">
 <meta property="og:image" content="http://oyop6c8p9.bkt.clouddn.com/1540368132986.png">
-<meta property="og:updated_time" content="2018-11-05T08:33:57.473Z">
+<meta property="og:updated_time" content="2018-11-08T05:17:21.623Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="并发框架Disruptor学习">
-<meta name="twitter:description" content="Disruptor 是一个基于生产者消费者模型的高性能并发框架，可以用来代替Java内置的阻塞队列实现的生产者消费者模型。">
+<meta name="twitter:description" content="Disruptor 是一个基于生产者消费者模型的高性能并发框架，可以用来代替Java内置的阻塞队列实现的生产者消费者模型。  Disruptor高效的原因Disruptor通过以下设计来解决队列速度慢的问题：  环形数组结构  为了避免垃圾回收，采用数组而非链表。同时，数组对处理器的缓存机制更加友好。  元素位置定位  数组长度2^n，通过位运算，加快定位的速度。下标采取递增的形式。不用担心in">
 <meta name="twitter:image" content="http://oyop6c8p9.bkt.clouddn.com/1540471442295.png">
 
 
@@ -336,7 +336,6 @@
         <blockquote>
 <p>Disruptor 是一个基于生产者消费者模型的高性能并发框架，可以用来代替Java内置的阻塞队列实现的生产者消费者模型。</p>
 </blockquote>
-<a id="more"></a>
 <h2 id="Disruptor高效的原因"><a href="#Disruptor高效的原因" class="headerlink" title="Disruptor高效的原因"></a>Disruptor高效的原因</h2><p>Disruptor通过以下设计来解决队列速度慢的问题：</p>
 <ul>
 <li>环形数组结构</li>
@@ -351,6 +350,7 @@
 </ul>
 <p>每个生产者或者消费者线程，会先申请可以操作的元素在数组中的位置，申请到之后，直接在该位置写入或者读取数据。</p>
 <p>下面忽略数组的环形结构，介绍一下如何实现无锁设计。整个过程通过原子变量CAS，保证操作的线程安全。</p>
+<a id="more"></a>
 <h2 id="核心组件介绍"><a href="#核心组件介绍" class="headerlink" title="核心组件介绍"></a>核心组件介绍</h2><h3 id="环形数组：RingBuffer"><a href="#环形数组：RingBuffer" class="headerlink" title="环形数组：RingBuffer"></a>环形数组：RingBuffer</h3><p><img src="http://oyop6c8p9.bkt.clouddn.com/1540471442295.png" alt="1540471442295"></p>
 <p><img src="http://oyop6c8p9.bkt.clouddn.com/1540365643162.png" alt="1540365643162"></p>
 <h4 id="RingBufferFields用来创建环形数组，并且对初始数组进行填充"><a href="#RingBufferFields用来创建环形数组，并且对初始数组进行填充" class="headerlink" title="RingBufferFields用来创建环形数组，并且对初始数组进行填充"></a>RingBufferFields用来创建环形数组，并且对初始数组进行填充</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"> <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">long</span> indexMask;    <span class="comment">//任务进度标记</span></div><div class="line"> <span class="keyword">private</span> <span class="keyword">final</span> Object[] entries;  <span class="comment">//空数组</span></div><div class="line"> <span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">int</span> bufferSize;  <span class="comment">//数组大小</span></div><div class="line"> <span class="keyword">protected</span> <span class="keyword">final</span> Sequencer sequencer; <span class="comment">//序号管理器</span></div><div class="line"></div><div class="line">RingBufferFields(</div><div class="line">        EventFactory&lt;E&gt; eventFactory,</div><div class="line">        Sequencer sequencer) &#123;</div><div class="line">    <span class="keyword">this</span>.sequencer = sequencer;</div><div class="line">    <span class="keyword">this</span>.bufferSize = sequencer.getBufferSize();</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (bufferSize &lt; <span class="number">1</span>) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"bufferSize must not be less than 1"</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (Integer.bitCount(bufferSize) != <span class="number">1</span>) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"bufferSize must be a power of 2"</span>);</div><div class="line">    &#125;</div><div class="line">	<span class="comment">//推测是对数组当前处理任务的标记，因为数组一开始就会填充满所以执行任务的进度是 bufferSize - 1</span></div><div class="line">    <span class="comment">//比如初始化一个 size为10 的数组，经过填充后0-9都是已经占用了，所以任务执行标记标注在 9</span></div><div class="line">    <span class="keyword">this</span>.indexMask = bufferSize - <span class="number">1</span>;</div><div class="line">    <span class="comment">//具体涉及到一些数组偏移量和增量地址的问题，暂不研究，可以理解为开辟一个bufferSize的环形数组</span></div><div class="line">    <span class="comment">//通过一系列操作创建了一个环形数组</span></div><div class="line">    <span class="keyword">this</span>.entries = <span class="keyword">new</span> Object[sequencer.getBufferSize() + <span class="number">2</span> * BUFFER_PAD];</div><div class="line">    <span class="comment">//填充数组，内存预加载机制</span></div><div class="line">    <span class="comment">//注意这里传入的是一个eventFactroy，通常就是重写newInstance方法，用来初始化。</span></div><div class="line">    fill(eventFactory);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">fill</span><span class="params">(EventFactory&lt;E&gt; eventFactory)</span> </span>&#123;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; bufferSize; i++) &#123;</div><div class="line">            <span class="comment">//newInstance返回的是我们定义的具体事件</span></div><div class="line">            entries[BUFFER_PAD + i] = eventFactory.newInstance();</div><div class="line">        &#125;</div><div class="line">｝</div></pre></td></tr></table></figure>
