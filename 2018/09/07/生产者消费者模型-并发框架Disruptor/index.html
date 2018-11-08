@@ -79,20 +79,20 @@
 
 
 
-<meta name="description" content="Disruptor 是一个基于生产者消费者模型的高性能并发框架，可以用来代替Java内置的阻塞队列实现的生产者消费者模型。  Disruptor高效的原因Disruptor通过以下设计来解决队列速度慢的问题：  环形数组结构  为了避免垃圾回收，采用数组而非链表。同时，数组对处理器的缓存机制更加友好。  元素位置定位  数组长度2^n，通过位运算，加快定位的速度。下标采取递增的形式。不用担心in">
+<meta name="description" content="Disruptor 是一个基于生产者消费者模型的高性能并发框架，可以用来代替Java内置的阻塞队列实现的生产者消费者模型。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="并发框架Disruptor学习">
 <meta property="og:url" content="https://originer.github.io/Horizon.github.io/2018/09/07/生产者消费者模型-并发框架Disruptor/index.html">
 <meta property="og:site_name" content="Horizon Notes">
-<meta property="og:description" content="Disruptor 是一个基于生产者消费者模型的高性能并发框架，可以用来代替Java内置的阻塞队列实现的生产者消费者模型。  Disruptor高效的原因Disruptor通过以下设计来解决队列速度慢的问题：  环形数组结构  为了避免垃圾回收，采用数组而非链表。同时，数组对处理器的缓存机制更加友好。  元素位置定位  数组长度2^n，通过位运算，加快定位的速度。下标采取递增的形式。不用担心in">
+<meta property="og:description" content="Disruptor 是一个基于生产者消费者模型的高性能并发框架，可以用来代替Java内置的阻塞队列实现的生产者消费者模型。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://oyop6c8p9.bkt.clouddn.com/1540471442295.png">
 <meta property="og:image" content="http://oyop6c8p9.bkt.clouddn.com/1540365643162.png">
 <meta property="og:image" content="http://oyop6c8p9.bkt.clouddn.com/1540368132986.png">
-<meta property="og:updated_time" content="2018-11-04T14:36:57.918Z">
+<meta property="og:updated_time" content="2018-11-05T08:33:57.473Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="并发框架Disruptor学习">
-<meta name="twitter:description" content="Disruptor 是一个基于生产者消费者模型的高性能并发框架，可以用来代替Java内置的阻塞队列实现的生产者消费者模型。  Disruptor高效的原因Disruptor通过以下设计来解决队列速度慢的问题：  环形数组结构  为了避免垃圾回收，采用数组而非链表。同时，数组对处理器的缓存机制更加友好。  元素位置定位  数组长度2^n，通过位运算，加快定位的速度。下标采取递增的形式。不用担心in">
+<meta name="twitter:description" content="Disruptor 是一个基于生产者消费者模型的高性能并发框架，可以用来代替Java内置的阻塞队列实现的生产者消费者模型。">
 <meta name="twitter:image" content="http://oyop6c8p9.bkt.clouddn.com/1540471442295.png">
 
 
@@ -336,6 +336,7 @@
         <blockquote>
 <p>Disruptor 是一个基于生产者消费者模型的高性能并发框架，可以用来代替Java内置的阻塞队列实现的生产者消费者模型。</p>
 </blockquote>
+<a id="more"></a>
 <h2 id="Disruptor高效的原因"><a href="#Disruptor高效的原因" class="headerlink" title="Disruptor高效的原因"></a>Disruptor高效的原因</h2><p>Disruptor通过以下设计来解决队列速度慢的问题：</p>
 <ul>
 <li>环形数组结构</li>
@@ -487,7 +488,7 @@
               
                 <a href="/Horizon.github.io/archives/">
               
-                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-count">32</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

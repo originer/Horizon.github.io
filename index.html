@@ -237,6 +237,176 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/11/07/Netty核心组件：解码器/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Horizon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/Horizon.github.io/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Horizon Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/Horizon.github.io/2018/11/07/Netty核心组件：解码器/" itemprop="url">Netty核心组件：解码器/编码器</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-07T10:02:18+08:00">
+                2018-11-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Horizon.github.io/categories/网络编程/" itemprop="url" rel="index">
+                    <span itemprop="name">网络编程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>我们知道，数据在网络上都是通过字节流传输的，Netty作为一款网络通讯框架，编解码是很重要的一个模块。</p>
+<h2 id="解码器-ByteToMessageDecoder"><a href="#解码器-ByteToMessageDecoder" class="headerlink" title="解码器 ByteToMessageDecoder"></a>解码器 ByteToMessageDecoder</h2><p><img src="C:\Users\hspcadmin\AppData\Roaming\Typora\typora-user-images\1541580608911.png" alt="1541580608911"></p>
+<p><code>ByteToMessageDecoder</code>中有个<code>ByteBuf</code>用来读取字节，还有一个<code>Cumulator</code>累加器用来计算当前读取的字节流。</p>
+<p>本质上<code>ByteToMessageDecoder</code>还是一个入站Handler，所以最重要的方法就是channelRead():</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelRead</span><span class="params">(ChannelHandlerContext ctx, Object msg)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    <span class="comment">//如果消息是字节流，就进行处理，否则就进行向下传播</span></div><div class="line">    <span class="keyword">if</span> (msg <span class="keyword">instanceof</span> ByteBuf) &#123;</div><div class="line">        CodecOutputList out = CodecOutputList.newInstance();</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            ByteBuf data = (ByteBuf) msg;</div><div class="line">            <span class="comment">//判断first是不是null，也就是判断是不是第一次读取数据</span></div><div class="line">            <span class="comment">//如果是就直接把data复制给cumulation  （cumulation就是一个ByteBuf）</span></div><div class="line">            <span class="comment">//否则就把data累加到cumulation上</span></div><div class="line">            first = cumulation == <span class="keyword">null</span>;</div><div class="line">            <span class="keyword">if</span> (first) &#123;</div><div class="line">                cumulation = data;</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                cumulation = cumulator.cumulate(ctx.alloc(), cumulation, data);</div><div class="line">            &#125;</div><div class="line">            <span class="comment">//调用decode，对字节流进行解码</span></div><div class="line">            callDecode(ctx, cumulation, out);</div><div class="line">        &#125; <span class="keyword">catch</span> (DecoderException e) &#123;</div><div class="line">            <span class="keyword">throw</span> e;</div><div class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> DecoderException(e);</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            <span class="comment">// 如果累计区没有可读字节了</span></div><div class="line">            <span class="keyword">if</span> (cumulation != <span class="keyword">null</span> &amp;&amp; !cumulation.isReadable()) &#123;</div><div class="line">                <span class="comment">//把读取次数清空</span></div><div class="line">                numReads = <span class="number">0</span>;</div><div class="line">                <span class="comment">//释放累计区</span></div><div class="line">                cumulation.release();</div><div class="line">                <span class="comment">//赋值为null，方便GC</span></div><div class="line">                cumulation = <span class="keyword">null</span>;</div><div class="line">                <span class="comment">// 如果超过了 16 次，就压缩累计区，主要是将已经读过的数据丢弃，将 readIndex 归零。</span></div><div class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (++ numReads &gt;= discardAfterReads) &#123;</div><div class="line">                numReads = <span class="number">0</span>;</div><div class="line">                discardSomeReadBytes();</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="keyword">int</span> size = out.size();</div><div class="line">            decodeWasNull = !out.insertSinceRecycled();</div><div class="line">            <span class="comment">//把out中的数据循环发送出去</span></div><div class="line">            fireChannelRead(ctx, out, size);</div><div class="line">            <span class="comment">//清空out</span></div><div class="line">            out.recycle();</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        ctx.fireChannelRead(msg);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>channelRead的任务是把字节读到累计器里面，然后调用callDecodec来进行解码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">callDecode</span><span class="params">(ChannelHandlerContext ctx, ByteBuf in, List&lt;Object&gt; out)</span> </span>&#123;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        <span class="comment">//循环判断有无可读数据，一直读到ByteBuf中没有数据为止</span></div><div class="line">        <span class="keyword">while</span> (in.isReadable()) &#123;</div><div class="line">            <span class="keyword">int</span> outSize = out.size();</div><div class="line">            <span class="comment">//如果out中已经有数据了就发送给下一个handler</span></div><div class="line">            <span class="keyword">if</span> (outSize &gt; <span class="number">0</span>) &#123;</div><div class="line">                <span class="comment">//注意，是可以多条一起发送的，然后把out列表清空</span></div><div class="line">                fireChannelRead(ctx, out, outSize);</div><div class="line">                out.clear();</div><div class="line"></div><div class="line">                <span class="comment">// Check if this handler was removed before continuing with decoding.</span></div><div class="line">                <span class="comment">// If it was removed, it is not safe to continue to operate on the buffer.</span></div><div class="line">                <span class="comment">//</span></div><div class="line">                <span class="comment">// See:</span></div><div class="line">                <span class="comment">// - https://github.com/netty/netty/issues/4635</span></div><div class="line">                <span class="keyword">if</span> (ctx.isRemoved()) &#123;</div><div class="line">                    <span class="keyword">break</span>;</div><div class="line">                &#125;</div><div class="line">                outSize = <span class="number">0</span>;</div><div class="line">            &#125;</div><div class="line">            <span class="comment">// 得到可读字节数</span></div><div class="line">            <span class="keyword">int</span> oldInputLength = in.readableBytes();</div><div class="line">            <span class="comment">// 调用 decode 方法，将成功解码后的数据放入道 out 数组中，可能会删除当前节点，删除之前会将数据发送到最后的 handler</span></div><div class="line">            decodeRemovalReentryProtection(ctx, in, out);</div><div class="line"></div><div class="line">            <span class="comment">// Check if this handler was removed before continuing the loop.</span></div><div class="line">            <span class="comment">// If it was removed, it is not safe to continue to operate on the buffer.</span></div><div class="line">            <span class="comment">//</span></div><div class="line">            <span class="comment">// See https://github.com/netty/netty/issues/1664</span></div><div class="line">            <span class="keyword">if</span> (ctx.isRemoved()) &#123;</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            &#125;</div><div class="line">            <span class="comment">//后面的都是判断读完退出的条件</span></div><div class="line">            <span class="keyword">if</span> (outSize == out.size()) &#123;</div><div class="line">                <span class="keyword">if</span> (oldInputLength == in.readableBytes()) &#123;</div><div class="line">                    <span class="keyword">break</span>;</div><div class="line">                &#125; <span class="keyword">else</span> &#123;</div><div class="line">                    <span class="keyword">continue</span>;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="keyword">if</span> (oldInputLength == in.readableBytes()) &#123;</div><div class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> DecoderException(</div><div class="line">                        StringUtil.simpleClassName(getClass()) +</div><div class="line">                                <span class="string">".decode() did not read anything but decoded a message."</span>);</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="keyword">if</span> (isSingleDecode()) &#123;</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">catch</span> (DecoderException e) &#123;</div><div class="line">        <span class="keyword">throw</span> e;</div><div class="line">    &#125; <span class="keyword">catch</span> (Exception cause) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> DecoderException(cause);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>Netty有很多内置解码器，最常用的有以下几种：</p>
+<h3 id="基于固定长度的解码器"><a href="#基于固定长度的解码器" class="headerlink" title="基于固定长度的解码器"></a>基于固定长度的解码器</h3><h3 id="基于分隔符的解码器"><a href="#基于分隔符的解码器" class="headerlink" title="基于分隔符的解码器"></a>基于分隔符的解码器</h3><h3 id="基于长度域的解码器"><a href="#基于长度域的解码器" class="headerlink" title="基于长度域的解码器"></a>基于长度域的解码器</h3><p>LengthFieldBasedFrameDecoder - 6个参数解释<br>LengthFieldBasedFrameDecoder是自定义长度解码器，所以构造函数中6个参数，基本都围绕那个定义长度域，进行的描述。</p>
+<ol>
+<li><p>maxFrameLength - 发送的数据帧最大长度</p>
+</li>
+<li><p>lengthFieldOffset - 定义长度域位于发送的字节数组中的下标。换句话说：发送的字节数组中下标为${lengthFieldOffset}的地方是长度域的开始地方</p>
+</li>
+<li><p>lengthFieldLength - 用于描述定义的长度域的长度。换句话说：发送字节数组bytes时, 字节数组bytes[lengthFieldOffset, lengthFieldOffset+lengthFieldLength]域对应于的定义长度域部分</p>
+</li>
+<li><p>lengthAdjustment - 满足公式: 发送的字节数组bytes.length - lengthFieldLength = bytes[lengthFieldOffset, lengthFieldOffset+lengthFieldLength] + lengthFieldOffset + lengthAdjustment </p>
+</li>
+<li><p>initialBytesToStrip - 接收到的发送数据包，去除前initialBytesToStrip位</p>
+</li>
+<li><p>failFast - true: 读取到长度域超过maxFrameLength，就抛出一个 TooLongFrameException。false: 只有真正读取完长度域的值表示的字节之后，才会抛出 TooLongFrameException，默认情况下设置为true，建议不要修改，否则可能会造成内存溢出</p>
+</li>
+<li><p>ByteOrder - 数据存储采用大端模式或小端模式</p>
+</li>
+</ol>
+<hr>
+<p>公式: 发送数据包长度 = 长度域的值 + lengthFieldOffset + lengthFieldLength + lengthAdjustment</p>
+<p>​                    100=96+0+4+0</p>
+<p><a href="https://www.jianshu.com/p/4c35541eec10" target="_blank" rel="external">https://www.jianshu.com/p/4c35541eec10</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/09/18/AQS基础/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -477,50 +647,16 @@
 
       
         
-          
-            <blockquote>
+          <blockquote>
 <p>Disruptor 是一个基于生产者消费者模型的高性能并发框架，可以用来代替Java内置的阻塞队列实现的生产者消费者模型。</p>
 </blockquote>
-<h2 id="Disruptor高效的原因"><a href="#Disruptor高效的原因" class="headerlink" title="Disruptor高效的原因"></a>Disruptor高效的原因</h2><p>Disruptor通过以下设计来解决队列速度慢的问题：</p>
-<ul>
-<li>环形数组结构</li>
-</ul>
-<p>为了避免垃圾回收，采用数组而非链表。同时，数组对处理器的缓存机制更加友好。</p>
-<ul>
-<li>元素位置定位</li>
-</ul>
-<p>数组长度2^n，通过位运算，加快定位的速度。下标采取递增的形式。不用担心index溢出的问题。index是long类型，即使100万QPS的处理速度，也需要30万年才能用完。</p>
-<ul>
-<li>无锁设计</li>
-</ul>
-<p>每个生产者或者消费者线程，会先申请可以操作的元素在数组中的位置，申请到之后，直接在该位置写入或者读取数据。</p>
-<p>下面忽略数组的环形结构，介绍一下如何实现无锁设计。整个过程通过原子变量CAS，保证操作的线程安全。</p>
-<h2 id="核心组件介绍"><a href="#核心组件介绍" class="headerlink" title="核心组件介绍"></a>核心组件介绍</h2><h3 id="环形数组：RingBuffer"><a href="#环形数组：RingBuffer" class="headerlink" title="环形数组：RingBuffer"></a>环形数组：RingBuffer</h3><p><img src="http://oyop6c8p9.bkt.clouddn.com/1540471442295.png" alt="1540471442295"></p>
-<p><img src="http://oyop6c8p9.bkt.clouddn.com/1540365643162.png" alt="1540365643162"></p>
-<h4 id="RingBufferFields用来创建环形数组，并且对初始数组进行填充"><a href="#RingBufferFields用来创建环形数组，并且对初始数组进行填充" class="headerlink" title="RingBufferFields用来创建环形数组，并且对初始数组进行填充"></a>RingBufferFields用来创建环形数组，并且对初始数组进行填充</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"> <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">long</span> indexMask;    <span class="comment">//任务进度标记</span></div><div class="line"> <span class="keyword">private</span> <span class="keyword">final</span> Object[] entries;  <span class="comment">//空数组</span></div><div class="line"> <span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">int</span> bufferSize;  <span class="comment">//数组大小</span></div><div class="line"> <span class="keyword">protected</span> <span class="keyword">final</span> Sequencer sequencer; <span class="comment">//序号管理器</span></div><div class="line"></div><div class="line">RingBufferFields(</div><div class="line">        EventFactory&lt;E&gt; eventFactory,</div><div class="line">        Sequencer sequencer) &#123;</div><div class="line">    <span class="keyword">this</span>.sequencer = sequencer;</div><div class="line">    <span class="keyword">this</span>.bufferSize = sequencer.getBufferSize();</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (bufferSize &lt; <span class="number">1</span>) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"bufferSize must not be less than 1"</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (Integer.bitCount(bufferSize) != <span class="number">1</span>) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"bufferSize must be a power of 2"</span>);</div><div class="line">    &#125;</div><div class="line">	<span class="comment">//推测是对数组当前处理任务的标记，因为数组一开始就会填充满所以执行任务的进度是 bufferSize - 1</span></div><div class="line">    <span class="comment">//比如初始化一个 size为10 的数组，经过填充后0-9都是已经占用了，所以任务执行标记标注在 9</span></div><div class="line">    <span class="keyword">this</span>.indexMask = bufferSize - <span class="number">1</span>;</div><div class="line">    <span class="comment">//具体涉及到一些数组偏移量和增量地址的问题，暂不研究，可以理解为开辟一个bufferSize的环形数组</span></div><div class="line">    <span class="comment">//通过一系列操作创建了一个环形数组</span></div><div class="line">    <span class="keyword">this</span>.entries = <span class="keyword">new</span> Object[sequencer.getBufferSize() + <span class="number">2</span> * BUFFER_PAD];</div><div class="line">    <span class="comment">//填充数组，内存预加载机制</span></div><div class="line">    <span class="comment">//注意这里传入的是一个eventFactroy，通常就是重写newInstance方法，用来初始化。</span></div><div class="line">    fill(eventFactory);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">fill</span><span class="params">(EventFactory&lt;E&gt; eventFactory)</span> </span>&#123;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; bufferSize; i++) &#123;</div><div class="line">            <span class="comment">//newInstance返回的是我们定义的具体事件</span></div><div class="line">            entries[BUFFER_PAD + i] = eventFactory.newInstance();</div><div class="line">        &#125;</div><div class="line">｝</div></pre></td></tr></table></figure>
-<h4 id="RingBuffer主要分为单生产者和多生产者，在进行create的时候可以进行选择："><a href="#RingBuffer主要分为单生产者和多生产者，在进行create的时候可以进行选择：" class="headerlink" title="RingBuffer主要分为单生产者和多生产者，在进行create的时候可以进行选择："></a>RingBuffer主要分为单生产者和多生产者，在进行create的时候可以进行选择：</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;E&gt; <span class="function">RingBuffer&lt;E&gt; <span class="title">create</span><span class="params">(</span></span></div><div class="line"><span class="function"><span class="params">        ProducerType producerType,</span></span></div><div class="line"><span class="function"><span class="params">        EventFactory&lt;E&gt; factory,</span></span></div><div class="line"><span class="function"><span class="params">        <span class="keyword">int</span> bufferSize,</span></span></div><div class="line"><span class="function"><span class="params">        WaitStrategy waitStrategy)</span> </span>&#123;</div><div class="line">    <span class="keyword">switch</span> (producerType) &#123;</div><div class="line">        <span class="keyword">case</span> SINGLE:</div><div class="line">            <span class="keyword">return</span> createSingleProducer(factory, bufferSize, waitStrategy);</div><div class="line">        <span class="keyword">case</span> MULTI:</div><div class="line">            <span class="keyword">return</span> createMultiProducer(factory, bufferSize, waitStrategy);</div><div class="line">        <span class="keyword">default</span>:</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(producerType.toString());</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h5 id="创建一个单生产者的RingBuffer"><a href="#创建一个单生产者的RingBuffer" class="headerlink" title="创建一个单生产者的RingBuffer"></a>创建一个单生产者的RingBuffer</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;E&gt; <span class="function">RingBuffer&lt;E&gt; <span class="title">createSingleProducer</span><span class="params">(</span></span></div><div class="line"><span class="function"><span class="params">        EventFactory&lt;E&gt; factory,</span></span></div><div class="line"><span class="function"><span class="params">        <span class="keyword">int</span> bufferSize,</span></span></div><div class="line"><span class="function"><span class="params">        WaitStrategy waitStrategy)</span> </span>&#123;</div><div class="line">    <span class="comment">//单生产者与多生产者最大的区别就在于sequencer，下面是sequencer的UML图</span></div><div class="line">    SingleProducerSequencer sequencer = <span class="keyword">new</span> SingleProducerSequencer(bufferSize, waitStrategy);</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> RingBuffer&lt;E&gt;(factory, sequencer);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="序号管理器：Sequencer"><a href="#序号管理器：Sequencer" class="headerlink" title="序号管理器：Sequencer"></a>序号管理器：Sequencer</h3><p><img src="http://oyop6c8p9.bkt.clouddn.com/1540368132986.png" alt="1540368132986"></p>
-<h4 id="SingleProducerSequencer-单生产者序号管理器"><a href="#SingleProducerSequencer-单生产者序号管理器" class="headerlink" title="SingleProducerSequencer 单生产者序号管理器"></a>SingleProducerSequencer 单生产者序号管理器</h4><h5 id="获取下一个可用序号next"><a href="#获取下一个可用序号next" class="headerlink" title="获取下一个可用序号next()"></a>获取下一个可用序号next()</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//假设第一次调用next() 此时：n=1 nextValue=-1 cachedValue=-1</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">next</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (n &lt; <span class="number">1</span>) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"n must be &gt; 0"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">//取出序号管理器的下一个值，初始值为-1</span></div><div class="line">    <span class="keyword">long</span> nextValue = <span class="keyword">this</span>.nextValue; <span class="comment">//-1；0</span></div><div class="line"></div><div class="line">    <span class="comment">//获得下一个序号</span></div><div class="line">    <span class="keyword">long</span> nextSequence = nextValue + n; <span class="comment">//0；1</span></div><div class="line">    <span class="comment">//判断生产者序号有没有超过ringBuffer的大小</span></div><div class="line">    <span class="keyword">long</span> wrapPoint = nextSequence - bufferSize; <span class="comment">//0-10 = -10；1-10=-9；</span></div><div class="line">    <span class="keyword">long</span> cachedGatingSequence = <span class="keyword">this</span>.cachedValue; <span class="comment">//-1；-1；</span></div><div class="line">	<span class="comment">//-10&gt;-1  -1&gt;-1 FALSE</span></div><div class="line">  	<span class="comment">//如果生产者序号大于最小的消费者就挂起自旋</span></div><div class="line">    <span class="keyword">if</span> (wrapPoint &gt; cachedGatingSequence || cachedGatingSequence &gt; nextValue) &#123;</div><div class="line">        cursor.setVolatile(nextValue);  <span class="comment">// StoreLoad fence</span></div><div class="line"></div><div class="line">        <span class="keyword">long</span> minSequence;</div><div class="line">        <span class="comment">//获取数组中的最小序号与wrapPoint比较</span></div><div class="line">        <span class="keyword">while</span> (wrapPoint &gt; (minSequence = Util.getMinimumSequence(gatingSequences, nextValue))) &#123;</div><div class="line">            <span class="comment">//挂起自旋</span></div><div class="line">            LockSupport.parkNanos(<span class="number">1L</span>); <span class="comment">// <span class="doctag">TODO:</span> Use waitStrategy to spin?</span></div><div class="line">        &#125;</div><div class="line">		<span class="comment">//更新缓存值</span></div><div class="line">        <span class="keyword">this</span>.cachedValue = minSequence;</div><div class="line">    &#125;</div><div class="line">	<span class="comment">// 0</span></div><div class="line">    <span class="keyword">this</span>.nextValue = nextSequence;</div><div class="line">	<span class="comment">// 0 	</span></div><div class="line">    <span class="keyword">return</span> nextSequence;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>通过分析代码，可以看出，disruptor在管理序号的时候使用了自旋锁和CAS操作来代替锁，同时也使用了填充缓存行的技术，最高效的利用了CPU的性能。</p>
-<h4 id="MultiProducerSequencer-多生产者序号管理器"><a href="#MultiProducerSequencer-多生产者序号管理器" class="headerlink" title="MultiProducerSequencer 多生产者序号管理器"></a>MultiProducerSequencer 多生产者序号管理器</h4><h5 id="获取下一个可用序号next-1"><a href="#获取下一个可用序号next-1" class="headerlink" title="获取下一个可用序号next()"></a>获取下一个可用序号next()</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">next</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (n &lt; <span class="number">1</span>) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"n must be &gt; 0"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">long</span> current;</div><div class="line">    <span class="keyword">long</span> next;</div><div class="line"></div><div class="line">    <span class="keyword">do</span> &#123;</div><div class="line">        current = cursor.get();</div><div class="line">        next = current + n;</div><div class="line"></div><div class="line">        <span class="keyword">long</span> wrapPoint = next - bufferSize;</div><div class="line">        <span class="keyword">long</span> cachedGatingSequence = gatingSequenceCache.get();</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (wrapPoint &gt; cachedGatingSequence || cachedGatingSequence &gt; current) &#123;</div><div class="line">            <span class="keyword">long</span> gatingSequence = Util.getMinimumSequence(gatingSequences, current);</div><div class="line">			<span class="comment">//猜测是生产者生产过快，所以需要停顿一下</span></div><div class="line">            <span class="keyword">if</span> (wrapPoint &gt; gatingSequence) &#123;</div><div class="line">                LockSupport.parkNanos(<span class="number">1</span>); <span class="comment">// TODO, should we spin based on the wait strategy?</span></div><div class="line">                <span class="keyword">continue</span>;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            gatingSequenceCache.set(gatingSequence);</div><div class="line">            <span class="comment">//采用CAS方式更新cusor的值</span></div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (cursor.compareAndSet(current, next)) &#123;</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">while</span> (<span class="keyword">true</span>);</div><div class="line"></div><div class="line">    <span class="keyword">return</span> next;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h4 id="序号栅栏机制"><a href="#序号栅栏机制" class="headerlink" title="序号栅栏机制"></a>序号栅栏机制</h4><p>下面三个要求是获取序号和更新序号的规则：</p>
-<ul>
-<li>消费者序号小于生产者序号</li>
-<li>消费者序号必须小于其前置（依赖关系）消费者的序号</li>
-<li>生产者序号不能大于消费者中最小的序号数值</li>
-</ul>
-<h3 id="执行器：EventProcessor"><a href="#执行器：EventProcessor" class="headerlink" title="执行器：EventProcessor"></a>执行器：EventProcessor</h3><p>文档中对<code>EventProcessor</code>的解释是用于执行事件的，可以添加等待策略，需要实现一个Runnable接口，主要实现类有两个<code>BatchEventProcessor</code> <code>WorkProcessor</code></p>
-<h4 id="BatchEventProcessor"><a href="#BatchEventProcessor" class="headerlink" title="BatchEventProcessor"></a>BatchEventProcessor</h4><h5 id="run"><a href="#run" class="headerlink" title="run()"></a>run()</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//内部的比较关键的状态参数</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> IDLE = <span class="number">0</span>;</div><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> HALTED = IDLE + <span class="number">1</span>;</div><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> RUNNING = HALTED + <span class="number">1</span>;</div><div class="line"></div><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> AtomicInteger running = <span class="keyword">new</span> AtomicInteger(IDLE);</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="comment">//修改runing的标志</span></div><div class="line">    <span class="keyword">if</span> (running.compareAndSet(IDLE, RUNNING)) &#123;</div><div class="line">        sequenceBarrier.clearAlert();</div><div class="line"></div><div class="line">        notifyStart();</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="comment">// 判断是否执行事件</span></div><div class="line">            <span class="keyword">if</span> (running.get() == RUNNING) &#123;</div><div class="line">                processEvents();</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            notifyShutdown();</div><div class="line">            running.set(IDLE);</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="comment">// This is a little bit of guess work.  The running state could of changed to HALTED by</span></div><div class="line">        <span class="comment">// this point.  However, Java does not have compareAndExchange which is the only way</span></div><div class="line">        <span class="comment">// to get it exactly correct.</span></div><div class="line">        <span class="keyword">if</span> (running.get() == RUNNING) &#123;</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Thread is already running"</span>);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            earlyExit();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h5 id="processEvents"><a href="#processEvents" class="headerlink" title="processEvents()"></a>processEvents()</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">processEvents</span><span class="params">()</span> </span>&#123;</div><div class="line">    T event = <span class="keyword">null</span>;</div><div class="line">    <span class="comment">//获取下一个可用序号给消费者使用</span></div><div class="line">    <span class="keyword">long</span> nextSequence = sequence.get() + <span class="number">1L</span>;</div><div class="line"></div><div class="line">    <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="comment">//根据消费策略获取真实可用序号，这是整个执行逻辑的核心</span></div><div class="line">            <span class="comment">//想要消费的序号必须小于生产者生产的序号，如果不符合条件就根据具体的等待策略进行等待</span></div><div class="line">            <span class="comment">//waitFor有多种实现，这个取决于选用了什么样的等待策略</span></div><div class="line">            <span class="keyword">final</span> <span class="keyword">long</span> availableSequence = sequenceBarrier.waitFor(nextSequence);</div><div class="line">            <span class="keyword">if</span> (batchStartAware != <span class="keyword">null</span>) &#123;</div><div class="line">                batchStartAware.onBatchStart(availableSequence - nextSequence + <span class="number">1</span>);</div><div class="line">            &#125;</div><div class="line">            <span class="comment">// 说明生产者速度比消费者快，有多余的事件可进行消费</span></div><div class="line">            <span class="comment">// 如果事件全部被消费完了就会跳出循环</span></div><div class="line">            <span class="keyword">while</span> (nextSequence &lt;= availableSequence) &#123;</div><div class="line">                event = dataProvider.get(nextSequence);</div><div class="line">                eventHandler.onEvent(event, nextSequence, nextSequence == availableSequence);</div><div class="line">                nextSequence++;</div><div class="line">            &#125;</div><div class="line">            <span class="comment">// 事件全部被消费完了，把当前生产者的序号设置给sequence</span></div><div class="line">            sequence.set(availableSequence);</div><div class="line">        &#125; <span class="keyword">catch</span> (<span class="keyword">final</span> TimeoutException e) &#123;</div><div class="line">            notifyTimeout(sequence.get());</div><div class="line">        &#125; <span class="keyword">catch</span> (<span class="keyword">final</span> AlertException ex) &#123;</div><div class="line">            <span class="keyword">if</span> (running.get() != RUNNING) &#123;</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">catch</span> (<span class="keyword">final</span> Throwable ex) &#123;</div><div class="line">            exceptionHandler.handleEventException(ex, nextSequence, event);</div><div class="line">            sequence.set(nextSequence);</div><div class="line">            nextSequence++;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h5 id="BlockingWaitStrategy中实现的waitFor"><a href="#BlockingWaitStrategy中实现的waitFor" class="headerlink" title="BlockingWaitStrategy中实现的waitFor"></a>BlockingWaitStrategy中实现的waitFor</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">waitFor</span><span class="params">(<span class="keyword">long</span> sequence, Sequence cursorSequence, Sequence dependentSequence, SequenceBarrier barrier)</span></span></div><div class="line"><span class="function">        <span class="keyword">throws</span> AlertException, InterruptedException </span>&#123;</div><div class="line">    <span class="keyword">long</span> availableSequence;</div><div class="line">    <span class="keyword">if</span> (cursorSequence.get() &lt; sequence) &#123;</div><div class="line">        <span class="comment">//很明显使用了互斥锁</span></div><div class="line">        <span class="keyword">synchronized</span> (mutex) &#123;</div><div class="line">            <span class="comment">//生产者序号小于消费者序，消费速度过快</span></div><div class="line">            <span class="keyword">while</span> (cursorSequence.get() &lt; sequence) &#123;</div><div class="line">                barrier.checkAlert();</div><div class="line">                mutex.wait();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">while</span> ((availableSequence = dependentSequence.get()) &lt; sequence) &#123;</div><div class="line">        barrier.checkAlert();</div><div class="line">        ThreadHints.onSpinWait();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> availableSequence;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="等待策略"><a href="#等待策略" class="headerlink" title="等待策略"></a>等待策略</h3><p>disruptor实现了多种等待策略</p>
-<h2 id="多生产者多消费者demo"><a href="#多生产者多消费者demo" class="headerlink" title="多生产者多消费者demo"></a>多生产者多消费者demo</h2><p>WorkPool的构造函数</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">WorkerPool</span><span class="params">(RingBuffer&lt;T&gt; ringBuffer, SequenceBarrier sequenceBarrier, ExceptionHandler&lt;? <span class="keyword">super</span> T&gt; exceptionHandler, WorkHandler... workHandlers)</span> </span>&#123;</div><div class="line">    <span class="keyword">this</span>.ringBuffer = ringBuffer;</div><div class="line">    <span class="keyword">int</span> numWorkers = workHandlers.length;</div><div class="line">    <span class="keyword">this</span>.workProcessors = <span class="keyword">new</span> WorkProcessor[numWorkers];</div><div class="line"></div><div class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; numWorkers; ++i) &#123;</div><div class="line">        <span class="keyword">this</span>.workProcessors[i] = <span class="keyword">new</span> WorkProcessor(ringBuffer, sequenceBarrier, workHandlers[i], exceptionHandler, <span class="keyword">this</span>.workSequence);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>使用多消费者需要使用<code>WorkerPool</code>启动</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">WorkerPool&lt;Order&gt; workerPool = <span class="keyword">new</span> WorkerPool&lt;Order&gt;(</div><div class="line">        ringBuffer,</div><div class="line">        sequenceBarrier,</div><div class="line">        <span class="keyword">new</span> EventExceptionHandler(),</div><div class="line">    	<span class="comment">//传入的消费者需要实现 WorkHandler 接口</span></div><div class="line">        consumers);</div></pre></td></tr></table></figure>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/Horizon.github.io/2018/09/07/生产者消费者模型-并发框架Disruptor/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1592,152 +1728,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/06/29/Netty核心组件：Channel与Pipline/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Horizon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/Horizon.github.io/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Horizon Notes">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/Horizon.github.io/2018/06/29/Netty核心组件：Channel与Pipline/" itemprop="url">Netty核心组件：Channel和Pipline</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-29T09:23:49+08:00">
-                2018-06-29
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/Horizon.github.io/categories/网络编程/" itemprop="url" rel="index">
-                    <span itemprop="name">网络编程</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="Channel分析"><a href="#Channel分析" class="headerlink" title="Channel分析"></a>Channel分析</h1><h2 id="Channel接口"><a href="#Channel接口" class="headerlink" title="Channel接口"></a>Channel接口</h2><p><img src="http://oyop6c8p9.bkt.clouddn.com/1530494504140.png" alt="1530236109956"></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/06/29/Netty核心组件：Channel与Pipline/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1788,7 +1778,7 @@
               
                 <a href="/Horizon.github.io/archives/">
               
-                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-count">32</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
