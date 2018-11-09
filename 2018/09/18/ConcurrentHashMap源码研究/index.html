@@ -83,17 +83,17 @@
 <meta name="keywords" content="Java集合框架">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ConcurrentHashMap源码研究">
-<meta property="og:url" content="https://originer.github.io/Horizon.github.io/2018/06/26/ConcurrentHashMap源码研究/index.html">
+<meta property="og:url" content="https://originer.github.io/Horizon.github.io/2018/09/18/ConcurrentHashMap源码研究/index.html">
 <meta property="og:site_name" content="Horizon Notes">
 <meta property="og:description" content="HashMap是我们平时开发过程中用的比较多的集合，但它是非线程安全的，在涉及到多线程并发的情况，进行put操作有可能会引起死循环，导致CPU利用率接近100%。 ConcurrentHashMap就是一个线程安全版的HashMap，但是这个类和HashMap都在JDK8发生了较大的变化。在这里分析一下源码，来了解一下JDK8下CuncurrentHashMap是如何保证线程安全的。Concurr">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://segmentfault.com/img/remote/1460000009001471?w=1188&h=664">
-<meta property="og:image" content="https://segmentfault.com/img/remote/1460000009001472?w=630&h=567">
-<meta property="og:updated_time" content="2018-09-16T14:50:18.299Z">
+<meta property="og:image" content="http://oyop6c8p9.bkt.clouddn.com/1460000009001471%5B1%5D">
+<meta property="og:image" content="http://oyop6c8p9.bkt.clouddn.com/1460000009001472%5B1%5D">
+<meta property="og:updated_time" content="2018-11-09T08:16:04.507Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ConcurrentHashMap源码研究">
 <meta name="twitter:description" content="HashMap是我们平时开发过程中用的比较多的集合，但它是非线程安全的，在涉及到多线程并发的情况，进行put操作有可能会引起死循环，导致CPU利用率接近100%。 ConcurrentHashMap就是一个线程安全版的HashMap，但是这个类和HashMap都在JDK8发生了较大的变化。在这里分析一下源码，来了解一下JDK8下CuncurrentHashMap是如何保证线程安全的。Concurr">
-<meta name="twitter:image" content="https://segmentfault.com/img/remote/1460000009001471?w=1188&h=664">
+<meta name="twitter:image" content="http://oyop6c8p9.bkt.clouddn.com/1460000009001471%5B1%5D">
 
 
 
@@ -244,7 +244,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/06/26/ConcurrentHashMap源码研究/">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/09/18/ConcurrentHashMap源码研究/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Horizon">
@@ -273,8 +273,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-26T17:12:47+08:00">
-                2018-06-26
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-18T17:05:04+08:00">
+                2018-09-18
               </time>
             
 
@@ -339,13 +339,13 @@
 <p><em><code>HashTable</code>也是一个线程安全Map，且不能存储<code>Null</code>值。它的操作方法和<code>HashMap</code>很类似，但是所有操作都加上<code>synchronized</code>，而且是将整个<code>HashTable</code>对象加锁，也就是同时只能有一个线程访问、修改<code>HashTable</code>。这样带来的问题就是在多线程环境中代价大、效率低。</em></p>
 </blockquote>
 <a id="more"></a>
-<h2 id="JDK6-的实现"><a href="#JDK6-的实现" class="headerlink" title="JDK6 的实现"></a>JDK6 的实现</h2><p><img src="https://segmentfault.com/img/remote/1460000009001471?w=1188&amp;h=664" alt="JDK1.6下ConcurrentHashMap结构"> </p>
+<h2 id="JDK6-的实现"><a href="#JDK6-的实现" class="headerlink" title="JDK6 的实现"></a>JDK6 的实现</h2><p><img src="http://oyop6c8p9.bkt.clouddn.com/1460000009001471%5B1%5D" alt="JDK1.6下ConcurrentHashMap结构"> </p>
 <p>ConcurrentHashMap引入了Segement数据结构</p>
 <h2 id="Segement"><a href="#Segement" class="headerlink" title="Segement"></a>Segement</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Segment</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; <span class="keyword">extends</span> <span class="title">ReentrantLock</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = <span class="number">2249069246763182397L</span>;</div><div class="line">    <span class="keyword">final</span> <span class="keyword">float</span> loadFactor;</div><div class="line">    Segment(<span class="keyword">float</span> lf) &#123; <span class="keyword">this</span>.loadFactor = lf; &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h3 id="数据节点"><a href="#数据节点" class="headerlink" title="数据节点"></a>数据节点</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">HashEntry</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; </span>&#123;</div><div class="line">    <span class="keyword">final</span> K key;</div><div class="line">    <span class="keyword">final</span> <span class="keyword">int</span> hash;</div><div class="line">    <span class="keyword">volatile</span> V value;</div><div class="line">    <span class="keyword">final</span> HashEntry&lt;K,V&gt; next;</div><div class="line"></div><div class="line">    HashEntry(K key, <span class="keyword">int</span> hash, HashEntry&lt;K,V&gt; next, V value) &#123;</div><div class="line">        <span class="keyword">this</span>.key = key;</div><div class="line">        <span class="keyword">this</span>.hash = hash;</div><div class="line">        <span class="keyword">this</span>.next = next;</div><div class="line">        <span class="keyword">this</span>.value = value;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h3 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">ConcurrentHashMap</span><span class="params">(<span class="keyword">int</span> initialCapacity,</span></span></div><div class="line"><span class="function"><span class="params">                         <span class="keyword">float</span> loadFactor, <span class="keyword">int</span> concurrencyLevel)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (!(loadFactor &gt; <span class="number">0</span>) || initialCapacity &lt; <span class="number">0</span> || concurrencyLevel &lt;= <span class="number">0</span>)</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException();</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (concurrencyLevel &gt; MAX_SEGMENTS)</div><div class="line">        concurrencyLevel = MAX_SEGMENTS;</div><div class="line"></div><div class="line">    <span class="comment">// Find power-of-two sizes best matching arguments</span></div><div class="line">    <span class="keyword">int</span> sshift = <span class="number">0</span>;</div><div class="line">    <span class="keyword">int</span> ssize = <span class="number">1</span>;</div><div class="line">    <span class="keyword">while</span> (ssize &lt; concurrencyLevel) &#123;</div><div class="line">        ++sshift;</div><div class="line">        ssize &lt;&lt;= <span class="number">1</span>;</div><div class="line">    &#125;</div><div class="line">    segmentShift = <span class="number">32</span> - sshift;</div><div class="line">    segmentMask = ssize - <span class="number">1</span>;</div><div class="line">    <span class="keyword">this</span>.segments = Segment.newArray(ssize);</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (initialCapacity &gt; MAXIMUM_CAPACITY)</div><div class="line">        initialCapacity = MAXIMUM_CAPACITY;</div><div class="line">    <span class="keyword">int</span> c = initialCapacity / ssize;</div><div class="line">    <span class="keyword">if</span> (c * ssize &lt; initialCapacity)</div><div class="line">        ++c;</div><div class="line">    <span class="keyword">int</span> cap = <span class="number">1</span>;</div><div class="line">    <span class="keyword">while</span> (cap &lt; c)</div><div class="line">        cap &lt;&lt;= <span class="number">1</span>;</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="keyword">this</span>.segments.length; ++i)</div><div class="line">        <span class="keyword">this</span>.segments[i] = <span class="keyword">new</span> Segment&lt;K,V&gt;(cap, loadFactor);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h2 id="JDK8-的实现"><a href="#JDK8-的实现" class="headerlink" title="JDK8 的实现"></a>JDK8 的实现</h2><p>JDK 1.8取消类<code>segments</code>字段，直接用table数组存储键值对，JDK1.6中每个bucket中键值对组织方式是单向链表，查找复杂度是<code>O(n)</code>，JDK1.8中当链表长度超过<code>TREEIFY_THRESHOLD</code>时，链表转换为红黑树，查询复杂度可以降低到O(log n)，改进性能； </p>
-<p><img src="https://segmentfault.com/img/remote/1460000009001472?w=630&amp;h=567" alt="HashMap结构"> </p>
+<p><img src="http://oyop6c8p9.bkt.clouddn.com/1460000009001472%5B1%5D" alt="HashMap结构"> </p>
 <p>首先先了解一下ConcurrentHashMap中的几个重要的参数：</p>
 <ul>
 <li><code>transient volatile Node&lt;K,V&gt;[] table</code>：键值对桶数组</li>
@@ -407,8 +407,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/Horizon.github.io/2018/06/19/缓存相关/" rel="next" title="Java常用的缓存方案">
-                <i class="fa fa-chevron-left"></i> Java常用的缓存方案
+              <a href="/Horizon.github.io/2018/09/18/AQS基础/" rel="next" title="Java并发核心-AQS">
+                <i class="fa fa-chevron-left"></i> Java并发核心-AQS
               </a>
             
           </div>
@@ -417,8 +417,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/Horizon.github.io/2018/07/02/Netty相关的经典问题/" rel="prev" title="Netty相关的常见问题整理">
-                Netty相关的常见问题整理 <i class="fa fa-chevron-right"></i>
+              <a href="/Horizon.github.io/2018/11/07/Netty核心组件：解码器编码器/" rel="prev" title="Netty核心组件：解码器/编码器">
+                Netty核心组件：解码器/编码器 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
