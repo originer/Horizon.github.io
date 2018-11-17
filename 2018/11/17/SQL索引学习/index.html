@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="面试的时候除了基本的增删改查，一般就是会问一些sql优化相关的，这部分很多知识是跟索引有关系的。面试两次都被SQL索引问题问倒了，有必要给自己充一下电，深入学习一下sql的索引机制。 关于索引索引分类：聚集索引和非聚集索引。以字典举例，拼音查询就是聚集索引，部首查询就是非聚集索引。  聚集索引和非聚集索引的根本区别是表记录的排列顺序和与索引的排列顺序是否一致，简单理解：比如聚集索引，a开头的数据后">
+<meta name="description" content="面试的时候除了基本的增删改查，一般就是会问一些sql优化相关的，这部分很多知识是跟索引有关系的。面试两次都被SQL索引问题问倒了，有必要给自己充一下电，深入学习一下sql的索引机制。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SQL索引学习">
 <meta property="og:url" content="https://originer.github.io/Horizon.github.io/2018/11/17/SQL索引学习/index.html">
 <meta property="og:site_name" content="Horizon Notes">
-<meta property="og:description" content="面试的时候除了基本的增删改查，一般就是会问一些sql优化相关的，这部分很多知识是跟索引有关系的。面试两次都被SQL索引问题问倒了，有必要给自己充一下电，深入学习一下sql的索引机制。 关于索引索引分类：聚集索引和非聚集索引。以字典举例，拼音查询就是聚集索引，部首查询就是非聚集索引。  聚集索引和非聚集索引的根本区别是表记录的排列顺序和与索引的排列顺序是否一致，简单理解：比如聚集索引，a开头的数据后">
+<meta property="og:description" content="面试的时候除了基本的增删改查，一般就是会问一些sql优化相关的，这部分很多知识是跟索引有关系的。面试两次都被SQL索引问题问倒了，有必要给自己充一下电，深入学习一下sql的索引机制。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="c:/Users/hspcadmin/AppData/Roaming/Typora/typora-user-images/1542423865518.png">
-<meta property="og:updated_time" content="2018-11-17T07:21:58.017Z">
+<meta property="og:updated_time" content="2018-11-17T07:37:50.337Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SQL索引学习">
-<meta name="twitter:description" content="面试的时候除了基本的增删改查，一般就是会问一些sql优化相关的，这部分很多知识是跟索引有关系的。面试两次都被SQL索引问题问倒了，有必要给自己充一下电，深入学习一下sql的索引机制。 关于索引索引分类：聚集索引和非聚集索引。以字典举例，拼音查询就是聚集索引，部首查询就是非聚集索引。  聚集索引和非聚集索引的根本区别是表记录的排列顺序和与索引的排列顺序是否一致，简单理解：比如聚集索引，a开头的数据后">
+<meta name="twitter:description" content="面试的时候除了基本的增删改查，一般就是会问一些sql优化相关的，这部分很多知识是跟索引有关系的。面试两次都被SQL索引问题问倒了，有必要给自己充一下电，深入学习一下sql的索引机制。">
 <meta name="twitter:image" content="c:/Users/hspcadmin/AppData/Roaming/Typora/typora-user-images/1542423865518.png">
 
 
@@ -332,6 +332,7 @@
 
       
         <p><em>面试的时候除了基本的增删改查，一般就是会问一些sql优化相关的，这部分很多知识是跟索引有关系的。面试两次都被SQL索引问题问倒了，有必要给自己充一下电，深入学习一下sql的索引机制。</em></p>
+<a id="more"></a>
 <h3 id="关于索引"><a href="#关于索引" class="headerlink" title="关于索引"></a>关于索引</h3><p>索引分类：聚集索引和非聚集索引。以字典举例，拼音查询就是聚集索引，部首查询就是非聚集索引。</p>
 <p> <strong>聚集索引和非聚集索引的根本区别是表记录的排列顺序和与索引的排列顺序是否一致</strong>，简单理解：比如聚集索引，a开头的数据后面一定是b开头的，跟物理排列顺序一致。非聚集索引就像部首查询，两个相同部首的可能位置相差非常远。</p>
 <p> <em>原理明白了，那他们是怎么存储的呢？在这里简单的说一下，聚集索引就是在数据库被开辟一个物理空间存放他的排列的值，例如1-100，所以当插入数据时，他会重新排列整个整个物理空间，而非聚集索引其实可以看作是一个含有聚集索引的表，他只仅包含原表中非聚集索引的列和指向实际物理表的指针。他只记录一个指针，其实就有点和堆栈差不多的感觉了。</em></p>
@@ -374,8 +375,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/Horizon.github.io/2018/11/15/常用排序算法总结/" rel="next" title="常用排序算法">
-                <i class="fa fa-chevron-left"></i> 常用排序算法
+              <a href="/Horizon.github.io/2018/11/15/常用排序算法总结/" rel="next" title="常用排序算法总结">
+                <i class="fa fa-chevron-left"></i> 常用排序算法总结
               </a>
             
           </div>
