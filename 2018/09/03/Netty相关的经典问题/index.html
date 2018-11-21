@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/Horizon.github.io/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/Horizon.github.io/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/Horizon.github.io/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/Horizon.github.io/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/Horizon.github.io/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/Horizon.github.io/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/Horizon.github.io/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Netty," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="问:服务端Socket在哪里初始化?答:反射创建服务端Channel:NioServerSocketChannel默认构造方法调用newSocket()使用provider.openServerSocketChannel()创建服务端Socket。 问:在哪里accept连接?答:端口绑定:Pipeline调用fireChannelActive()传播active事件,HeadContext使用r">
+<meta name="keywords" content="Netty">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Netty相关的常见问题整理">
+<meta property="og:url" content="https://originer.github.io/Horizon.github.io/2018/09/03/Netty相关的经典问题/index.html">
+<meta property="og:site_name" content="Horizon Notes">
+<meta property="og:description" content="问:服务端Socket在哪里初始化?答:反射创建服务端Channel:NioServerSocketChannel默认构造方法调用newSocket()使用provider.openServerSocketChannel()创建服务端Socket。 问:在哪里accept连接?答:端口绑定:Pipeline调用fireChannelActive()传播active事件,HeadContext使用r">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-11-13T11:17:48.574Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Netty相关的常见问题整理">
+<meta name="twitter:description" content="问:服务端Socket在哪里初始化?答:反射创建服务端Channel:NioServerSocketChannel默认构造方法调用newSocket()使用provider.openServerSocketChannel()创建服务端Socket。 问:在哪里accept连接?答:端口绑定:Pipeline调用fireChannelActive()传播active事件,HeadContext使用r">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/Horizon.github.io/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+
+
+
+
+  <title>Netty相关的常见问题整理 | Horizon Notes</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/Horizon.github.io/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Horizon Notes</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/Horizon.github.io/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/Horizon.github.io/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/Horizon.github.io/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/Horizon.github.io/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/09/03/Netty相关的经典问题/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Horizon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/Horizon.github.io/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Horizon Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Netty相关的常见问题整理</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-03T16:47:09+08:00">
+                2018-09-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Horizon.github.io/categories/网络编程/" itemprop="url" rel="index">
+                    <span itemprop="name">网络编程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="问-服务端Socket在哪里初始化"><a href="#问-服务端Socket在哪里初始化" class="headerlink" title="问:服务端Socket在哪里初始化?"></a>问:服务端Socket在哪里初始化?</h3><p>答:反射创建服务端Channel:NioServerSocketChannel默认构造方法调用newSocket()使用provider.openServerSocketChannel()创建服务端Socket。</p>
+<h3 id="问-在哪里accept连接"><a href="#问-在哪里accept连接" class="headerlink" title="问:在哪里accept连接?"></a>问:在哪里accept连接?</h3><p>答:端口绑定:Pipeline调用fireChannelActive()传播active事件,HeadContext使用readIfIsAutoRead()重新绑定OP_ACCEPT事件,新连接接入Selector轮询到OP_ACCEPT事件将连接交给Netty处理</p>
+<a id="more"></a>
+<h3 id="问-默认情况下-Netty服务端起多少线程-何时启动"><a href="#问-默认情况下-Netty服务端起多少线程-何时启动" class="headerlink" title="问:默认情况下,Netty服务端起多少线程?何时启动?"></a>问:默认情况下,Netty服务端起多少线程?何时启动?</h3><p>答:默认2<em>cpu即Runtime.getRuntime().availableProcessors()</em>2]线程,调用execute()方法判断当前是否在本线程,如果是在本线程说明线程已经启动,如果是在外部线程调用execute()方法,首先调用startThread()方法判断当前线程是否启动,未启动就启动此线程 </p>
+<h3 id="问-Netty是如何解决JDK空轮询Bug"><a href="#问-Netty是如何解决JDK空轮询Bug" class="headerlink" title="问:Netty是如何解决JDK空轮询Bug?"></a>问:Netty是如何解决JDK空轮询Bug?</h3><p>答:判断阻塞select操作是否阻塞timeoutMillis时间,未阻塞timeoutMillis时间表示可能触发JDK空轮询;判断触发JDK空轮询的次数是否超过阈值(默认512),超过阈值调用rebuildSelector()方法重建Selector把之前的Selector上面所有的Key重新移到新的Selector避免JDK空轮询的Bug </p>
+<h3 id="问-Netty如何保证异步串行无锁化"><a href="#问-Netty如何保证异步串行无锁化" class="headerlink" title="问:Netty如何保证异步串行无锁化?"></a>问:Netty如何保证异步串行无锁化?</h3><p>答:外部线程调用EventLoop或者Channel方法通过inEventLoop()方法判断得出是外部线程,所有操作封装成Task丢到普通任务队列MpscQueue,异步执行普通任务队列MpscQueue待执行任务</p>
+<h3 id="问-Netty是在哪里检测有新连接接入的"><a href="#问-Netty是在哪里检测有新连接接入的" class="headerlink" title="问:Netty是在哪里检测有新连接接入的?"></a>问:Netty是在哪里检测有新连接接入的?</h3><p>答:Boss线程通过服务端Channel绑定的Selector轮询OP_ACCEPT事件,通过JDK底层Channel的accept()方法获取JDK底层SocketChannel创建新连接 </p>
+<h3 id="问-新连接是怎样注册到NioEventLoop线程的"><a href="#问-新连接是怎样注册到NioEventLoop线程的" class="headerlink" title="问:新连接是怎样注册到NioEventLoop线程的?"></a>问:新连接是怎样注册到NioEventLoop线程的?</h3><p>答:Boss线程调用Chooser的next()方法选择获取NioEventLoop绑定到客户端Channel,使用doRegister()方法将新连接注册到NioEventLoop的Selector上面 </p>
+<h3 id="问-Netty是如何判断ChannelHandler类型的"><a href="#问-Netty是如何判断ChannelHandler类型的" class="headerlink" title="问:Netty是如何判断ChannelHandler类型的?"></a>问:Netty是如何判断ChannelHandler类型的?</h3><p>答:Pipeline添加ChannelHandler调用newContext()创建ChannelHandlerContext节点使用isInbound()/isOutbound()方法通过instanceOf关键词判断ChannelHandler类型为ChannelInboundHandler或者ChannelOutboundHandler,设置inbound/outbound为true标识Handler处理inbound/outBound事件 </p>
+<h3 id="问-对于ChannelHandler的添加应该遵循什么样的顺序"><a href="#问-对于ChannelHandler的添加应该遵循什么样的顺序" class="headerlink" title="问:对于ChannelHandler的添加应该遵循什么样的顺序?"></a>问:对于ChannelHandler的添加应该遵循什么样的顺序?</h3><p>答:inBound事件的传播跟添加ChannelHandler顺序正相关,outBound事件的传播跟添加ChannelHandler顺序逆相关</p>
+<h3 id="问-用户手动触发事件传播-不同的触发方式有什么样的区别"><a href="#问-用户手动触发事件传播-不同的触发方式有什么样的区别" class="headerlink" title="问:用户手动触发事件传播,不同的触发方式有什么样的区别?"></a>问:用户手动触发事件传播,不同的触发方式有什么样的区别?</h3><p>答:通过Channel触发事件从head节点传播即为inBound事件传播,从tail节点传播即为outBound事件传播,当前节点触发事件从当前节点开始传播,inBound事件从当前节点向后传播到最后一个ChannelInboundHandler节点,outBound事件从当前节点向前传播到第一个ChannelOutboundHandler节点</p>
+<h3 id="问-内存的类别有哪些"><a href="#问-内存的类别有哪些" class="headerlink" title="问:内存的类别有哪些?"></a>问:内存的类别有哪些?</h3><p>答:1.堆内[基于byte字节内存数组分配]/堆外[基于JDK的DirectByteBuffer内存分配],2.Unsafe[通过JDK的Unsafe对象基于物理内存地址进行数据读写]/非Unsafe[调用JDK的API进行读写],3.UnPooled[每次分配内存申请内存]/Pooled[预先分配好一整块内存,分配的时候用一定算法从一整块内存取出一块连续内存] </p>
+<h3 id="问-如何减少多线程内存分配之间的竞争"><a href="#问-如何减少多线程内存分配之间的竞争" class="headerlink" title="问:如何减少多线程内存分配之间的竞争?"></a>问:如何减少多线程内存分配之间的竞争?</h3><p>答:PooledByteBufAllocator内存分配器结构维护Arena数组,所有的内存分配都在Arena上进行,通过PoolThreadCache对象将线程和Arena进行一一绑定,默认情况一个Nio线程管理一个Arena实现多线程内存分配相互不受影响减少多线程内存分配之间的竞争</p>
+<h3 id="问-不同大小的内存是如何进行分配的"><a href="#问-不同大小的内存是如何进行分配的" class="headerlink" title="问:不同大小的内存是如何进行分配的?"></a>问:不同大小的内存是如何进行分配的?</h3><p>答:Page级别的内存分配通过完全二叉树的标记查找某一段连续内存,Page级别以下的内存分配首先查找到Page然后把此Page按照SubPage大小进行划分最后通过位图的方式进行内存分配</p>
+<h3 id="问-解码器抽象的解码过程"><a href="#问-解码器抽象的解码过程" class="headerlink" title="问:解码器抽象的解码过程?"></a>问:解码器抽象的解码过程?</h3><p>答:通过解码器ByteToMessageDecoder解码实现,ByteToMessageDecoder解码步骤:1.累加字节流:把当前读到的所有字节流累加到累加器里面,2.调用子类的decode()方法进行解析,ByteToMessageDecoder调用子类的decode()方法传参当前累加字节流和CodecOutputList,子类解码从字节流里面读取一段数据,解析出的数据包加到CodecOutputList,3.将解析到ByteBuf向下传播:CodecOutputList有解析出的数据包通过Pipeline事件传播机制往下传播</p>
+<h3 id="问-Netty里面有哪些拆箱即用的解码器"><a href="#问-Netty里面有哪些拆箱即用的解码器" class="headerlink" title="问:Netty里面有哪些拆箱即用的解码器?"></a>问:Netty里面有哪些拆箱即用的解码器?</h3><p> 答:基于固定长度解码器FixedLengthFrameDecoder[每次取固定长度的数据包,数据流长度足够截取一段数据包放到CodecOutputList],基于行解码器LineBasedFrameDecoder[\n或者|r\n为分隔符解码,丢弃/非丢弃模式处理和是/否找到分割符四个维度进行解码器的处理],基于分隔符解码器DelimiterBasedFrameDecoder[传参指定分隔符,找到分隔符使得本次解码出来的数据包长度最小,分隔符为\n或者\r\n委托给基于行解码器LineBasedFrameDecoder],基于长度域解码器LengthFieldBasedFrameDecoder[计算需要抽取的数据包长度即本次需要从当前数据流里面截取数据长度,跳过字节逻辑处理,丢弃模式下的处理]</p>
+<h3 id="问-如何把对象变成字节流-最终写到Socket底层"><a href="#问-如何把对象变成字节流-最终写到Socket底层" class="headerlink" title="问:如何把对象变成字节流,最终写到Socket底层?"></a>问:如何把对象变成字节流,最终写到Socket底层?</h3><p>答:BizHandler把自定义对象通过writeAndFlush()方法往前传播拆分成两个过程:1.write()方法通过Pipeline逐个ChannelHandler往前传播,传播到Encoder节点继承MessageToByteEncoder负责覆盖write()方法将自定义对象转换成ByteBuf,MessageToByteEncoder分配ByteBuffer调用encode()抽象方法由子类实现把自定义对象填充到ByteBuf继续调用write()方法将ByteBuf往前传播,默认情况无覆盖write()方法最终传播到head节点,head节点通过底层Unsafe把当前ByteBuf塞到Unsafe底层维护的outboundBuffer缓冲区对象并且计算ByteBuf超过最高水位设置当前通道不可写,write操作完成之后head节点底层维护的缓冲区里面对应ByteBuf链表;2.flush()方法从tail节点通过Pipeline逐个ChannelHandler往前传播,默认情况无覆盖flush()方法最终传播到head节点,head节点调用底层Unsafe把指针进行一系列调整通过循环不断往缓冲区里面获取ByteBuf转换成JDK底层的ByteBuffer对象使用JDK的Channel把ByteBuffer写到Socket删除节点,缓冲区里面当前可写字节小于最低水位改变Channel状态,最高水位64K/最低水位32K。 </p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/Horizon.github.io/tags/Netty/" rel="tag"># Netty</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/Horizon.github.io/2018/09/03/Java线程池学习/" rel="next" title="Java线程池学习总结">
+                <i class="fa fa-chevron-left"></i> Java线程池学习总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/Horizon.github.io/2018/09/03/Netty核心组件：Channel与Pipline/" rel="prev" title="Netty核心组件：Channel和Pipline">
+                Netty核心组件：Channel和Pipline <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Horizon</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/Horizon.github.io/archives/">
+              
+                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/origner" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:zhjl955@foxmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#问-服务端Socket在哪里初始化"><span class="nav-number">1.</span> <span class="nav-text">问:服务端Socket在哪里初始化?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问-在哪里accept连接"><span class="nav-number">2.</span> <span class="nav-text">问:在哪里accept连接?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问-默认情况下-Netty服务端起多少线程-何时启动"><span class="nav-number">3.</span> <span class="nav-text">问:默认情况下,Netty服务端起多少线程?何时启动?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问-Netty是如何解决JDK空轮询Bug"><span class="nav-number">4.</span> <span class="nav-text">问:Netty是如何解决JDK空轮询Bug?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问-Netty如何保证异步串行无锁化"><span class="nav-number">5.</span> <span class="nav-text">问:Netty如何保证异步串行无锁化?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问-Netty是在哪里检测有新连接接入的"><span class="nav-number">6.</span> <span class="nav-text">问:Netty是在哪里检测有新连接接入的?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问-新连接是怎样注册到NioEventLoop线程的"><span class="nav-number">7.</span> <span class="nav-text">问:新连接是怎样注册到NioEventLoop线程的?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问-Netty是如何判断ChannelHandler类型的"><span class="nav-number">8.</span> <span class="nav-text">问:Netty是如何判断ChannelHandler类型的?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问-对于ChannelHandler的添加应该遵循什么样的顺序"><span class="nav-number">9.</span> <span class="nav-text">问:对于ChannelHandler的添加应该遵循什么样的顺序?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问-用户手动触发事件传播-不同的触发方式有什么样的区别"><span class="nav-number">10.</span> <span class="nav-text">问:用户手动触发事件传播,不同的触发方式有什么样的区别?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问-内存的类别有哪些"><span class="nav-number">11.</span> <span class="nav-text">问:内存的类别有哪些?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问-如何减少多线程内存分配之间的竞争"><span class="nav-number">12.</span> <span class="nav-text">问:如何减少多线程内存分配之间的竞争?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问-不同大小的内存是如何进行分配的"><span class="nav-number">13.</span> <span class="nav-text">问:不同大小的内存是如何进行分配的?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问-解码器抽象的解码过程"><span class="nav-number">14.</span> <span class="nav-text">问:解码器抽象的解码过程?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问-Netty里面有哪些拆箱即用的解码器"><span class="nav-number">15.</span> <span class="nav-text">问:Netty里面有哪些拆箱即用的解码器?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问-如何把对象变成字节流-最终写到Socket底层"><span class="nav-number">16.</span> <span class="nav-text">问:如何把对象变成字节流,最终写到Socket底层?</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Horizon</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/Horizon.github.io/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/Horizon.github.io/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/Horizon.github.io/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/Horizon.github.io/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/Horizon.github.io/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
