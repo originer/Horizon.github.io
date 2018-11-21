@@ -82,7 +82,7 @@
 <meta name="description" content="缓存命中率缓存的设计要考虑到具体的业务场景，一般来说，并发量越大，缓存的收益就越大。 缓存的分类本地缓存编程实现（成员变量、局部变量、静态变量）Guava Cache 分布式缓存Memcache、Redis Guava Cache 类似一个ConcurrentHashMap、包含了多余的信息，使用LRU策略来实现缓存。 Memcache Memcache本身不提供分布式解决方案，需要在应用服务器上">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java常用的缓存方案">
-<meta property="og:url" content="https://originer.github.io/Horizon.github.io/2018/06/19/缓存相关/index.html">
+<meta property="og:url" content="https://originer.github.io/Horizon.github.io/2018/09/03/缓存相关/index.html">
 <meta property="og:site_name" content="Horizon Notes">
 <meta property="og:description" content="缓存命中率缓存的设计要考虑到具体的业务场景，一般来说，并发量越大，缓存的收益就越大。 缓存的分类本地缓存编程实现（成员变量、局部变量、静态变量）Guava Cache 分布式缓存Memcache、Redis Guava Cache 类似一个ConcurrentHashMap、包含了多余的信息，使用LRU策略来实现缓存。 Memcache Memcache本身不提供分布式解决方案，需要在应用服务器上">
 <meta property="og:locale" content="zh-Hans">
@@ -91,7 +91,7 @@
 <meta property="og:image" content="c:/Users/Zz/AppData/Local/Temp/1529342483370.png">
 <meta property="og:image" content="c:/Users/Zz/AppData/Local/Temp/1529344638979.png">
 <meta property="og:image" content="c:/Users/Zz/AppData/Local/Temp/1529346488980.png">
-<meta property="og:updated_time" content="2018-06-25T12:38:50.465Z">
+<meta property="og:updated_time" content="2018-11-19T07:39:48.619Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java常用的缓存方案">
 <meta name="twitter:description" content="缓存命中率缓存的设计要考虑到具体的业务场景，一般来说，并发量越大，缓存的收益就越大。 缓存的分类本地缓存编程实现（成员变量、局部变量、静态变量）Guava Cache 分布式缓存Memcache、Redis Guava Cache 类似一个ConcurrentHashMap、包含了多余的信息，使用LRU策略来实现缓存。 Memcache Memcache本身不提供分布式解决方案，需要在应用服务器上">
@@ -194,6 +194,16 @@
         </li>
       
         
+        <li class="menu-item menu-item-tags">
+          <a href="/Horizon.github.io/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
         <li class="menu-item menu-item-categories">
           <a href="/Horizon.github.io/categories/" rel="section">
             
@@ -246,7 +256,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/06/19/缓存相关/">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/09/03/缓存相关/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Horizon">
@@ -275,8 +285,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-19T01:10:50+08:00">
-                2018-06-19
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-03T16:47:05+08:00">
+                2018-09-03
               </time>
             
 
@@ -347,6 +357,15 @@
 <p>redis</p>
 <p><img src="C:\Users\Zz\AppData\Local\Temp\1529344638979.png" alt="1529344638979"></p>
 <p><img src="C:\Users\Zz\AppData\Local\Temp\1529346488980.png" alt="1529346488980"></p>
+<h2 id="缓存穿透"><a href="#缓存穿透" class="headerlink" title="缓存穿透"></a>缓存穿透</h2><h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>访问一个不存在的key，缓存不起作用，请求会穿透到DB，流量大时DB会挂掉。</p>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><ol>
+<li>采用布隆过滤器，使用一个足够大的bitmap，用于存储可能访问的key，不存在的key直接被过滤；</li>
+<li>访问key未在DB查询到值，也将空值写进缓存，但可以设置较短过期时间。</li>
+</ol>
+<h2 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h2><h3 id="概念-1"><a href="#概念-1" class="headerlink" title="概念"></a>概念</h3><p>大量的key设置了相同的过期时间，导致在缓存在同一时刻全部失效，造成瞬时DB请求量大、压力骤增，引起雪崩。</p>
+<h3 id="解决方案-1"><a href="#解决方案-1" class="headerlink" title="解决方案"></a>解决方案</h3><p>可以给缓存设置过期时间时加上一个随机值时间，使得每个key的过期时间分布开来，不会集中在同一时刻失效。</p>
+<h2 id="缓存击穿"><a href="#缓存击穿" class="headerlink" title="缓存击穿"></a>缓存击穿</h2><h3 id="概念-2"><a href="#概念-2" class="headerlink" title="概念"></a>概念</h3><p>一个存在的key，在缓存过期的一刻，同时有大量的请求，这些请求都会击穿到DB，造成瞬时DB请求量大、压力骤增。</p>
+<h3 id="解决方案-2"><a href="#解决方案-2" class="headerlink" title="解决方案"></a>解决方案</h3><p>在访问key之前，采用SETNX（set if not exists）来设置另一个短期key来锁住当前key的访问，访问结束再删除该短期key。</p>
 
       
     </div>
@@ -371,8 +390,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/Horizon.github.io/2018/05/30/四种引用/" rel="next" title="Java的四种引用">
-                <i class="fa fa-chevron-left"></i> Java的四种引用
+              <a href="/Horizon.github.io/2018/09/03/SpringMVC数据绑定总结/" rel="next" title="SpringMVC数据绑定总结">
+                <i class="fa fa-chevron-left"></i> SpringMVC数据绑定总结
               </a>
             
           </div>
@@ -381,8 +400,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/Horizon.github.io/2018/07/02/Netty相关的经典问题/" rel="prev" title="Netty相关的常见问题整理">
-                Netty相关的常见问题整理 <i class="fa fa-chevron-right"></i>
+              <a href="/Horizon.github.io/2018/09/03/ThreadLocal源码研究/" rel="prev" title="ThreadLocal源码研究">
+                ThreadLocal源码研究 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -493,6 +512,22 @@
           
 
           
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/origner" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:zhjl955@foxmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
 
           
           
@@ -515,7 +550,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#缓存命中率"><span class="nav-number">1.</span> <span class="nav-text">缓存命中率</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#缓存的分类"><span class="nav-number">2.</span> <span class="nav-text">缓存的分类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#本地缓存"><span class="nav-number">2.1.</span> <span class="nav-text">本地缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分布式缓存"><span class="nav-number">2.2.</span> <span class="nav-text">分布式缓存</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Guava-Cache"><span class="nav-number">2.2.1.</span> <span class="nav-text">Guava Cache</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Memcache"><span class="nav-number">2.2.2.</span> <span class="nav-text">Memcache</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#缓存命中率"><span class="nav-number">1.</span> <span class="nav-text">缓存命中率</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#缓存的分类"><span class="nav-number">2.</span> <span class="nav-text">缓存的分类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#本地缓存"><span class="nav-number">2.1.</span> <span class="nav-text">本地缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分布式缓存"><span class="nav-number">2.2.</span> <span class="nav-text">分布式缓存</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Guava-Cache"><span class="nav-number">2.2.1.</span> <span class="nav-text">Guava Cache</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Memcache"><span class="nav-number">2.2.2.</span> <span class="nav-text">Memcache</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#缓存穿透"><span class="nav-number">3.</span> <span class="nav-text">缓存穿透</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#概念"><span class="nav-number">3.1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决方案"><span class="nav-number">3.2.</span> <span class="nav-text">解决方案</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#缓存雪崩"><span class="nav-number">4.</span> <span class="nav-text">缓存雪崩</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#概念-1"><span class="nav-number">4.1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决方案-1"><span class="nav-number">4.2.</span> <span class="nav-text">解决方案</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#缓存击穿"><span class="nav-number">5.</span> <span class="nav-text">缓存击穿</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#概念-2"><span class="nav-number">5.1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决方案-2"><span class="nav-number">5.2.</span> <span class="nav-text">解决方案</span></a></li></ol></li></ol></div>
             
 
           </div>

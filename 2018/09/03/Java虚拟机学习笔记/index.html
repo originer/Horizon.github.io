@@ -82,7 +82,7 @@
 <meta name="description" content="Java内存区域与内存溢出异常运行时数据区域下图是Java运行时数据区域划分图     区域 是否线程共享 是否会内存溢出     程序计数器 否 不会   java虚拟机栈 否 会   本地方法栈 否 会   堆 是 会   方法区 是 会">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java虚拟机学习笔记">
-<meta property="og:url" content="https://originer.github.io/Horizon.github.io/2018/05/01/Java虚拟机学习笔记/index.html">
+<meta property="og:url" content="https://originer.github.io/Horizon.github.io/2018/09/03/Java虚拟机学习笔记/index.html">
 <meta property="og:site_name" content="Horizon Notes">
 <meta property="og:description" content="Java内存区域与内存溢出异常运行时数据区域下图是Java运行时数据区域划分图     区域 是否线程共享 是否会内存溢出     程序计数器 否 不会   java虚拟机栈 否 会   本地方法栈 否 会   堆 是 会   方法区 是 会">
 <meta property="og:locale" content="zh-Hans">
@@ -103,7 +103,7 @@
 <meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/12/1604a8499ea082f5?imageView2/0/w/1280/h/960/ignore-error/1">
 <meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/12/1604a8c58a032b54?imageView2/0/w/1280/h/960/ignore-error/1">
 <meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/12/1604a8c5de316d00?imageView2/0/w/1280/h/960/ignore-error/1">
-<meta property="og:updated_time" content="2018-06-25T12:43:55.764Z">
+<meta property="og:updated_time" content="2018-11-20T02:06:37.394Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java虚拟机学习笔记">
 <meta name="twitter:description" content="Java内存区域与内存溢出异常运行时数据区域下图是Java运行时数据区域划分图     区域 是否线程共享 是否会内存溢出     程序计数器 否 不会   java虚拟机栈 否 会   本地方法栈 否 会   堆 是 会   方法区 是 会">
@@ -206,6 +206,16 @@
         </li>
       
         
+        <li class="menu-item menu-item-tags">
+          <a href="/Horizon.github.io/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
         <li class="menu-item menu-item-categories">
           <a href="/Horizon.github.io/categories/" rel="section">
             
@@ -258,7 +268,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/05/01/Java虚拟机学习笔记/">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/09/03/Java虚拟机学习笔记/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Horizon">
@@ -287,8 +297,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-01T01:36:28+08:00">
-                2018-05-01
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-03T16:47:09+08:00">
+                2018-09-03
               </time>
             
 
@@ -585,6 +595,7 @@
 <li>这样的好处是Java类随着它的类加载器具备了一种带有优先级的层次关系，对保证Java程序的稳定运作很重要；</li>
 <li>实现双亲委派的代码都集中在java.lang.ClassLoader的loadClass方法中，逻辑清晰易懂；</li>
 </ul>
+<p>关于Java内存模型：<a href="https://juejin.im/post/5bf2977751882505d840321d?utm_source=gold_browser_extension" target="_blank" rel="external">https://juejin.im/post/5bf2977751882505d840321d?utm_source=gold_browser_extension</a></p>
 
       
     </div>
@@ -609,8 +620,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/Horizon.github.io/2018/05/01/Java容器/" rel="next" title="Java容器">
-                <i class="fa fa-chevron-left"></i> Java容器
+              <a href="/Horizon.github.io/2018/09/03/CopyOnWriteArrayList详解/" rel="next" title="CopyOnWriteArrayList详解">
+                <i class="fa fa-chevron-left"></i> CopyOnWriteArrayList详解
               </a>
             
           </div>
@@ -619,8 +630,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/Horizon.github.io/2018/05/01/NIO Channel和Buffer/" rel="prev" title="深入浅出NIO Channel和Buffer">
-                深入浅出NIO Channel和Buffer <i class="fa fa-chevron-right"></i>
+              <a href="/Horizon.github.io/2018/09/07/生产者消费者模型-并发框架Disruptor/" rel="prev" title="并发框架Disruptor学习">
+                并发框架Disruptor学习 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -730,6 +741,22 @@
 
           
 
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/origner" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:zhjl955@foxmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
           
 
           
