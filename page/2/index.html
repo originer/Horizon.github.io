@@ -326,7 +326,7 @@
 </blockquote>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/09/18/AQS基础/#espandi" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/09/18/AQS基础/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -488,7 +488,7 @@
 <p>下面忽略数组的环形结构，介绍一下如何实现无锁设计。整个过程通过原子变量CAS，保证操作的线程安全。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/09/07/生产者消费者模型-并发框架Disruptor/#espandi" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/09/07/生产者消费者模型-并发框架Disruptor/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -634,7 +634,7 @@
           <h2 id="为什么会出现跨域"><a href="#为什么会出现跨域" class="headerlink" title="为什么会出现跨域"></a>为什么会出现跨域</h2><p>跨域问题来源于JavaScript的同源策略，即只有 协议+主机名+端口号<br>(如存在)相同，则允许相互访问。也就是说JavaScript只能访问和操作自己域下的资源，不能访问和操作其他域下的资源。跨域问题是针对JS和ajax的，html本身没有跨域问题，比如a标签、script标签、甚至form标签（可以直接跨域发送数据并接收数据）等。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/09/03/ajax跨域问题/#espandi" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/09/03/ajax跨域问题/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -782,7 +782,7 @@
 </blockquote>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/09/03/CGlib动态代理/#espandi" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/09/03/CGlib动态代理/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -928,7 +928,7 @@
           <p>Java中代理的实现一般分为三种：JDK静态代理、JDK动态代理以及CGLIB动态代理。在Spring的AOP实现中，主要应用了JDK动态代理以及CGLIB动态代理。但是本文着重介绍JDK动态代理机制，CGLIB动态代理后面会接着探究。<br>代理一般实现的模式为JDK静态代理：创建一个接口，然后创建被代理的类实现该接口并且实现该接口中的抽象方法。之后再创建一个代理类，同时使其也实现这个接口。在代理类中持有一个被代理对象的引用，而后在代理类方法中调用该对象的方法。<br>其实就是代理类为被代理类预处理消息、过滤消息并在此之后将消息转发给被代理类，之后还能进行消息的后置处理。代理类和被代理类通常会存在关联关系(即上面提到的持有的被带离对象的引用)，代理类本身不实现服务，而是通过调用被代理类中的方法来提供服务。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/09/03/jdk代理/#espandi" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/09/03/jdk代理/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1111,7 +1111,7 @@
 </table>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/09/03/Java虚拟机学习笔记/#espandi" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/09/03/Java虚拟机学习笔记/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1263,7 +1263,7 @@
 </ul>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/09/03/CopyOnWriteArrayList详解/#espandi" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/09/03/CopyOnWriteArrayList详解/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1409,7 +1409,7 @@
           <h1 id="什么是HTTP协议"><a href="#什么是HTTP协议" class="headerlink" title="什么是HTTP协议"></a>什么是HTTP协议</h1><p>协议是指计算机通信网络中两台计算机之间进行通信所必须共同遵守的规定或规则，超文本传输协议(HTTP)是一种通信协议，它允许将超文本标记语言(HTML)文档从Web服务器传送到客户端的浏览器。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/09/03/HTTP协议相关笔记/#espandi" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/09/03/HTTP协议相关笔记/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1561,7 +1561,7 @@
 <p>传统的IO操作面向数据流，意味着每次从流中读一个或多个字节，直至完成，数据没有被缓存在任何地方。NIO操作面向缓冲区，数据从Channel读取到Buffer缓冲区，随后在Buffer中处理数据。本文着重介绍Channel和Buffer的概念以及在文件读写方面的应用和内部实现原理。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/09/03/NIO Channel和Buffer/#espandi" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/09/03/NIO Channel和Buffer/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1708,7 +1708,7 @@
 <p>之所以把<em>HashSet</em>和<em>HashMap</em>放在一起讲解，是因为二者在Java里有着相同的实现，前者仅仅是对后者做了一层包装，也就是说<em>HashSet里面有一个HashMap</em>（适配器模式）<em>*。因此本文将重点分析</em>HashMap*。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/09/03/HashSet和HashMap/#espandi" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/09/03/HashSet和HashMap/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>

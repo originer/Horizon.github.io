@@ -445,7 +445,7 @@
 <p><strong>sql及索引、数据表结构、系统配置、硬件</strong>这四个按顺序效果越来越小，成本越来越高，所以对数据库性能进行优化一般都是从sql语句和索引入手。<br>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/11/28/MySql性能优化/#espandi" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/11/28/MySql性能优化/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -596,7 +596,7 @@
 </ul>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/11/27/Git命令整理/#espandi" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/11/27/Git命令整理/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -742,7 +742,7 @@
           <h2 id="观察者模式定义"><a href="#观察者模式定义" class="headerlink" title="观察者模式定义"></a>观察者模式定义</h2><p>可以理解为发布订阅模式，订阅者订阅之后就可以监听发布者的消息。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/11/21/设计模式：观察者模式/#espandi" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/11/21/设计模式：观察者模式/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -888,7 +888,7 @@
           <p><em>面试的时候除了基本的增删改查，一般就是会问一些sql优化相关的，这部分很多知识是跟索引有关系的。面试两次都被SQL索引问题问倒了，有必要给自己充一下电，深入学习一下sql的索引机制。</em></p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/11/18/SQL索引学习/#espandi" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/11/18/SQL索引学习/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1036,7 +1036,7 @@
 <p><img src="C:\Users\hspcadmin\AppData\Roaming\Typora\typora-user-images\1542608413490.png" alt="1542608413490"></p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/11/15/常用排序算法总结/#espandi" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/11/15/常用排序算法总结/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1329,7 +1329,7 @@
           <p>我们知道，数据在网络上都是通过字节流传输的，Netty作为一款网络通讯框架，编解码是很重要的一个模块。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/11/07/Netty核心组件：解码器编码器/#espandi" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/11/07/Netty核心组件：解码器编码器/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1479,7 +1479,7 @@
 </blockquote>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/09/18/ConcurrentHashMap源码研究/#espandi" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/09/18/ConcurrentHashMap源码研究/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1626,7 +1626,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Sigleton</span> </span>&#123;</div><div class="line">    <span class="comment">//饿汉模式 outInstance是私有的</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Sigleton ourInstance = <span class="keyword">new</span> Sigleton();</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 此实现是线程安全的  JVM在加载此类时，因为对于static属性的初始化只能由一个线程执行且仅执行一次</span></div><div class="line"><span class="comment">     * 缺点：instance在类装载时就实例化 这时候初始化instance显然没有达到lazy loading的效果</span></div><div class="line"><span class="comment">     * <span class="doctag">@return</span></span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Sigleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> ourInstance;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">//把构造函数声明为private 客户对象无法创建该实例</span></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Sigleton</span><span class="params">()</span> </span>&#123;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/09/18/设计模式：单例模式/#espandi" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/09/18/设计模式：单例模式/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
