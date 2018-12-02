@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/Horizon.github.io/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/Horizon.github.io/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/Horizon.github.io/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/Horizon.github.io/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/Horizon.github.io/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/Horizon.github.io/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/Horizon.github.io/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Java集合框架," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="CopyOnWriteArrayList与JMM一 CopyOnWriteArrayList与JMM说明：本文代码均以JDK1.8的源码为准。 1 什么是CopyOnWriteArrayList关于CopyOnWriteArrayList是什么以及基本用法，在这里不多说，网上可以搜到大量这方面的文章。在这里只做简要说明：CopyOnWriteArrayList相当于线程安全的ArrayList，是">
+<meta name="keywords" content="Java集合框架">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CopyOnWriteArrayList详解">
+<meta property="og:url" content="https://originer.github.io/Horizon.github.io/2018/11/18/CopyOnWriteArrayList详解/index.html">
+<meta property="og:site_name" content="Horizon Notes">
+<meta property="og:description" content="CopyOnWriteArrayList与JMM一 CopyOnWriteArrayList与JMM说明：本文代码均以JDK1.8的源码为准。 1 什么是CopyOnWriteArrayList关于CopyOnWriteArrayList是什么以及基本用法，在这里不多说，网上可以搜到大量这方面的文章。在这里只做简要说明：CopyOnWriteArrayList相当于线程安全的ArrayList，是">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-11-18T12:05:41.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CopyOnWriteArrayList详解">
+<meta name="twitter:description" content="CopyOnWriteArrayList与JMM一 CopyOnWriteArrayList与JMM说明：本文代码均以JDK1.8的源码为准。 1 什么是CopyOnWriteArrayList关于CopyOnWriteArrayList是什么以及基本用法，在这里不多说，网上可以搜到大量这方面的文章。在这里只做简要说明：CopyOnWriteArrayList相当于线程安全的ArrayList，是">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/Horizon.github.io/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://originer.github.io/Horizon.github.io/2018/11/18/CopyOnWriteArrayList详解/"/>
+
+
+
+
+
+  <title>CopyOnWriteArrayList详解 | Horizon Notes</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/Horizon.github.io/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Horizon Notes</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/Horizon.github.io/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/Horizon.github.io/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/Horizon.github.io/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/Horizon.github.io/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/11/18/CopyOnWriteArrayList详解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Horizon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/Horizon.github.io/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Horizon Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">CopyOnWriteArrayList详解</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-18T20:05:41+08:00">
+                2018-11-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Horizon.github.io/categories/Java集合框架/" itemprop="url" rel="index">
+                    <span itemprop="name">Java集合框架</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="CopyOnWriteArrayList与JMM"><a href="#CopyOnWriteArrayList与JMM" class="headerlink" title="CopyOnWriteArrayList与JMM"></a>CopyOnWriteArrayList与JMM</h2><h1 id="一-CopyOnWriteArrayList与JMM"><a href="#一-CopyOnWriteArrayList与JMM" class="headerlink" title="一 CopyOnWriteArrayList与JMM"></a>一 CopyOnWriteArrayList与JMM</h1><p>说明：本文代码均以JDK1.8的源码为准。</p>
+<h2 id="1-什么是CopyOnWriteArrayList"><a href="#1-什么是CopyOnWriteArrayList" class="headerlink" title="1 什么是CopyOnWriteArrayList"></a>1 什么是CopyOnWriteArrayList</h2><p>关于CopyOnWriteArrayList是什么以及基本用法，在这里不多说，网上可以搜到大量这方面的文章。在这里只做简要说明：CopyOnWriteArrayList相当于线程安全的ArrayList，是一个可变数组。它具有如下特性：</p>
+<ul>
+<li>是线程安全的</li>
+<li>写操作会复制整个基础数组，因此写操作开销很大</li>
+<li>适用于如下情况：数组大小较小，并且读操作比写操作多很多的情形</li>
+</ul>
+<a id="more"></a>
+<h2 id="2-CopyOnWriteArrayList的设计原理与JMM"><a href="#2-CopyOnWriteArrayList的设计原理与JMM" class="headerlink" title="2 CopyOnWriteArrayList的设计原理与JMM"></a>2 CopyOnWriteArrayList的设计原理与JMM</h2><p>下面我们分析CopyOnWriteArrayList的设计原理，结合JMM的基础知识，分析CopyOnWriteArrayList是如何保证线程安全的。</p>
+<p>首先看用来实际保存数据的数组：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/** The array, accessed only via getArray/setArray. */</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">transient</span> <span class="keyword">volatile</span> Object[] array;</div></pre></td></tr></table></figure>
+<p>可以看到array数组前面使用了volatile变量来修饰。volatile主要用来解决内存可见性问题。关于volatile的详细实现原理可以参考《<a href="http://o8sltkx20.bkt.clouddn.com/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B.pdf" target="_blank" rel="external">深入理解java内存模型.pdf</a>》以及<a href="http://www.cnblogs.com/dolphin0520/p/3920373.html" target="_blank" rel="external">Java并发编程：volatile关键字解析-博客园-海子</a>。</p>
+<h3 id="2-1-CopyOnWriteArrayList的读方法"><a href="#2-1-CopyOnWriteArrayList的读方法" class="headerlink" title="2.1 CopyOnWriteArrayList的读方法"></a>2.1 CopyOnWriteArrayList的读方法</h3><p>读方法比较简单，直接从array中获取对应索引的值。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * &#123;<span class="doctag">@inheritDoc</span>&#125;</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> * <span class="doctag">@throws</span> IndexOutOfBoundsException &#123;<span class="doctag">@inheritDoc</span>&#125;</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="function"><span class="keyword">public</span> E <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> get(getArray(), index);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</div><div class="line"><span class="function"><span class="keyword">private</span> E <span class="title">get</span><span class="params">(Object[] a, <span class="keyword">int</span> index)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> (E) a[index];</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * Gets the array.  Non-private so as to also be accessible</span></div><div class="line"><span class="comment"> * from CopyOnWriteArraySet class.</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">final</span> Object[] getArray() &#123;</div><div class="line">    <span class="keyword">return</span> array;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="2-2-CopyOnWriteArrayList的写方法"><a href="#2-2-CopyOnWriteArrayList的写方法" class="headerlink" title="2.2 CopyOnWriteArrayList的写方法"></a>2.2 CopyOnWriteArrayList的写方法</h3><ul>
+<li>set方法源码如下：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * Replaces the element at the specified position in this list with the</span></div><div class="line"><span class="comment"> * specified element.</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> * <span class="doctag">@throws</span> IndexOutOfBoundsException &#123;<span class="doctag">@inheritDoc</span>&#125;</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="function"><span class="keyword">public</span> E <span class="title">set</span><span class="params">(<span class="keyword">int</span> index, E element)</span> </span>&#123;</div><div class="line">    <span class="keyword">final</span> ReentrantLock lock = <span class="keyword">this</span>.lock;</div><div class="line">    lock.lock();</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        Object[] elements = getArray();</div><div class="line">        E oldValue = get(elements, index);</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (oldValue != element) &#123;</div><div class="line">            <span class="keyword">int</span> len = elements.length;</div><div class="line">            Object[] newElements = Arrays.copyOf(elements, len);</div><div class="line">            newElements[index] = element;</div><div class="line">            setArray(newElements);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="comment">// Not quite a no-op; ensures volatile write semantics</span></div><div class="line">            setArray(elements);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> oldValue;</div><div class="line">    &#125; <span class="keyword">finally</span> &#123;</div><div class="line">        lock.unlock();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * Sets the array.</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="function"><span class="keyword">final</span> <span class="keyword">void</span> <span class="title">setArray</span><span class="params">(Object[] a)</span> </span>&#123;</div><div class="line">    array = a;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>set方法的功能是将对应索引的元素置为一个新值。执行流程：</p>
+<p>（1）加锁</p>
+<p>（2）获取对应索引已有的值</p>
+<p>（3）比较已有的值和新值，如果不相等，转4，否则转5</p>
+<p>（4）创建新的数组，复制原数组的元素，并将对应索引置为新值。然后将新数组赋给array（setArray）</p>
+<p>（5）setArray-将array赋给array</p>
+<p>这里有一个比较奇怪的点，为什么已有的值和新值相等的时候，还要执行setArray呢？本质上setArray也没有做什么事情。</p>
+<p>这段代码混合使用了锁以及volatile。锁的用法比较容易理解，它在使用同一个锁的不同线程之间保证内存顺序性，代码结尾的释放锁的操作提供了本线程和其他欲获取相同的锁的线程之间的happens-before语义。但是CopyOnWriteArrayList类中其他代码，不一定会使用到这把锁，因此，前面所述的锁带来的内存模型含义对这部分代码执行是不适用的。</p>
+<p>其他没用到这把锁的代码，读写是volatile读和volatile写（因为array前面使用volatile关键字修饰）。由volatile来保证happens-before语义。</p>
+<hr>
+<p><strong>volatile的特性及原理</strong></p>
+<p>volatile 变量自身具有下列特性:（1）可见性。对一个volatile 变量的读,总是能看到(任意线程)对这个volatile变量最后的写入。（2）原子性:对任意单个volatile 变量的读/写具有原子性,但类似于volatile++这种复合操作不具有原子性。</p>
+<p>volatile 写和锁的释放有相同的内存语义。</p>
+<p>为了实现 volatile 的内存语义,编译器在生成字节码时,会在指令序列中插入内存屏障来禁止特定类型的处理器重排序。</p>
+<hr>
+<p>这里调用setArray的原因是，确保set方法对array执行的永远是volatile写。这就和其他对array执行volatile读的线程之间建立了happens-before语义。非常重要的一点：volatile读/写语义针对的是读写操作，而不是使用volatile修饰的变量本身。这样说更直白一点：在一个volatile写操作之前的对其他非volatile变量的写，happens-before于同一个volatile变量读操作之后的对其他变量的读。这句话比较绕，看下面一个例子就比较易懂了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// initial conditions</span></div><div class="line"><span class="keyword">int</span> nonVolatileField = <span class="number">0</span>;</div><div class="line">CopyOnWriteArrayList&lt;String&gt; list = <span class="comment">/* a single String */</span></div><div class="line"></div><div class="line"><span class="comment">// Thread 1</span></div><div class="line">nonVolatileField = <span class="number">1</span>;                 <span class="comment">// (1)</span></div><div class="line">list.set(<span class="number">0</span>, <span class="string">"x"</span>);                     <span class="comment">// (2)</span></div><div class="line"></div><div class="line"><span class="comment">// Thread 2</span></div><div class="line">String s = list.get(<span class="number">0</span>);               <span class="comment">// (3)</span></div><div class="line"><span class="keyword">if</span> (s == <span class="string">"x"</span>) &#123;</div><div class="line">    <span class="keyword">int</span> localVar = nonVolatileField;  <span class="comment">// (4)</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>现在假设原始数组中无元素“x”，这样(2)成功设置了元素”x”，(3)处可以成功获取到元素”x”。这种情况下，(4)一定会读取到(1)处设置的值1.因为(2)处的volatile写以及在此之前的任何写操作都happens-before(3)处的读以及之后的所有读。</p>
+<p>但是，假设一开始数组中就有了元素”x”，如果else不调用setArray，那么(2)处的写就不是volatile写，(4)处的读就不一定能读到(1)处设置的值！</p>
+<p>很显然我们不想让内存可见性依赖于list中已有的值，为了确保任何情况下的内存可见性，set方法必须永远都是一个volatile写，这就是为何要在else代码块中调用setArray的原因。</p>
+<p>其他写方法（add、remove）比较易懂，在此不详述。</p>
+<h2 id="3-参考资料"><a href="#3-参考资料" class="headerlink" title="3 参考资料"></a>3 参考资料</h2><ul>
+<li><a href="http://www.cnblogs.com/skywang12345/p/3498483.html" target="_blank" rel="external">Java多线程系列–“JUC集合”02之 CopyOnWriteArrayList</a></li>
+<li><a href="http://stackoverflow.com/questions/28772539/why-setarray-method-call-required-in-copyonwritearraylist#" target="_blank" rel="external">Why setArray() method call required in CopyOnWriteArrayList</a></li>
+<li><a href="http://o8sltkx20.bkt.clouddn.com/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B.pdf" target="_blank" rel="external">深入理解java内存模型.pdf</a></li>
+<li><a href="http://www.cnblogs.com/dolphin0520/p/3920373.html" target="_blank" rel="external">Java并发编程：volatile关键字解析-博客园-海子</a></li>
+</ul>
+<h1 id="二-为什么Java-HashMap、CopyOnWriteArrayList等集合自己实现readObject和writeObject方法"><a href="#二-为什么Java-HashMap、CopyOnWriteArrayList等集合自己实现readObject和writeObject方法" class="headerlink" title="二 为什么Java HashMap、CopyOnWriteArrayList等集合自己实现readObject和writeObject方法"></a>二 为什么Java HashMap、CopyOnWriteArrayList等集合自己实现readObject和writeObject方法</h1><p>PS:本文源码参考的是JDK 1.8.</p>
+<h2 id="1-readObject、writeObject方法是什么？作用是什么？"><a href="#1-readObject、writeObject方法是什么？作用是什么？" class="headerlink" title="1 readObject、writeObject方法是什么？作用是什么？"></a>1 readObject、writeObject方法是什么？作用是什么？</h2><p>当一个class实现了Serializable接口，那么意味着这个类可以被序列化。如果类不实现readObject、writeObject方法，那么会执行默认的序列化和反序列化逻辑，否则执行自定义的序列化和反序列化逻辑，即readObject、writeObject方法的逻辑。</p>
+<p>JDK提供的对于Java对象序列化操作的类是ObjectOutputStream，反序列化的类是ObjectInputStream。下面我们来看序列化的实现（ObjectOutputStream.writeObject）。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * Write the specified object to the ObjectOutputStream.  The class of the</span></div><div class="line"><span class="comment"> * object, the signature of the class, and the values of the non-transient</span></div><div class="line"><span class="comment"> * and non-static fields of the class and all of its supertypes are</span></div><div class="line"><span class="comment"> * written.  Default serialization for a class can be overridden using the</span></div><div class="line"><span class="comment"> * writeObject and the readObject methods.  Objects referenced by this</span></div><div class="line"><span class="comment"> * object are written transitively so that a complete equivalent graph of</span></div><div class="line"><span class="comment"> * objects can be reconstructed by an ObjectInputStream.</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> * &lt;p&gt;Exceptions are thrown for problems with the OutputStream and for</span></div><div class="line"><span class="comment"> * classes that should not be serialized.  All exceptions are fatal to the</span></div><div class="line"><span class="comment"> * OutputStream, which is left in an indeterminate state, and it is up to</span></div><div class="line"><span class="comment"> * the caller to ignore or recover the stream state.</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> * <span class="doctag">@throws</span>  InvalidClassException Something is wrong with a class used by</span></div><div class="line"><span class="comment"> *          serialization.</span></div><div class="line"><span class="comment"> * <span class="doctag">@throws</span>  NotSerializableException Some object to be serialized does not</span></div><div class="line"><span class="comment"> *          implement the java.io.Serializable interface.</span></div><div class="line"><span class="comment"> * <span class="doctag">@throws</span>  IOException Any exception thrown by the underlying</span></div><div class="line"><span class="comment"> *          OutputStream.</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">writeObject</span><span class="params">(Object obj)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">    <span class="keyword">if</span> (enableOverride) &#123;</div><div class="line">        writeObjectOverride(obj);</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        writeObject0(obj, <span class="keyword">false</span>);</div><div class="line">    &#125; <span class="keyword">catch</span> (IOException ex) &#123;</div><div class="line">        <span class="keyword">if</span> (depth == <span class="number">0</span>) &#123;</div><div class="line">            writeFatalException(ex);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">throw</span> ex;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>从方法注释可以看到，此方法正是执行了将对象序列化的操作。并且默认的序列化机制可以通过重写readObject、writeObject方法实现。实际调用的方法writeObject0最终会调到writeSerialData：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * Writes instance data for each serializable class of given object, from</span></div><div class="line"><span class="comment"> * superclass to subclass.</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">writeSerialData</span><span class="params">(Object obj, ObjectStreamClass desc)</span></span></div><div class="line"><span class="function">    <span class="keyword">throws</span> IOException</span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    ObjectStreamClass.ClassDataSlot[] slots = desc.getClassDataLayout();</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; slots.length; i++) &#123;</div><div class="line">        ObjectStreamClass slotDesc = slots[i].desc;</div><div class="line">        <span class="comment">//如果类重写了writeObject方法</span></div><div class="line">        <span class="keyword">if</span> (slotDesc.hasWriteObjectMethod()) &#123;</div><div class="line">            PutFieldImpl oldPut = curPut;</div><div class="line">            curPut = <span class="keyword">null</span>;</div><div class="line">            SerialCallbackContext oldContext = curContext;</div><div class="line"></div><div class="line">            <span class="keyword">if</span> (extendedDebugInfo) &#123;</div><div class="line">                debugInfoStack.push(</div><div class="line">                    <span class="string">"custom writeObject data (class \""</span> +</div><div class="line">                    slotDesc.getName() + <span class="string">"\")"</span>);</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                curContext = <span class="keyword">new</span> SerialCallbackContext(obj, slotDesc);</div><div class="line">                bout.setBlockDataMode(<span class="keyword">true</span>);</div><div class="line">                <span class="comment">//调用实现类自己的writeobject方法</span></div><div class="line">                slotDesc.invokeWriteObject(obj, <span class="keyword">this</span>);</div><div class="line">                bout.setBlockDataMode(<span class="keyword">false</span>);</div><div class="line">                bout.writeByte(TC_ENDBLOCKDATA);</div><div class="line">            &#125; <span class="keyword">finally</span> &#123;</div><div class="line">                curContext.setUsed();</div><div class="line">                curContext = oldContext;</div><div class="line">                <span class="keyword">if</span> (extendedDebugInfo) &#123;</div><div class="line">                    debugInfoStack.pop();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            curPut = oldPut;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            defaultWriteFields(obj, slotDesc);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="2-为什么是private方法？"><a href="#2-为什么是private方法？" class="headerlink" title="2 为什么是private方法？"></a>2 为什么是private方法？</h2><p>javadoc上没有明确说明声明为private的原因，一个可能的原因是，除了子类以外没有其他类会使用它，这样不会被滥用。</p>
+<p>另一个原因是，不希望这些方法被子类override。每个类都可以有自己的writeObject方法，序列化引擎会逐一调用。readObject相同。</p>
+<h2 id="3-HashMap中对readObject、writeObject方法的实现"><a href="#3-HashMap中对readObject、writeObject方法的实现" class="headerlink" title="3 HashMap中对readObject、writeObject方法的实现"></a>3 HashMap中对readObject、writeObject方法的实现</h2><h3 id="3-1-为什么HashMap要自定义序列化逻辑"><a href="#3-1-为什么HashMap要自定义序列化逻辑" class="headerlink" title="3.1 为什么HashMap要自定义序列化逻辑"></a>3.1 为什么HashMap要自定义序列化逻辑</h3><p>下文是摘自《Effective Java》：</p>
+<p><em>For example, consider the case of a hash table. The physical representation is a sequence of hash buckets containing key-value entries. The bucket that an entry resides in is a function of the hash code of its key, which is not, in general, guaranteed to be the same from JVM implementation to JVM implementation. In fact, it isn’t even guaranteed to be the same from run to run. Therefore, accepting the default serialized form for a hash table would constitute a serious bug. Serializing and deserializing the hash table could yield an object whose invariants were seriously corrupt.</em></p>
+<p>大概意思是：对于同一个key，在不同的JVM平台上计算出来的hash值可能不同，导致的结果就是，同一个hashmap反序列化之后和序列化之前不同，导致同一个key取出来的值不同。</p>
+<h3 id="3-2-HashMap是如何解决的"><a href="#3-2-HashMap是如何解决的" class="headerlink" title="3.2 HashMap是如何解决的"></a>3.2 HashMap是如何解决的</h3><ul>
+<li>将可能造成数据不一致的元素使用transient修饰，在序列化的时候忽略这些元素：<em>Entry[] tablesizemodCount</em></li>
+<li>HashMap中对writeObject的实现：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">writeObject</span><span class="params">(java.io.ObjectOutputStream s)</span></span></div><div class="line"><span class="function">    <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">    <span class="keyword">int</span> buckets = capacity();</div><div class="line">    <span class="comment">// Write out the threshold, loadfactor, and any hidden stuff</span></div><div class="line">    s.defaultWriteObject();</div><div class="line">    s.writeInt(buckets);</div><div class="line">    s.writeInt(size);</div><div class="line">    internalWriteEntries(s);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// Called only from writeObject, to ensure compatible ordering.</span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">internalWriteEntries</span><span class="params">(java.io.ObjectOutputStream s)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">    Node&lt;K,V&gt;[] tab;</div><div class="line">    <span class="keyword">if</span> (size &gt; <span class="number">0</span> &amp;&amp; (tab = table) != <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; tab.length; ++i) &#123;</div><div class="line">            <span class="keyword">for</span> (Node&lt;K,V&gt; e = tab[i]; e != <span class="keyword">null</span>; e = e.next) &#123;</div><div class="line">                s.writeObject(e.key);</div><div class="line">                s.writeObject(e.value);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>HashMap不会将保存数据的数组序列化，而是将元素个数以及每个元素的key、value序列化。而在反序列化的时候，重新计算，填充hashmap：</p>
+<p>readObject的实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * Reconstitute the &#123;<span class="doctag">@code</span> HashMap&#125; instance from a stream (i.e.,</span></div><div class="line"><span class="comment"> * deserialize it).</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">readObject</span><span class="params">(java.io.ObjectInputStream s)</span></span></div><div class="line"><span class="function">    <span class="keyword">throws</span> IOException, ClassNotFoundException </span>&#123;</div><div class="line">    <span class="comment">// Read in the threshold (ignored), loadfactor, and any hidden stuff</span></div><div class="line">    s.defaultReadObject();</div><div class="line">    reinitialize();</div><div class="line">    <span class="keyword">if</span> (loadFactor &lt;= <span class="number">0</span> || Float.isNaN(loadFactor))</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> InvalidObjectException(<span class="string">"Illegal load factor: "</span> +</div><div class="line">                                         loadFactor);</div><div class="line">    s.readInt();                <span class="comment">// Read and ignore number of buckets</span></div><div class="line">    <span class="keyword">int</span> mappings = s.readInt(); <span class="comment">// Read number of mappings (size)</span></div><div class="line">    <span class="keyword">if</span> (mappings &lt; <span class="number">0</span>)</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> InvalidObjectException(<span class="string">"Illegal mappings count: "</span> +</div><div class="line">                                         mappings);</div><div class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (mappings &gt; <span class="number">0</span>) &#123; <span class="comment">// (if zero, use defaults)</span></div><div class="line">        <span class="comment">// Size the table using given load factor only if within</span></div><div class="line">        <span class="comment">// range of 0.25...4.0</span></div><div class="line">        <span class="keyword">float</span> lf = Math.min(Math.max(<span class="number">0.25f</span>, loadFactor), <span class="number">4.0f</span>);</div><div class="line">        <span class="keyword">float</span> fc = (<span class="keyword">float</span>)mappings / lf + <span class="number">1.0f</span>;</div><div class="line">        <span class="keyword">int</span> cap = ((fc &lt; DEFAULT_INITIAL_CAPACITY) ?</div><div class="line">                   DEFAULT_INITIAL_CAPACITY :</div><div class="line">                   (fc &gt;= MAXIMUM_CAPACITY) ?</div><div class="line">                   MAXIMUM_CAPACITY :</div><div class="line">                   tableSizeFor((<span class="keyword">int</span>)fc));</div><div class="line">        <span class="keyword">float</span> ft = (<span class="keyword">float</span>)cap * lf;</div><div class="line">        threshold = ((cap &lt; MAXIMUM_CAPACITY &amp;&amp; ft &lt; MAXIMUM_CAPACITY) ?</div><div class="line">                     (<span class="keyword">int</span>)ft : Integer.MAX_VALUE);</div><div class="line">        <span class="meta">@SuppressWarnings</span>(&#123;<span class="string">"rawtypes"</span>,<span class="string">"unchecked"</span>&#125;)</div><div class="line">            Node&lt;K,V&gt;[] tab = (Node&lt;K,V&gt;[])<span class="keyword">new</span> Node[cap];</div><div class="line">        table = tab;</div><div class="line"></div><div class="line">        <span class="comment">// Read the keys and values, and put the mappings in the HashMap</span></div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; mappings; i++) &#123;</div><div class="line">            <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</div><div class="line">                K key = (K) s.readObject();</div><div class="line">            <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</div><div class="line">                V value = (V) s.readObject();</div><div class="line">            putVal(hash(key), key, value, <span class="keyword">false</span>, <span class="keyword">false</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这样就避免了反序列化之后根据Key获取到的元素与序列化之前获取到的元素不同。</p>
+<h2 id="4-为什么CopyOnWriteArrayList也需要自定义序列化逻辑？"><a href="#4-为什么CopyOnWriteArrayList也需要自定义序列化逻辑？" class="headerlink" title="4 为什么CopyOnWriteArrayList也需要自定义序列化逻辑？"></a>4 为什么CopyOnWriteArrayList也需要自定义序列化逻辑？</h2><p>writeObject、readObject实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment">  * Saves this list to a stream (that is, serializes it).</span></div><div class="line"><span class="comment">  *</span></div><div class="line"><span class="comment">  * <span class="doctag">@param</span> s the stream</span></div><div class="line"><span class="comment">  * <span class="doctag">@throws</span> java.io.IOException if an I/O error occurs</span></div><div class="line"><span class="comment">  * <span class="doctag">@serialData</span> The length of the array backing the list is emitted</span></div><div class="line"><span class="comment">  *               (int), followed by all of its elements (each an Object)</span></div><div class="line"><span class="comment">  *               in the proper order.</span></div><div class="line"><span class="comment">  */</span></div><div class="line"> <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">writeObject</span><span class="params">(java.io.ObjectOutputStream s)</span></span></div><div class="line"><span class="function">     <span class="keyword">throws</span> java.io.IOException </span>&#123;</div><div class="line"></div><div class="line">     s.defaultWriteObject();</div><div class="line"></div><div class="line">     Object[] elements = getArray();</div><div class="line">     <span class="comment">// Write out array length</span></div><div class="line">     s.writeInt(elements.length);</div><div class="line"></div><div class="line">     <span class="comment">// Write out all elements in the proper order.</span></div><div class="line">     <span class="keyword">for</span> (Object element : elements)</div><div class="line">         s.writeObject(element);</div><div class="line"> &#125;</div><div class="line"></div><div class="line"> <span class="comment">/**</span></div><div class="line"><span class="comment">  * Reconstitutes this list from a stream (that is, deserializes it).</span></div><div class="line"><span class="comment">  * <span class="doctag">@param</span> s the stream</span></div><div class="line"><span class="comment">  * <span class="doctag">@throws</span> ClassNotFoundException if the class of a serialized object</span></div><div class="line"><span class="comment">  *         could not be found</span></div><div class="line"><span class="comment">  * <span class="doctag">@throws</span> java.io.IOException if an I/O error occurs</span></div><div class="line"><span class="comment">  */</span></div><div class="line"> <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">readObject</span><span class="params">(java.io.ObjectInputStream s)</span></span></div><div class="line"><span class="function">     <span class="keyword">throws</span> java.io.IOException, ClassNotFoundException </span>&#123;</div><div class="line"></div><div class="line">     s.defaultReadObject();</div><div class="line"></div><div class="line">     <span class="comment">// bind to new lock</span></div><div class="line">     resetLock();</div><div class="line"></div><div class="line">     <span class="comment">// Read in array length and allocate array</span></div><div class="line">     <span class="keyword">int</span> len = s.readInt();</div><div class="line">     Object[] elements = <span class="keyword">new</span> Object[len];</div><div class="line"></div><div class="line">     <span class="comment">// Read in all elements in the proper order.</span></div><div class="line">     <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; i++)</div><div class="line">         elements[i] = s.readObject();</div><div class="line">     setArray(elements);</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<p>而数组被声明为transient：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/** The array, accessed only via getArray/setArray. */</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">transient</span> <span class="keyword">volatile</span> Object[] array;</div></pre></td></tr></table></figure>
+<p>可以看出其逻辑和ArrayList相同：是将数组长度以及所有元素序列化，在反序列化的时候新建数组，填充元素。</p>
+<p>如果采用默认的序列化机制会有如下问题：存储数据的数组实际上是动态数组，每次在放满以后自动增长设定的长度值，如果数组自动增长长度设为100，而实际只放了一个元素，那就会序列化很多null元素，所以ArrayList把元素数组设置为transient。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/Horizon.github.io/tags/Java集合框架/" rel="tag"># Java集合框架</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/Horizon.github.io/2018/11/17/HTTP协议相关笔记/" rel="next" title="HTTP协议相关笔记">
+                <i class="fa fa-chevron-left"></i> HTTP协议相关笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/Horizon.github.io/2018/11/19/缓存相关/" rel="prev" title="Java常用的缓存方案">
+                Java常用的缓存方案 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Horizon</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/Horizon.github.io/archives/">
+              
+                  <span class="site-state-item-count">39</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/Horizon.github.io/categories/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/Horizon.github.io/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/origner" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#CopyOnWriteArrayList与JMM"><span class="nav-number">1.</span> <span class="nav-text">CopyOnWriteArrayList与JMM</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#一-CopyOnWriteArrayList与JMM"><span class="nav-number"></span> <span class="nav-text">一 CopyOnWriteArrayList与JMM</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-什么是CopyOnWriteArrayList"><span class="nav-number">1.</span> <span class="nav-text">1 什么是CopyOnWriteArrayList</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-CopyOnWriteArrayList的设计原理与JMM"><span class="nav-number">2.</span> <span class="nav-text">2 CopyOnWriteArrayList的设计原理与JMM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-CopyOnWriteArrayList的读方法"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 CopyOnWriteArrayList的读方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-CopyOnWriteArrayList的写方法"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 CopyOnWriteArrayList的写方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-参考资料"><span class="nav-number">3.</span> <span class="nav-text">3 参考资料</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二-为什么Java-HashMap、CopyOnWriteArrayList等集合自己实现readObject和writeObject方法"><span class="nav-number"></span> <span class="nav-text">二 为什么Java HashMap、CopyOnWriteArrayList等集合自己实现readObject和writeObject方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-readObject、writeObject方法是什么？作用是什么？"><span class="nav-number">1.</span> <span class="nav-text">1 readObject、writeObject方法是什么？作用是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-为什么是private方法？"><span class="nav-number">2.</span> <span class="nav-text">2 为什么是private方法？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-HashMap中对readObject、writeObject方法的实现"><span class="nav-number">3.</span> <span class="nav-text">3 HashMap中对readObject、writeObject方法的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-为什么HashMap要自定义序列化逻辑"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 为什么HashMap要自定义序列化逻辑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-HashMap是如何解决的"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 HashMap是如何解决的</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-为什么CopyOnWriteArrayList也需要自定义序列化逻辑？"><span class="nav-number">4.</span> <span class="nav-text">4 为什么CopyOnWriteArrayList也需要自定义序列化逻辑？</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Horizon</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/Horizon.github.io/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/Horizon.github.io/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/Horizon.github.io/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/Horizon.github.io/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/Horizon.github.io/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

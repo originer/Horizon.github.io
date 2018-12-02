@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/Horizon.github.io/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/Horizon.github.io/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/Horizon.github.io/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/Horizon.github.io/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/Horizon.github.io/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/Horizon.github.io/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/Horizon.github.io/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="都是一些比较经典和基础的排序算法，应该是每个开发者都要掌握的，但是工作中用到的机会其实不多，时间长了会忘记。但是面试的时候也许会用到，所以做一个总结，方便自己复习。 排序动态视图展示：https://visualgo.net/en/sorting">
+<meta property="og:type" content="article">
+<meta property="og:title" content="常用排序算法总结">
+<meta property="og:url" content="https://originer.github.io/Horizon.github.io/2018/11/19/常用排序算法总结/index.html">
+<meta property="og:site_name" content="Horizon Notes">
+<meta property="og:description" content="都是一些比较经典和基础的排序算法，应该是每个开发者都要掌握的，但是工作中用到的机会其实不多，时间长了会忘记。但是面试的时候也许会用到，所以做一个总结，方便自己复习。 排序动态视图展示：https://visualgo.net/en/sorting">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/sort.png">
+<meta property="og:updated_time" content="2018-12-02T06:35:38.069Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="常用排序算法总结">
+<meta name="twitter:description" content="都是一些比较经典和基础的排序算法，应该是每个开发者都要掌握的，但是工作中用到的机会其实不多，时间长了会忘记。但是面试的时候也许会用到，所以做一个总结，方便自己复习。 排序动态视图展示：https://visualgo.net/en/sorting">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/sort.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/Horizon.github.io/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://originer.github.io/Horizon.github.io/2018/11/19/常用排序算法总结/"/>
+
+
+
+
+
+  <title>常用排序算法总结 | Horizon Notes</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/Horizon.github.io/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Horizon Notes</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/Horizon.github.io/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/Horizon.github.io/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/Horizon.github.io/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/Horizon.github.io/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/11/19/常用排序算法总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Horizon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/Horizon.github.io/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Horizon Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">常用排序算法总结</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-19T17:25:10+08:00">
+                2018-11-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Horizon.github.io/categories/算法/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><em>都是一些比较经典和基础的排序算法，应该是每个开发者都要掌握的，但是工作中用到的机会其实不多，时间长了会忘记。但是面试的时候也许会用到，所以做一个总结，方便自己复习。</em></p>
+<p>排序动态视图展示：<a href="https://visualgo.net/en/sorting" target="_blank" rel="external">https://visualgo.net/en/sorting</a></p>
+<p><img src="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/sort.png" alt="1542608413490"></p>
+<a id="more"></a>
+<p>一、稳定性:</p>
+<p>　   稳定：冒泡排序、插入排序、归并排序和基数排序</p>
+<p>　　不稳定：选择排序、快速排序、希尔排序、堆排序</p>
+<p>二、平均时间复杂度</p>
+<p>　　O(n^2):直接插入排序，简单选择排序，冒泡排序。</p>
+<p>　　在数据规模较小时（9W内），直接插入排序，简单选择排序差不多。当数据较大时，冒泡排序算法的时间代价最高。性能为O(n^2)的算法基本上是相邻元素进行比较，基本上都是稳定的。</p>
+<p>　　O(nlogn):快速排序，归并排序，希尔排序，堆排序。</p>
+<p>　　其中，快排是最好的， 其次是归并和希尔，堆排序在数据量很大时效果明显。</p>
+<p>三、排序算法的选择</p>
+<p>　　1.数据规模较小</p>
+<p>  　　（1）待排序列基本序的情况下，可以选择<strong>直接插入排序</strong>；</p>
+<p>  　　（2）对稳定性不作要求宜用简单选择排序，对稳定性有要求宜用插入或冒泡</p>
+<p>　　2.数据规模不是很大</p>
+<p>　　（1）完全可以用内存空间，序列杂乱无序，对稳定性没有要求，<strong>快速排序</strong>，此时要付出log（N）的额外空间。</p>
+<p>　　（2）序列本身可能有序，对稳定性有要求，空间允许下，宜用归并排序</p>
+<p>　　3.数据规模很大</p>
+<p>   　　（1）对稳定性有求，则可考虑归并排序。</p>
+<p>​    　　（2）对稳定性没要求，宜用堆排序</p>
+<p>　　4.序列初始基本有序（正序），宜用直接插入，冒泡</p>
+<h3 id="直接插入排序"><a href="#直接插入排序" class="headerlink" title="直接插入排序"></a>直接插入排序</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//伪代码</span></div><div class="line">mark first element as sorted</div><div class="line"></div><div class="line"><span class="keyword">for</span> each unsorted element X</div><div class="line"></div><div class="line">  <span class="string">'extract'</span> the element X</div><div class="line"></div><div class="line">  <span class="keyword">for</span> j = lastSortedIndex down to <span class="number">0</span></div><div class="line"></div><div class="line">    <span class="keyword">if</span> current element j &gt; X</div><div class="line"></div><div class="line">      move sorted element to the right by <span class="number">1</span></div><div class="line"></div><div class="line">    <span class="keyword">break</span> loop and insert X here</div><div class="line"><span class="comment">//实现</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span>[] insertSort(<span class="keyword">int</span>[] arr) &#123;</div><div class="line">    <span class="keyword">int</span> len = arr.length;</div><div class="line">    <span class="keyword">int</span> insertNum;<span class="comment">//要插入的数</span></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; len; i++) &#123;<span class="comment">//因为第一次不用，所以从1开始</span></div><div class="line">        insertNum = arr[i];</div><div class="line">        <span class="keyword">int</span> j = i - <span class="number">1</span>;<span class="comment">//序列元素个数</span></div><div class="line">        <span class="keyword">while</span> (j &gt;= <span class="number">0</span> &amp;&amp; arr[j] &gt; insertNum) &#123;<span class="comment">//从后往前循环，将大于insertNum的数向后移动</span></div><div class="line">            arr[j + <span class="number">1</span>] = arr[j];<span class="comment">//元素向后移动</span></div><div class="line">            j--;</div><div class="line">        &#125;</div><div class="line">        arr[j + <span class="number">1</span>] = insertNum;<span class="comment">//找到位置，插入当前元素</span></div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> arr;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 冒泡排序</span></div><div class="line"><span class="comment"> * do</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> *   swapped = false</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> *   for i = 1 to indexOfLastUnsortedElement-1</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> *     if leftElement &gt; rightElement</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> *       swap(leftElement, rightElement)</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> *       swapped = true; swapCounter++</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> * while swapped</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span>[] bubbleSort(<span class="keyword">int</span>[] arr) &#123;</div><div class="line">    <span class="keyword">int</span> len = arr.length;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; len - i - <span class="number">1</span>; j++) &#123;<span class="comment">//注意第二重循环的条件</span></div><div class="line">            <span class="keyword">if</span> (arr[j] &gt; arr[j + <span class="number">1</span>]) &#123;</div><div class="line">                <span class="keyword">int</span> temp = arr[j];</div><div class="line">                arr[j] = arr[j + <span class="number">1</span>];</div><div class="line">                arr[j + <span class="number">1</span>] = temp;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> arr;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="选择排序"><a href="#选择排序" class="headerlink" title="选择排序"></a>选择排序</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * repeat (numOfElements - 1) times</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> *   set the first unsorted element as the minimum</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> *   for each of the unsorted elements</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> *     if element &lt; currentMinimum</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> *       set element as new minimum</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> *   swap minimum with first unsorted positio</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span>[] sort(<span class="keyword">int</span>[] arr) &#123;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; arr.length; i++) &#123;</div><div class="line">        <span class="keyword">int</span> min = findMinIndex(arr, i);</div><div class="line">        swap(arr, i, min);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> arr;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">swap</span><span class="params">(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> i, <span class="keyword">int</span> min)</span> </span>&#123;</div><div class="line">    <span class="keyword">int</span> tmp = arr[i];</div><div class="line">    arr[i] = arr[min];</div><div class="line">    arr[min] = tmp;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">findMinIndex</span><span class="params">(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> i)</span> </span>&#123;</div><div class="line">    <span class="keyword">int</span> min = i;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = i + <span class="number">1</span>; j &lt; arr.length; j++) &#123;</div><div class="line">        <span class="keyword">if</span> (arr[j] &lt; arr[min]) &#123;</div><div class="line">            min = j;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> min;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 快速排序，递归实现</span></div><div class="line"><span class="comment"> * for each (unsorted) partition</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> * set first element as pivot</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> *   storeIndex = pivotIndex + 1</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> *   for i = pivotIndex + 1 to rightmostIndex</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> *     if element[i] &lt; element[pivot]</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> *       swap(i, storeIndex); storeIndex++</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> *   swap(pivot, storeIndex - 1)</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">QuickSort</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span>[] quickSort(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> start, <span class="keyword">int</span> end) &#123;</div><div class="line">        <span class="keyword">if</span> (start &lt; end) &#123;</div><div class="line">            <span class="keyword">int</span> baseNum = arr[start];<span class="comment">//选基准值</span></div><div class="line">            <span class="keyword">int</span> midNum;<span class="comment">//记录中间值</span></div><div class="line">            <span class="keyword">int</span> i = start;</div><div class="line">            <span class="keyword">int</span> j = end;</div><div class="line">            <span class="keyword">do</span> &#123;</div><div class="line">                <span class="keyword">while</span> ((arr[i] &lt; baseNum) &amp;&amp; i &lt; end) &#123;</div><div class="line">                    i++;</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">while</span> ((arr[j] &gt; baseNum) &amp;&amp; j &gt; start) &#123;</div><div class="line">                    j--;</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">if</span> (i &lt;= j) &#123;</div><div class="line">                    midNum = arr[i];</div><div class="line">                    arr[i] = arr[j];</div><div class="line">                    arr[j] = midNum;</div><div class="line">                    i++;</div><div class="line">                    j--;</div><div class="line">                &#125;</div><div class="line">            &#125; <span class="keyword">while</span> (i &lt;= j);</div><div class="line">            <span class="keyword">if</span> (start &lt; j) &#123;</div><div class="line">                quickSort(arr, start, j);</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">if</span> (end &gt; i) &#123;</div><div class="line">                quickSort(arr, i, end);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> arr;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/Horizon.github.io/2018/11/19/缓存相关/" rel="next" title="Java常用的缓存方案">
+                <i class="fa fa-chevron-left"></i> Java常用的缓存方案
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/Horizon.github.io/2018/11/20/Java虚拟机学习笔记/" rel="prev" title="Java虚拟机学习笔记">
+                Java虚拟机学习笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Horizon</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/Horizon.github.io/archives/">
+              
+                  <span class="site-state-item-count">39</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/Horizon.github.io/categories/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/Horizon.github.io/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/origner" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#直接插入排序"><span class="nav-number">1.</span> <span class="nav-text">直接插入排序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#冒泡排序"><span class="nav-number">2.</span> <span class="nav-text">冒泡排序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#选择排序"><span class="nav-number">3.</span> <span class="nav-text">选择排序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#快速排序"><span class="nav-number">4.</span> <span class="nav-text">快速排序</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Horizon</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/Horizon.github.io/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/Horizon.github.io/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/Horizon.github.io/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/Horizon.github.io/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/Horizon.github.io/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

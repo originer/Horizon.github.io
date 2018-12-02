@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/Horizon.github.io/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/Horizon.github.io/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/Horizon.github.io/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/Horizon.github.io/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/Horizon.github.io/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/Horizon.github.io/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/Horizon.github.io/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="HTTP," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="什么是HTTP协议协议是指计算机通信网络中两台计算机之间进行通信所必须共同遵守的规定或规则，超文本传输协议(HTTP)是一种通信协议，它允许将超文本标记语言(HTML)文档从Web服务器传送到客户端的浏览器。">
+<meta name="keywords" content="HTTP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HTTP协议相关笔记">
+<meta property="og:url" content="https://originer.github.io/Horizon.github.io/2018/11/17/HTTP协议相关笔记/index.html">
+<meta property="og:site_name" content="Horizon Notes">
+<meta property="og:description" content="什么是HTTP协议协议是指计算机通信网络中两台计算机之间进行通信所必须共同遵守的规定或规则，超文本传输协议(HTTP)是一种通信协议，它允许将超文本标记语言(HTML)文档从Web服务器传送到客户端的浏览器。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-11-17T07:51:01.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HTTP协议相关笔记">
+<meta name="twitter:description" content="什么是HTTP协议协议是指计算机通信网络中两台计算机之间进行通信所必须共同遵守的规定或规则，超文本传输协议(HTTP)是一种通信协议，它允许将超文本标记语言(HTML)文档从Web服务器传送到客户端的浏览器。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/Horizon.github.io/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://originer.github.io/Horizon.github.io/2018/11/17/HTTP协议相关笔记/"/>
+
+
+
+
+
+  <title>HTTP协议相关笔记 | Horizon Notes</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/Horizon.github.io/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Horizon Notes</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/Horizon.github.io/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/Horizon.github.io/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/Horizon.github.io/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/Horizon.github.io/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/11/17/HTTP协议相关笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Horizon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/Horizon.github.io/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Horizon Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">HTTP协议相关笔记</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-17T15:51:01+08:00">
+                2018-11-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Horizon.github.io/categories/HTTP/" itemprop="url" rel="index">
+                    <span itemprop="name">HTTP</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="什么是HTTP协议"><a href="#什么是HTTP协议" class="headerlink" title="什么是HTTP协议"></a>什么是HTTP协议</h1><p>协议是指计算机通信网络中两台计算机之间进行通信所必须共同遵守的规定或规则，超文本传输协议(HTTP)是一种通信协议，它允许将超文本标记语言(HTML)文档从Web服务器传送到客户端的浏览器。</p>
+<a id="more"></a>
+<h1 id="URL详解"><a href="#URL详解" class="headerlink" title="URL详解"></a>URL详解</h1><p> URL(Uniform Resource Locator) 地址用于描述一个网络上的资源,  基本格式如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">schema://host[:port#]/path/.../[?query-string][#anchor]</div></pre></td></tr></table></figure>
+<p>scheme               指定低层使用的协议(例如：http, https, ftp)</p>
+<p>host                   HTTP服务器的IP地址或者域名</p>
+<p>port#                 HTTP服务器的默认端口是80，这种情况下端口号可以省略。如果使用了别的端口，必须指明，例如 <a href="http://www.cnblogs.com:8080/" target="_blank" rel="external">http://www.cnblogs.com:8080/</a></p>
+<p>path                   访问资源的路径</p>
+<p>query-string       发送给http服务器的数据</p>
+<p>anchor-             锚</p>
+<h1 id="HTTP协议是无状态的"><a href="#HTTP协议是无状态的" class="headerlink" title="HTTP协议是无状态的"></a>HTTP协议是无状态的</h1><p>http协议是无状态的，同一个客户端的这次请求和上次请求是没有对应关系，对http服务器来说，它并不知道这两个请求来自同一个客户端。 为了解决这个问题， Web程序引入了Cookie机制来维护状态.</p>
+<h1 id="打开一个网页需要浏览器发送很多次Request"><a href="#打开一个网页需要浏览器发送很多次Request" class="headerlink" title="打开一个网页需要浏览器发送很多次Request"></a>打开一个网页需要浏览器发送很多次Request</h1><p>\1. 当你在浏览器输入URL <a href="http://www.cnblogs.com" target="_blank" rel="external">http://www.cnblogs.com</a> 的时候，浏览器发送一个Request去获取 <a href="http://www.cnblogs.com" target="_blank" rel="external">http://www.cnblogs.com</a> 的html.  服务器把Response发送回给浏览器.</p>
+<p>\2. 浏览器分析Response中的 HTML，发现其中引用了很多其他文件，比如图片，CSS文件，JS文件。</p>
+<p>\3. 浏览器会自动再次发送Request去获取图片，CSS文件，或者JS文件。</p>
+<p>\4. 等所有的文件都下载成功后。 网页就被显示出来了。</p>
+<h1 id="Get和Post方法的区别"><a href="#Get和Post方法的区别" class="headerlink" title="Get和Post方法的区别"></a>Get和Post方法的区别</h1><p>Http协议定义了很多与服务器交互的方法，最基本的有4种，分别是GET,POST,PUT,DELETE. 一个URL地址用于描述一个网络上的资源，而HTTP中的GET, POST, PUT, DELETE就对应着对这个资源的查，改，增，删4个操作。 我们最常见的就是GET和POST了。GET一般用于获取/查询资源信息，而POST一般用于更新资源信息.</p>
+<p>我们看看GET和POST的区别</p>
+<p>\1. GET提交的数据会放在URL之后，以?分割URL和传输数据，参数之间以&amp;相连，如EditPosts.aspx?name=test1&amp;id=123456.  POST方法是把提交的数据放在HTTP包的Body中.</p>
+<p>\2. GET提交的数据大小有限制（因为浏览器对URL的长度有限制），而POST方法提交的数据没有限制.</p>
+<p>\3. GET方式需要使用Request.QueryString来取得变量的值，而POST方式通过Request.Form来获取变量的值。</p>
+<p>\4. GET方式提交数据，会带来安全问题，比如一个登录页面，通过GET方式提交数据时，用户名和密码将出现在URL上，如果页面可以被缓存或者其他人可以访问这台机器，就可以从历史记录获得该用户的账号和密码.</p>
+<h1 id="状态码"><a href="#状态码" class="headerlink" title="状态码"></a>状态码</h1><p>Response 消息中的第一行叫做状态行，由HTTP协议版本号， 状态码， 状态消息 三部分组成。</p>
+<p>状态码用来告诉HTTP客户端,HTTP服务器是否产生了预期的Response.</p>
+<p>HTTP/1.1中定义了5类状态码， 状态码由三位数字组成，第一个数字定义了响应的类别</p>
+<p>1XX  提示信息 - 表示请求已被成功接收，继续处理</p>
+<p>2XX  成功 - 表示请求已被成功接收，理解，接受</p>
+<p>3XX  重定向 - 要完成请求必须进行更进一步的处理</p>
+<p>4XX  客户端错误 -  请求有语法错误或请求无法实现</p>
+<p>5XX  服务器端错误 -   服务器未能实现合法的请求</p>
+<h1 id="HTTP协议是无状态的和Connection-keep-alive的区别"><a href="#HTTP协议是无状态的和Connection-keep-alive的区别" class="headerlink" title="HTTP协议是无状态的和Connection: keep-alive的区别"></a>HTTP协议是无状态的和Connection: keep-alive的区别</h1><p>无状态是指协议对于事务处理没有记忆能力，服务器不知道客户端是什么状态。从另一方面讲，打开一个服务器上的网页和你之前打开这个服务器上的网页之间没有任何联系</p>
+<p>HTTP是一个无状态的面向连接的协议，无状态不代表HTTP不能保持TCP连接，更不能代表HTTP使用的是UDP协议（无连接）</p>
+<p>从HTTP/1.1起，默认都开启了Keep-Alive，保持连接特性，简单地说，当一个网页打开完成后，客户端和服务器之间用于传输HTTP数据的TCP连接不会关闭，如果客户端再次访问这个服务器上的网页，会继续使用这一条已经建立的连接</p>
+<p> Keep-Alive不会永久保持连接，它有一个保持时间，可以在不同的服务器软件（如Apache）中设定这个时间    </p>
+<h1 id="http和https的区别"><a href="#http和https的区别" class="headerlink" title="http和https的区别"></a>http和https的区别</h1><p>超文本传输协议HTTP协议被用于在Web浏览器和网站服务器之间传递信息，HTTP协议以明文方式发送内容，不提供任何方式的数据加密，如果攻击者截取了Web浏览器和网站服务器之间的传输报文，就可以直接读懂其中的信息，因此，HTTP协议不适合传输一些敏感信息，比如：信用卡号、密码等支付信息。为了解决HTTP协议的这一缺陷，需要使用另一种协议：安全套接字层超文本传输协议HTTPS，为了数据传输的安全，HTTPS在HTTP的基础上加入了SSL协议，SSL依靠证书来验证服务器的身份，并为浏览器和服务器之间的通信加密。</p>
+<h4 id="一、HTTP和HTTPS的基本概念"><a href="#一、HTTP和HTTPS的基本概念" class="headerlink" title="一、HTTP和HTTPS的基本概念"></a>一、HTTP和HTTPS的基本概念</h4><p>HTTP：是互联网上应用最为广泛的一种网络协议，是一个客户端和服务器端请求和应答的标准（TCP），用于从WWW服务器传输超文本到本地浏览器的传输协议，它可以使浏览器更加高效，使网络传输减少。HTTPS：是以安全为目标的HTTP通道，简单讲是HTTP的安全版，即HTTP下加入SSL层，HTTPS的安全基础是SSL，因此加密的详细内容就需要SSL。HTTPS协议的主要作用可以分为两种：一种是建立一个信息安全通道，来保证数据传输的安全；另一种就是确认网站的真实性。</p>
+<h4 id="二、HTTP与HTTPS有什么区别？"><a href="#二、HTTP与HTTPS有什么区别？" class="headerlink" title="二、HTTP与HTTPS有什么区别？"></a>二、HTTP与HTTPS有什么区别？</h4><p>1、https协议需要到ca申请证书，一般免费证书较少，因而需要一定费用。</p>
+<p>2、http是超文本传输协议，信息是明文传输，https则是具有安全性的ssl加密传输协议。</p>
+<p>3、http和https使用的是完全不同的连接方式，用的端口也不一样，前者是80，后者是443。</p>
+<p>4、http的连接很简单，是无状态的；HTTPS协议是由SSL+HTTP协议构建的可进行加密传输、身份认证的网络协议，比http协议安全。</p>
+<h4 id="三、HTTPS的工作原理"><a href="#三、HTTPS的工作原理" class="headerlink" title="三、HTTPS的工作原理"></a>三、HTTPS的工作原理</h4><p>我们都知道HTTPS能够加密信息，以免敏感信息被第三方获取，所以很多银行网站或电子邮箱等等安全级别较高的服务都会采用HTTPS协议。</p>
+<p>1、客户端发起HTTPS请求这个没什么好说的，就是用户在浏览器里输入一个https网址，然后连接到server的443端口。</p>
+<p>2、服务端的配置采用HTTPS协议的服务器必须要有一套数字证书，可以自己制作，也可以向组织申请，区别就是自己颁发的证书需要客户端验证通过，才可以继续访问，而使用受信任的公司申请的证书则不会弹出提示页面(startssl就是个不错的选择，有1年的免费服务)。这套证书其实就是一对公钥和私钥，如果对公钥和私钥不太理解，可以想象成一把钥匙和一个锁头，只是全世界只有你一个人有这把钥匙，你可以把锁头给别人，别人可以用这个锁把重要的东西锁起来，然后发给你，因为只有你一个人有这把钥匙，所以只有你才能看到被这把锁锁起来的东西。</p>
+<p>3、传送证书这个证书其实就是公钥，只是包含了很多信息，如证书的颁发机构，过期时间等等。</p>
+<p>4、客户端解析证书这部分工作是有客户端的TLS来完成的，首先会验证公钥是否有效，比如颁发机构，过期时间等等，如果发现异常，则会弹出一个警告框，提示证书存在问题。如果证书没有问题，那么就生成一个随机值，然后用证书对该随机值进行加密，就好像上面说的，把随机值用锁头锁起来，这样除非有钥匙，不然看不到被锁住的内容。</p>
+<p>5、传送加密信息这部分传送的是用证书加密后的随机值，目的就是让服务端得到这个随机值，以后客户端和服务端的通信就可以通过这个随机值来进行加密解密了。</p>
+<p>6、服务段解密信息服务端用私钥解密后，得到了客户端传过来的随机值(私钥)，然后把内容通过该值进行对称加密，所谓对称加密就是，将信息和私钥通过某种算法混合在一起，这样除非知道私钥，不然无法获取内容，而正好客户端和服务端都知道这个私钥，所以只要加密算法够彪悍，私钥够复杂，数据就够安全。</p>
+<p>7、传输加密后的信息这部分信息是服务段用私钥加密后的信息，可以在客户端被还原。</p>
+<p>8、客户端解密信息客户端用之前生成的私钥解密服务段传过来的信息，于是获取了解密后的内容，整个过程第三方即使监听到了数据，也束手无策。</p>
+<h1 id="HTTP1-0-HTTP-1-1主要区别"><a href="#HTTP1-0-HTTP-1-1主要区别" class="headerlink" title="HTTP1.0 HTTP 1.1主要区别"></a>HTTP1.0 HTTP 1.1主要区别</h1><h6 id="长连接"><a href="#长连接" class="headerlink" title="长连接"></a>长连接</h6><p>HTTP 1.0需要使用keep-alive参数来告知服务器端要建立一个长连接，而HTTP1.1默认支持长连接。HTTP是基于TCP/IP协议的，创建一个TCP连接是需要经过三次握手的,有一定的开销，如果每次通讯都要重新建立连接的话，对性能有影响。因此最好能维持一个长连接，可以用个长连接来发多个请求。</p>
+<h6 id="节约带宽"><a href="#节约带宽" class="headerlink" title="节约带宽"></a>节约带宽</h6><p>HTTP 1.1支持只发送header信息(不带任何body信息)，如果服务器认为客户端有权限请求服务器，则返回100，否则返回401。客户端如果接受到100，才开始把请求body发送到服务器。这样当服务器返回401的时候，客户端就可以不用发送请求body了，节约了带宽。另外HTTP还支持传送内容的一部分。这样当客户端已经有一部分的资源后，只需要跟服务器请求另外的部分资源即可。这是支持文件断点续传的基础。</p>
+<h6 id="HOST域"><a href="#HOST域" class="headerlink" title="HOST域"></a>HOST域</h6><p>现在可以web server例如tomat，设置虚拟站点是非常常见的，也即是说，web server上的多个虚拟站点可以共享同一个ip和端口。HTTP1.0是没有host域的，HTTP1.1才支持这个参数。</p>
+<h1 id="HTTP1-1-HTTP-2-0主要区别"><a href="#HTTP1-1-HTTP-2-0主要区别" class="headerlink" title="HTTP1.1 HTTP 2.0主要区别"></a>HTTP1.1 HTTP 2.0主要区别</h1><h6 id="多路复用"><a href="#多路复用" class="headerlink" title="多路复用"></a>多路复用</h6><p>HTTP2.0使用了多路复用的技术，做到同一个连接并发处理多个请求，而且并发请求的数量比HTTP1.1大了好几个数量级。当然HTTP1.1也可以多建立几个TCP连接，来支持处理更多并发的请求，但是创建TCP连接本身也是有开销的。TCP连接有一个预热和保护的过程，先检查数据是否传送成功，一旦成功过，则慢慢加大传输速度。因此对应瞬时并发的连接，服务器的响应就会变慢。所以最好能使用一个建立好的连接，并且这个连接可以支持瞬时并发的请求。</p>
+<h6 id="数据压缩"><a href="#数据压缩" class="headerlink" title="数据压缩"></a>数据压缩</h6><p>HTTP1.1不支持header数据的压缩，HTTP2.0使用HPACK算法对header的数据进行压缩，这样数据体积小了，在网络上传输就会更快。</p>
+<h6 id="服务器推送"><a href="#服务器推送" class="headerlink" title="服务器推送"></a>服务器推送</h6><p>意思是说，当我们对支持HTTP2.0的web server请求数据的时候，服务器会顺便把一些客户端需要的资源一起推送到客户端，免得客户端再次创建连接发送请求到服务器端获取。这种方式非常合适加载静态资源。服务器端推送的这些资源其实存在客户端的某处地方，客户端直接从本地加载这些资源就可以了，不用走网络，速度自然是快很多的。</p>
+<h1 id="cookie-和session-的区别"><a href="#cookie-和session-的区别" class="headerlink" title="cookie 和session 的区别"></a>cookie 和session 的区别</h1><ol>
+<li>cookie 是一种发送到客户浏览器的文本串句柄，并保存在客户机硬盘上，可以用来在某个WEB站点会话间持久的保持数据。</li>
+<li>session其实指的就是访问者从到达某个特定主页到离开为止的那段时间。 Session其实是利用Cookie进行信息处理的，当用户首先进行了请求后，服务端就在用户浏览器上创建了一个Cookie，当这个Session结束时，其实就是意味着这个Cookie就过期了。注：为这个用户创建的Cookie的名称是aspsessionid。这个Cookie的唯一目的就是为每一个用户提供不同的身份认证。</li>
+<li>cookie和session的共同之处在于：cookie和session都是用来跟踪浏览器用户身份的会话方式。</li>
+<li>cookie 和session的区别是：cookie数据保存在客户端，session数据保存在服务器端。 </li>
+</ol>
+<blockquote>
+<p>如果web服务器端使用的是session，那么所有的数据都保存在服务器上，客户端每次请求服务器的时候会发送当前会话的sessionid，服务器根据当前sessionid判断相应的用户数据标志，以确定用户是否登录或具有某种权限。由于数据是存储在服务器上面，所以你不能伪造，但是如果你能够获取某个登录用户的 sessionid，用特殊的浏览器伪造该用户的请求也是能够成功的。sessionid是服务器和客户端链接时候随机分配的，一般来说是不会有重复，但如果有大量的并发请求，也不是没有重复的可能性. </p>
+<p>如果浏览器使用的是cookie，那么所有的数据都保存在浏览器端，比如你登录以后，服务器设置了cookie用户名，那么当你再次请求服务器的时候，浏览器会将用户名一块发送给服务器，这些变量有一定的特殊标记。服务器会解释为cookie变量，所以只要不关闭浏览器，那么cookie变量一直是有效的，所以能够保证长时间不掉线。如果你能够截获某个用户的 cookie变量，然后伪造一个数据包发送过去，那么服务器还是认为你是合法的。所以，使用 cookie被攻击的可能性比较大。如果设置了的有效时间，那么它会将 cookie保存在客户端的硬盘上，下次再访问该网站的时候，浏览器先检查有没有 cookie，如果有的话，就读取该 cookie，然后发送给服务器。如果你在机器上面保存了某个论坛 cookie，有效期是一年，如果有人入侵你的机器，将你的  cookie拷走，然后放在他的浏览器的目录下面，那么他登录该网站的时候就是用你的的身份登录的。所以 cookie是可以伪造的。当然，伪造的时候需要主意，直接copy    cookie文件到 cookie目录，浏览器是不认的，他有一个index.dat文件，存储了 cookie文件的建立时间，以及是否有修改，所以你必须先要有该网站的 cookie文件，并且要从保证时间上骗过浏览器</p>
+</blockquote>
+<p><strong>1、cookie数据存放在客户的浏览器上，session数据放在服务器上。</strong></p>
+<p><strong>2、cookie不是很安全，别人可以分析存放在本地的COOKIE并进行COOKIE欺骗   考虑到安全应当使用session。</strong></p>
+<p><strong>3、session会在一定时间内保存在服务器上。当访问增多，会比较占用你服务器的性能   考虑到减轻服务器性能方面，应当使用COOKIE。</strong></p>
+<p><strong>4、单个cookie保存的数据不能超过4K，很多浏览器都限制一个站点最多保存20个cookie。5、所以个人建议：   将登陆信息等重要信息存放为SESSION   其他信息如果需要保留，可以放在COOKIE中</strong></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/Horizon.github.io/tags/HTTP/" rel="tag"># HTTP</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/Horizon.github.io/2018/11/15/AQS基础/" rel="next" title="Java并发核心-AQS">
+                <i class="fa fa-chevron-left"></i> Java并发核心-AQS
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/Horizon.github.io/2018/11/18/CopyOnWriteArrayList详解/" rel="prev" title="CopyOnWriteArrayList详解">
+                CopyOnWriteArrayList详解 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Horizon</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/Horizon.github.io/archives/">
+              
+                  <span class="site-state-item-count">39</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/Horizon.github.io/categories/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/Horizon.github.io/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/origner" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是HTTP协议"><span class="nav-number">1.</span> <span class="nav-text">什么是HTTP协议</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#URL详解"><span class="nav-number">2.</span> <span class="nav-text">URL详解</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HTTP协议是无状态的"><span class="nav-number">3.</span> <span class="nav-text">HTTP协议是无状态的</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#打开一个网页需要浏览器发送很多次Request"><span class="nav-number">4.</span> <span class="nav-text">打开一个网页需要浏览器发送很多次Request</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Get和Post方法的区别"><span class="nav-number">5.</span> <span class="nav-text">Get和Post方法的区别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#状态码"><span class="nav-number">6.</span> <span class="nav-text">状态码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HTTP协议是无状态的和Connection-keep-alive的区别"><span class="nav-number">7.</span> <span class="nav-text">HTTP协议是无状态的和Connection: keep-alive的区别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#http和https的区别"><span class="nav-number">8.</span> <span class="nav-text">http和https的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、HTTP和HTTPS的基本概念"><span class="nav-number">8.0.0.1.</span> <span class="nav-text">一、HTTP和HTTPS的基本概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、HTTP与HTTPS有什么区别？"><span class="nav-number">8.0.0.2.</span> <span class="nav-text">二、HTTP与HTTPS有什么区别？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、HTTPS的工作原理"><span class="nav-number">8.0.0.3.</span> <span class="nav-text">三、HTTPS的工作原理</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HTTP1-0-HTTP-1-1主要区别"><span class="nav-number">9.</span> <span class="nav-text">HTTP1.0 HTTP 1.1主要区别</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#长连接"><span class="nav-number">9.0.0.0.0.1.</span> <span class="nav-text">长连接</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#节约带宽"><span class="nav-number">9.0.0.0.0.2.</span> <span class="nav-text">节约带宽</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#HOST域"><span class="nav-number">9.0.0.0.0.3.</span> <span class="nav-text">HOST域</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HTTP1-1-HTTP-2-0主要区别"><span class="nav-number">10.</span> <span class="nav-text">HTTP1.1 HTTP 2.0主要区别</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#多路复用"><span class="nav-number">10.0.0.0.0.1.</span> <span class="nav-text">多路复用</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#数据压缩"><span class="nav-number">10.0.0.0.0.2.</span> <span class="nav-text">数据压缩</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#服务器推送"><span class="nav-number">10.0.0.0.0.3.</span> <span class="nav-text">服务器推送</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#cookie-和session-的区别"><span class="nav-number">11.</span> <span class="nav-text">cookie 和session 的区别</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Horizon</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/Horizon.github.io/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/Horizon.github.io/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/Horizon.github.io/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/Horizon.github.io/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/Horizon.github.io/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/Horizon.github.io/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/Horizon.github.io/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/Horizon.github.io/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/Horizon.github.io/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/Horizon.github.io/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/Horizon.github.io/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/Horizon.github.io/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="面试的时候除了基本的增删改查，一般就是会问一些sql优化相关的，这部分很多知识是跟索引有关系的。面试两次都被SQL索引问题问倒了，有必要给自己充一下电，深入学习一下sql的索引机制。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SQL索引学习">
+<meta property="og:url" content="https://originer.github.io/Horizon.github.io/2018/11/26/SQL索引学习/index.html">
+<meta property="og:site_name" content="Horizon Notes">
+<meta property="og:description" content="面试的时候除了基本的增删改查，一般就是会问一些sql优化相关的，这部分很多知识是跟索引有关系的。面试两次都被SQL索引问题问倒了，有必要给自己充一下电，深入学习一下sql的索引机制。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-11-26T07:55:48.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SQL索引学习">
+<meta name="twitter:description" content="面试的时候除了基本的增删改查，一般就是会问一些sql优化相关的，这部分很多知识是跟索引有关系的。面试两次都被SQL索引问题问倒了，有必要给自己充一下电，深入学习一下sql的索引机制。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/Horizon.github.io/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://originer.github.io/Horizon.github.io/2018/11/26/SQL索引学习/"/>
+
+
+
+
+
+  <title>SQL索引学习 | Horizon Notes</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/Horizon.github.io/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Horizon Notes</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/Horizon.github.io/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/Horizon.github.io/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/Horizon.github.io/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/Horizon.github.io/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/11/26/SQL索引学习/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Horizon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/Horizon.github.io/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Horizon Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">SQL索引学习</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-26T15:55:48+08:00">
+                2018-11-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Horizon.github.io/categories/数据库/" itemprop="url" rel="index">
+                    <span itemprop="name">数据库</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><em>面试的时候除了基本的增删改查，一般就是会问一些sql优化相关的，这部分很多知识是跟索引有关系的。面试两次都被SQL索引问题问倒了，有必要给自己充一下电，深入学习一下sql的索引机制。</em></p>
+<a id="more"></a>
+<h3 id="关于索引"><a href="#关于索引" class="headerlink" title="关于索引"></a>关于索引</h3><p>索引分类：聚集索引和非聚集索引。以字典举例，拼音查询就是聚集索引，部首查询就是非聚集索引。</p>
+<p> <strong>聚集索引和非聚集索引的根本区别是表记录的排列顺序和与索引的排列顺序是否一致</strong>，简单理解：比如聚集索引，a开头的数据后面一定是b开头的，跟物理排列顺序一致。非聚集索引就像部首查询，两个相同部首的可能位置相差非常远。</p>
+<p> <em>原理明白了，那他们是怎么存储的呢？在这里简单的说一下，聚集索引就是在数据库被开辟一个物理空间存放他的排列的值，例如1-100，所以当插入数据时，他会重新排列整个整个物理空间，而非聚集索引其实可以看作是一个含有聚集索引的表，他只仅包含原表中非聚集索引的列和指向实际物理表的指针。他只记录一个指针，其实就有点和堆栈差不多的感觉了。</em></p>
+<p><strong>个人理解：索引其实就是另外开辟一块空间，用来保存经过索引排列过顺序的数据，然后这些数据会映射到真正在表中存储的数据，实际上是以空间换时间的做法。一般数据库中的索引结构都是B+树。</strong></p>
+<h3 id="建立索引的原则"><a href="#建立索引的原则" class="headerlink" title="建立索引的原则"></a>建立索引的原则</h3><p>1) 定义主键的数据列一定要建立索引。</p>
+<p>2) 定义有外键的数据列一定要建立索引。</p>
+<p>3) 对于经常查询的数据列最好建立索引。</p>
+<p>4) 对于需要在指定范围内的快速或频繁查询的数据列;</p>
+<p>5) 经常用在WHERE子句中的数据列。</p>
+<p>6) 经常出现在关键字order by、group by、distinct后面的字段，建立索引。如果建立的是复合索引，索引的字段顺序要和这些关键字后面的字段顺序一致，否则索引不会被使用。</p>
+<p>7) 对于那些查询中很少涉及的列，重复值比较多的列不要建立索引。</p>
+<p>8) 对于定义为text、image和bit的数据类型的列不要建立索引。</p>
+<p>9) 对于经常存取的列避免建立索引 </p>
+<p>9) 限制表上的索引数目。对一个存在大量更新操作的表，所建索引的数目一般不要超过3个，最多不要超过5个。索引虽说提高了访问速度，但太多索引会影响数据的更新操作。</p>
+<p>10) 对复合索引，按照字段在查询条件中出现的频度建立索引。在复合索引中，记录首先按照第一个字段排序。对于在第一个字段上取值相同的记录，系统再按照第二个字段的取值排序，以此类推。因此只有复合索引的第一个字段出现在查询条件中，该索引才可能被使用,因此将应用频度高的字段，放置在复合索引的前面，会使系统最大可能地使用此索引，发挥索引的作用。</p>
+<h3 id="如何对索引执行效果进行分析然后进行查询优化："><a href="#如何对索引执行效果进行分析然后进行查询优化：" class="headerlink" title="如何对索引执行效果进行分析然后进行查询优化："></a>如何对索引执行效果进行分析然后进行查询优化：</h3><p>在<code>MySql</code>中有慢查询语句，可以帮助找到执行缓慢的sql。在<code>my.ini</code>文件中配置开启，可以保存超时的语句。然后就可以用执行计划explain进行分析。</p>
+<p>EXPLAIN SELECT * from dept_emp;</p>
+<p>EXPLAIN 执行结果中的具体含义：</p>
+<table>
+<thead>
+<tr>
+<th><strong>id</strong></th>
+<th>SELECT识别符。这是SELECT的查询序列号</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>select_type</strong></td>
+<td>SELECT类型,可以为以下任何一种:<strong>SIMPLE</strong>:简单SELECT(不使用UNION或子查询)<strong>PRIMARY</strong>:最外面的SELECT<strong>UNION</strong>:UNION中的第二个或后面的SELECT语句<strong>DEPENDENT UNION</strong>:UNION中的第二个或后面的SELECT语句,取决于外面的查询<strong>UNION RESULT</strong>:UNION 的结果<strong>SUBQUERY</strong>:子查询中的第一个SELECT<strong>DEPENDENT SUBQUERY</strong>:子查询中的第一个SELECT,取决于外面的查询<strong>DERIVED</strong>:导出表的SELECT(FROM子句的子查询)</td>
+</tr>
+<tr>
+<td><strong>table</strong></td>
+<td>输出的行所引用的表</td>
+</tr>
+<tr>
+<td><strong>type</strong></td>
+<td>联接类型。下面给出各种联接类型,按照从最佳类型到最坏类型进行排序:<strong>system</strong>:表仅有一行(=系统表)。这是const联接类型的一个特例。<strong>const</strong>:表最多有一个匹配行,它将在查询开始时被读取。因为仅有一行,在这行的列值可被优化器剩余部分认为是常数。const表很快,因为它们只读取一次!<strong>eq_ref</strong>:对于每个来自于前面的表的行组合,从该表中读取一行。这可能是最好的联接类型,除了const类型。<strong>ref</strong>:对于每个来自于前面的表的行组合,所有有匹配索引值的行将从这张表中读取。<strong>ref_or_null</strong>:该联接类型如同ref,但是添加了MySQL可以专门搜索包含NULL值的行。<strong>index_merge</strong>:该联接类型表示使用了索引合并优化方法。<strong>unique_subquery</strong>:该类型替换了下面形式的IN子查询的ref: value IN (SELECT primary_key FROM single_table WHERE some_expr) unique_subquery是一个索引查找函数,可以完全替换子查询,效率更高。<strong>index_subquery</strong>:该联接类型类似于unique_subquery。可以替换IN子查询,但只适合下列形式的子查询中的非唯一索引: value IN (SELECT key_column FROM single_table WHERE some_expr)<strong>range</strong>:只检索给定范围的行,使用一个索引来选择行。<strong>index</strong>:该联接类型与ALL相同,除了只有索引树被扫描。这通常比ALL快,因为索引文件通常比数据文件小。<strong>ALL</strong>:对于每个来自于先前的表的行组合,进行完整的表扫描。</td>
+</tr>
+<tr>
+<td><strong>possible_keys</strong></td>
+<td>指出MySQL能使用哪个索引在该表中找到行</td>
+</tr>
+<tr>
+<td><strong>key</strong></td>
+<td>显示MySQL实际决定使用的键(索引)。如果没有选择索引,键是NULL。</td>
+</tr>
+<tr>
+<td><strong>key_len</strong></td>
+<td>显示MySQL决定使用的键长度。如果键是NULL,则长度为NULL。</td>
+</tr>
+<tr>
+<td><strong>ref</strong></td>
+<td>显示使用哪个列或常数与key一起从表中选择行。</td>
+</tr>
+<tr>
+<td><strong>rows</strong></td>
+<td>显示MySQL认为它执行查询时必须检查的行数。多行之间的数据相乘可以估算要处理的行数。</td>
+</tr>
+<tr>
+<td><strong>filtered</strong></td>
+<td>显示了通过条件过滤出的行数的百分比估计值。</td>
+</tr>
+<tr>
+<td><strong>Extra</strong></td>
+<td>该列包含MySQL解决查询的详细信息<strong>Distinct</strong>:MySQL发现第1个匹配行后,停止为当前的行组合搜索更多的行。<strong>Not exists</strong>:MySQL能够对查询进行LEFT JOIN优化,发现1个匹配LEFT JOIN标准的行后,不再为前面的的行组合在该表内检查更多的行。<strong>range checked for each record (index map: #)</strong>:MySQL没有发现好的可以使用的索引,但发现如果来自前面的表的列值已知,可能部分索引可以使用。<strong>Using filesort</strong>:MySQL需要额外的一次传递,以找出如何按排序顺序检索行。<strong>Using index</strong>:从只使用索引树中的信息而不需要进一步搜索读取实际的行来检索表中的列信息。<strong>Using temporary</strong>:为了解决查询,MySQL需要创建一个临时表来容纳结果。<strong>Using where</strong>:WHERE 子句用于限制哪一个行匹配下一个表或发送到客户。<strong>Using sort_union(…), Using union(…), Using intersect(…)</strong>:这些函数说明如何为index_merge联接类型合并索引扫描。<strong>Using index for group-by</strong>:类似于访问表的Using index方式,Using index for group-by表示MySQL发现了一个索引,可以用来查 询GROUP BY或DISTINCT查询的所有列,而不要额外搜索硬盘访问实际的表。</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/Horizon.github.io/2018/11/21/设计模式：观察者模式/" rel="next" title="Java设计模式：观察者模式">
+                <i class="fa fa-chevron-left"></i> Java设计模式：观察者模式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/Horizon.github.io/2018/11/27/Netty核心组件：EventLoop和EventLoopGroup/" rel="prev" title="Netty核心组件：EventLoop和EventLoopGroup">
+                Netty核心组件：EventLoop和EventLoopGroup <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Horizon</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/Horizon.github.io/archives/">
+              
+                  <span class="site-state-item-count">39</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/Horizon.github.io/categories/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/Horizon.github.io/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/origner" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#关于索引"><span class="nav-number">1.</span> <span class="nav-text">关于索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#建立索引的原则"><span class="nav-number">2.</span> <span class="nav-text">建立索引的原则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何对索引执行效果进行分析然后进行查询优化："><span class="nav-number">3.</span> <span class="nav-text">如何对索引执行效果进行分析然后进行查询优化：</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Horizon</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/Horizon.github.io/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/Horizon.github.io/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/Horizon.github.io/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/Horizon.github.io/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/Horizon.github.io/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

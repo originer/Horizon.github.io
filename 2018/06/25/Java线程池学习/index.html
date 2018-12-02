@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/Horizon.github.io/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/Horizon.github.io/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/Horizon.github.io/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/Horizon.github.io/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/Horizon.github.io/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/Horizon.github.io/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/Horizon.github.io/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="为什么不用new Thread() 每次 new Thread() 都是新建对象，性能差； 线程缺乏统一管理，可能无限制的新建线程，相互竞争，有可能占用过多的系统资源导致死机或OOM 功能少，缺少多执行、定期执行、线程中断等功能；">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java线程池学习总结">
+<meta property="og:url" content="https://originer.github.io/Horizon.github.io/2018/06/25/Java线程池学习/index.html">
+<meta property="og:site_name" content="Horizon Notes">
+<meta property="og:description" content="为什么不用new Thread() 每次 new Thread() 都是新建对象，性能差； 线程缺乏统一管理，可能无限制的新建线程，相互竞争，有可能占用过多的系统资源导致死机或OOM 功能少，缺少多执行、定期执行、线程中断等功能；">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-25T12:43:51.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java线程池学习总结">
+<meta name="twitter:description" content="为什么不用new Thread() 每次 new Thread() 都是新建对象，性能差； 线程缺乏统一管理，可能无限制的新建线程，相互竞争，有可能占用过多的系统资源导致死机或OOM 功能少，缺少多执行、定期执行、线程中断等功能；">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/Horizon.github.io/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://originer.github.io/Horizon.github.io/2018/06/25/Java线程池学习/"/>
+
+
+
+
+
+  <title>Java线程池学习总结 | Horizon Notes</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/Horizon.github.io/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Horizon Notes</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/Horizon.github.io/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/Horizon.github.io/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/Horizon.github.io/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/Horizon.github.io/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/06/25/Java线程池学习/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Horizon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/Horizon.github.io/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Horizon Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java线程池学习总结</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-25T20:43:51+08:00">
+                2018-06-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Horizon.github.io/categories/Java并发编程/" itemprop="url" rel="index">
+                    <span itemprop="name">Java并发编程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="为什么不用new-Thread"><a href="#为什么不用new-Thread" class="headerlink" title="为什么不用new Thread()"></a>为什么不用new Thread()</h3><ul>
+<li>每次 new Thread() 都是新建对象，性能差；</li>
+<li>线程缺乏统一管理，可能无限制的新建线程，相互竞争，有可能占用过多的系统资源导致死机或OOM</li>
+<li>功能少，缺少多执行、定期执行、线程中断等功能；</li>
+</ul>
+<a id="more"></a>
+<h3 id="线程池的优势"><a href="#线程池的优势" class="headerlink" title="线程池的优势"></a>线程池的优势</h3><ul>
+<li><p>重用存在的线程，减少对象的创建，消亡的开销；</p>
+</li>
+<li><p>可以控制最大并发线程数，提高系统资源利用率，同时可以避免过多资源竞争，避免阻塞；</p>
+</li>
+<li><p>提供定期执行、单线程、并发数控制等功能；</p>
+</li>
+</ul>
+<h3 id="线程池-：-ThreadPoolExecutor"><a href="#线程池-：-ThreadPoolExecutor" class="headerlink" title="线程池 ： ThreadPoolExecutor"></a>线程池 ： ThreadPoolExecutor</h3><p>ThreadPoolExecutor有下面几个核心参数：</p>
+<p><strong>corePoolSize：</strong>核心线程数；</p>
+<p><strong>maximumPoolSize：</strong>线程池最大线程数；</p>
+<p><strong>workQueue：</strong>阻塞队列，存储等待执行的任务；</p>
+<p><strong>keepAliveTime：</strong>线程没有任务执行时最多保持的时间；</p>
+<p><em>如果运行的线程小于corePoolSize，会直接创建线程执行任务，即使其他线程是空闲的；</em><br><em>如果运行线程大于corePoolSize，小于maximumPoolSize时，只有workQueue满的时候才创建新线程；</em><br><em>如果corePoolSize等于maximumPoolSize时创建的线程是固定的，多余的任务会被放置到workQueue中；</em></p>
+<h3 id="线程池的关闭"><a href="#线程池的关闭" class="headerlink" title="线程池的关闭"></a>线程池的关闭</h3><p>ThreadPoolExecutor提供了两个方法，用于线程池的关闭，分别是shutdown()和shutdownNow()，其中：</p>
+<p>shutdown()：不会立即终止线程池，而是要等所有任务缓存队列中的任务都执行完后才终止，但再也不会接受新的任务</p>
+<p>shutdownNow()：立即终止线程池，并尝试打断正在执行的任务，并且清空任务缓存队列，返回尚未执行的任务</p>
+<h2 id="常见的四种线程池"><a href="#常见的四种线程池" class="headerlink" title="常见的四种线程池"></a>常见的四种线程池</h2><h3 id="newFixedThreadPool-："><a href="#newFixedThreadPool-：" class="headerlink" title="newFixedThreadPool ："></a><strong>newFixedThreadPool</strong> ：</h3><p>固定大小的线程池，可以指定线程池的大小，该线程池corePoolSize和maximumPoolSize相等，阻塞队列使用的是LinkedBlockingQueue，大小为整数最大值。该线程池中的线程数量始终不变，当有新任务提交时，线程池中有空闲线程则会立即执行，如果没有，则会暂存到阻塞队列。对于固定大小的线程池，不存在线程数量的变化。同时使用无界的LinkedBlockingQueue来存放执行的任务。当任务提交十分频繁的时候，LinkedBlockingQueue迅速增大，存在着耗尽系统资源的问题。而且在线程池空闲时，即线程池中没有可运行任务时，它也不会释放工作线程，还会占用一定的系统资源，需要shutdown。</p>
+<h3 id="newSingleThreadExecutor-："><a href="#newSingleThreadExecutor-：" class="headerlink" title="newSingleThreadExecutor ："></a><strong>newSingleThreadExecutor</strong> ：</h3><p>单个线程线程池，只有一个线程的线程池，阻塞队列使用的是LinkedBlockingQueue,若有多余的任务提交到线程池中，则会被暂存到阻塞队列，待空闲时再去执行。按照先入先出的顺序执行任务。 </p>
+<h3 id="newCachedThreadPool-："><a href="#newCachedThreadPool-：" class="headerlink" title="newCachedThreadPool ："></a><strong>newCachedThreadPool</strong> ：</h3><p>缓存线程池，缓存的线程默认存活60秒。线程的核心池corePoolSize大小为0，核心池最大为Integer.MAX_VALUE,阻塞队列使用的是SynchronousQueue。是一个直接提交的阻塞队列，    他总会迫使线程池增加新的线程去执行新的任务。在没有任务执行时，当线程的空闲时间超过keepAliveTime（60秒），则工作线程将会终止被回收，当提交新任务时，如果没有空闲线程，则创建新线程执行任务，会导致一定的系统开销。如果同时又大量任务被提交，而且任务执行的时间不是特别快，那么线程池便会新增出等量的线程池处理任务，这很可能会很快耗尽系统的资源。 </p>
+<h3 id="newScheduledThreadPool-："><a href="#newScheduledThreadPool-：" class="headerlink" title="newScheduledThreadPool ："></a><strong>newScheduledThreadPool</strong> ：</h3><p>定时线程池，该线程池可用于周期性地去执行任务，通常用于周期性的同步数据。scheduleAtFixedRate:是以固定的频率去执行任务，周期是指每次执行任务成功执行之间的间隔。schedultWithFixedDelay:是以固定的延时去执行任务，延时是指上一次执行成功之后和下一次开始执行的之前的时间。</p>
+<h2 id="如何选择线程池数量"><a href="#如何选择线程池数量" class="headerlink" title="如何选择线程池数量"></a>如何选择线程池数量</h2><p><strong>线程池的大小决定着系统的性能，过大或者过小的线程池数量都无法发挥最优的系统性能。</strong></p>
+<p>当然线程池的大小也不需要做的太过于精确，只需要避免过大和过小的情况。一般来说，确定线程池的大小需要考虑CPU的数量，内存大小，任务是计算密集型还是IO密集型等因素</p>
+<p><strong>NCPU = CPU的数量</strong></p>
+<p><strong>UCPU = 期望对CPU的使用率 0 ≤ UCPU ≤ 1</strong></p>
+<p><strong>W/C = 等待时间与计算时间的比率</strong></p>
+<p><strong>如果希望处理器达到理想的使用率，那么线程池的最优大小为：</strong></p>
+<p><strong>线程池大小=NCPU *UCPU(1+W/C)</strong></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/Horizon.github.io/2018/06/25/Java容器/" rel="next" title="Java容器">
+                <i class="fa fa-chevron-left"></i> Java容器
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/Horizon.github.io/2018/06/25/关于Java值传递和引用传递的思考/" rel="prev" title="关于Java值传递和引用传递的思考">
+                关于Java值传递和引用传递的思考 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Horizon</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/Horizon.github.io/archives/">
+              
+                  <span class="site-state-item-count">39</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/Horizon.github.io/categories/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/Horizon.github.io/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/origner" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么不用new-Thread"><span class="nav-number">1.</span> <span class="nav-text">为什么不用new Thread()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线程池的优势"><span class="nav-number">2.</span> <span class="nav-text">线程池的优势</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线程池-：-ThreadPoolExecutor"><span class="nav-number">3.</span> <span class="nav-text">线程池 ： ThreadPoolExecutor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线程池的关闭"><span class="nav-number">4.</span> <span class="nav-text">线程池的关闭</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常见的四种线程池"><span class="nav-number"></span> <span class="nav-text">常见的四种线程池</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#newFixedThreadPool-："><span class="nav-number">1.</span> <span class="nav-text">newFixedThreadPool ：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#newSingleThreadExecutor-："><span class="nav-number">2.</span> <span class="nav-text">newSingleThreadExecutor ：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#newCachedThreadPool-："><span class="nav-number">3.</span> <span class="nav-text">newCachedThreadPool ：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#newScheduledThreadPool-："><span class="nav-number">4.</span> <span class="nav-text">newScheduledThreadPool ：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何选择线程池数量"><span class="nav-number"></span> <span class="nav-text">如何选择线程池数量</span></a></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Horizon</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/Horizon.github.io/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/Horizon.github.io/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/Horizon.github.io/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/Horizon.github.io/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/Horizon.github.io/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/Horizon.github.io/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

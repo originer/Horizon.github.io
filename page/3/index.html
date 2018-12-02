@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next muse use-motion" lang="zh-Hans">
+<html class="theme-next mist use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -93,7 +93,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/Horizon.github.io/',
-    scheme: 'Muse',
+    scheme: 'Mist',
     version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
     fancybox: true,
@@ -187,6 +187,26 @@
         </li>
       
         
+        <li class="menu-item menu-item-tags">
+          <a href="/Horizon.github.io/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/Horizon.github.io/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
         <li class="menu-item menu-item-archives">
           <a href="/Horizon.github.io/archives/" rel="section">
             
@@ -229,7 +249,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/09/03/Netty核心组件：Channel与Pipline/">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/09/07/性能调优手记/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Horizon">
@@ -248,7 +268,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/Horizon.github.io/2018/09/03/Netty核心组件：Channel与Pipline/" itemprop="url">Netty核心组件：Channel和Pipline</a></h1>
+                <a class="post-title-link" href="/Horizon.github.io/2018/09/07/性能调优手记/" itemprop="url">Java性能调优</a></h1>
         
 
         <div class="post-meta">
@@ -260,8 +280,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-03T16:47:09+08:00">
-                2018-09-03
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-07T09:31:36+08:00">
+                2018-09-07
               </time>
             
 
@@ -283,8 +303,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/Horizon.github.io/categories/网络编程/" itemprop="url" rel="index">
-                    <span itemprop="name">网络编程</span>
+                  <a href="/Horizon.github.io/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
                   </a>
                 </span>
 
@@ -321,14 +341,18 @@
 
       
         
-          <h1 id="Channel分析"><a href="#Channel分析" class="headerlink" title="Channel分析"></a>Channel分析</h1><h2 id="Channel接口"><a href="#Channel接口" class="headerlink" title="Channel接口"></a>Channel接口</h2><p><img src="http://oyop6c8p9.bkt.clouddn.com/1530494504140.png" alt="1530236109956"></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/09/03/Netty核心组件：Channel与Pipline/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+          
+            <p>1.在程序调用过程中，有一段代码是通过动态反射调用的，如果频繁创建元数据性能会比直接调用低很多。</p>
+<p>解决方法：可以给动态反射调用添加缓存，关闭安全检查。</p>
+<p>2.对相似独立的任务采用线程池处理</p>
+<p>解决方法：优化线程池的配置，缓存线程池和固定线程数的效率差不多，但是缓存线程池在任务接收速度很快的情况下CPU占用会飙升，变的很卡，所以还是选择FIXED线程池，线程数可以设置为  cpu core+1。</p>
+<p>3.多线程情况下，调用工具类的静态方法速度反而会更加慢？</p>
+<p>4.每处理一笔委托大约需要20ms，现在要把时间压缩到5ms左右。</p>
+<p>5.优化点：对于需要频繁创建的大对象做静态化处理，或者把对象缓存起来</p>
+<p>参考：</p>
+<p><a href="https://my.oschina.net/xianggao/blog/77224" target="_blank" rel="external">https://my.oschina.net/xianggao/blog/77224</a> </p>
+
+          
         
       
     </div>
@@ -375,7 +399,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/09/03/Netty相关的经典问题/">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/08/27/Netty相关的经典问题/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Horizon">
@@ -394,7 +418,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/Horizon.github.io/2018/09/03/Netty相关的经典问题/" itemprop="url">Netty相关的常见问题整理</a></h1>
+                <a class="post-title-link" href="/Horizon.github.io/2018/08/27/Netty相关的经典问题/" itemprop="url">Netty相关的常见问题整理</a></h1>
         
 
         <div class="post-meta">
@@ -406,8 +430,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-03T16:47:09+08:00">
-                2018-09-03
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-27T00:58:04+08:00">
+                2018-08-27
               </time>
             
 
@@ -471,7 +495,7 @@
 <h3 id="问-在哪里accept连接"><a href="#问-在哪里accept连接" class="headerlink" title="问:在哪里accept连接?"></a>问:在哪里accept连接?</h3><p>答:端口绑定:Pipeline调用fireChannelActive()传播active事件,HeadContext使用readIfIsAutoRead()重新绑定OP_ACCEPT事件,新连接接入Selector轮询到OP_ACCEPT事件将连接交给Netty处理</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/09/03/Netty相关的经典问题/#more" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/08/27/Netty相关的经典问题/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -522,7 +546,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/09/03/Java线程池学习/">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/08/26/HashSet和HashMap/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Horizon">
@@ -541,7 +565,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/Horizon.github.io/2018/09/03/Java线程池学习/" itemprop="url">Java线程池学习总结</a></h1>
+                <a class="post-title-link" href="/Horizon.github.io/2018/08/26/HashSet和HashMap/" itemprop="url">HashSet和HashMap源码研究</a></h1>
         
 
         <div class="post-meta">
@@ -553,158 +577,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-03T16:47:09+08:00">
-                2018-09-03
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/Horizon.github.io/categories/Java并发编程/" itemprop="url" rel="index">
-                    <span itemprop="name">Java并发编程</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="为什么不用new-Thread"><a href="#为什么不用new-Thread" class="headerlink" title="为什么不用new Thread()"></a>为什么不用new Thread()</h3><ul>
-<li>每次 new Thread() 都是新建对象，性能差；</li>
-<li>线程缺乏统一管理，可能无限制的新建线程，相互竞争，有可能占用过多的系统资源导致死机或OOM</li>
-<li>功能少，缺少多执行、定期执行、线程中断等功能；</li>
-</ul>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/09/03/Java线程池学习/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/09/03/Java容器/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Horizon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/Horizon.github.io/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Horizon Notes">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/Horizon.github.io/2018/09/03/Java容器/" itemprop="url">Java容器</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-03T16:47:09+08:00">
-                2018-09-03
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-26T22:51:03+08:00">
+                2018-08-26
               </time>
             
 
@@ -764,12 +638,11 @@
 
       
         
-          <blockquote>
-<p>Java容器里只能放对象，对于基本类型（int, long, float, double等），需要将其包装成对象类型后（Integer, Long, Float, Double等）才能放到容器里。很多时候拆包装和解包装能够自动完成。这虽然会导致额外的性能和空间开销，但简化了设计和编程。</p>
-</blockquote>
+          <h1 id="HashSet-and-HashMap"><a href="#HashSet-and-HashMap" class="headerlink" title="HashSet and HashMap"></a>HashSet and HashMap</h1><h1 id="总体介绍"><a href="#总体介绍" class="headerlink" title="总体介绍"></a>总体介绍</h1><p><a href="https://github.com/CarpenterLee/JCFInternals/blob/master/markdown/6-HashSet%20and%20HashMap.md" target="_blank" rel="external">原文github地址</a></p>
+<p>之所以把<em>HashSet</em>和<em>HashMap</em>放在一起讲解，是因为二者在Java里有着相同的实现，前者仅仅是对后者做了一层包装，也就是说<em>HashSet里面有一个HashMap</em>（适配器模式）<em>*。因此本文将重点分析</em>HashMap*。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/09/03/Java容器/#more" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/08/26/HashSet和HashMap/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -820,7 +693,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/09/03/IDEA部署tomcat/">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/08/26/IDEA部署tomcat/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Horizon">
@@ -839,7 +712,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/Horizon.github.io/2018/09/03/IDEA部署tomcat/" itemprop="url">总结使用 IDEA 部署web工程到 Tomcat 遇到的一些问题</a></h1>
+                <a class="post-title-link" href="/Horizon.github.io/2018/08/26/IDEA部署tomcat/" itemprop="url">总结使用 IDEA 部署web工程到 Tomcat 遇到的一些问题</a></h1>
         
 
         <div class="post-meta">
@@ -851,8 +724,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-03T16:47:09+08:00">
-                2018-09-03
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-26T19:41:20+08:00">
+                2018-08-26
               </time>
             
 
@@ -920,7 +793,7 @@
 <p>（3）在平时开发的时候，使用热部署的话，应该对Tomcat进行相应的设置，这样的话修改的jsp界面什么的东西才可以及时的显示出来。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/09/03/IDEA部署tomcat/#more" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/08/26/IDEA部署tomcat/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -971,7 +844,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/09/03/Map的几种遍历方式/">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/08/26/设计模式：策略模式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Horizon">
@@ -990,7 +863,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/Horizon.github.io/2018/09/03/Map的几种遍历方式/" itemprop="url">Map的几种遍历方式</a></h1>
+                <a class="post-title-link" href="/Horizon.github.io/2018/08/26/设计模式：策略模式/" itemprop="url">Java设计模式：策略模式</a></h1>
         
 
         <div class="post-meta">
@@ -1002,8 +875,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-03T16:47:09+08:00">
-                2018-09-03
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-26T19:03:58+08:00">
+                2018-08-26
               </time>
             
 
@@ -1012,6 +885,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Horizon.github.io/categories/策略模式/" itemprop="url" rel="index">
+                    <span itemprop="name">策略模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -1041,11 +936,14 @@
 
       
         
-          <p><em>在开发过程中经常会用到Map的遍历，所以对Map的几种遍历方式做一下整理；</em></p>
-<h4 id="KeySet-遍历"><a href="#KeySet-遍历" class="headerlink" title="KeySet 遍历"></a>KeySet 遍历</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Iterator it = map.keySet().iterator();</div><div class="line"> 		<span class="keyword">while</span> (it.hasNext()) &#123;</div><div class="line">              key = it.next();</div><div class="line">              value = map.get(key);</div><div class="line">              System.out.println(key + <span class="string">":"</span> + value);</div><div class="line">          &#125;</div></pre></td></tr></table></figure>
+          <p><em>策略模式是一种简单且实用的设计模式。在处理的事情的流程都差不多，只是具体细节不同的时候我们就可以使用策略模式来减少代码的耦合性。</em></p>
+<h2 id="策略模式说明"><a href="#策略模式说明" class="headerlink" title="策略模式说明"></a>策略模式说明</h2><p><strong>策略模式属于对象的行为模式。其用意是针对一组算法，将每一个算法封装到具有共同接口的独立的类中，从而使得它们可以相互替换。策略模式使得算法可以在不影响到客户端的情况下发生变化。</strong> </p>
+<h3 id="策略模式涉及的主要角色"><a href="#策略模式涉及的主要角色" class="headerlink" title="策略模式涉及的主要角色"></a>策略模式涉及的主要角色</h3><p>●　　<strong>环境(Context)角色：</strong>持有一个Strategy的引用。</p>
+<p>●　　<strong>抽象策略(Strategy)角色：</strong>这是一个抽象角色，通常由一个接口或抽象类实现。此角色给出所有的具体策略类所需接口。</p>
+<p>●　　<strong>具体策略(ConcreteStrategy)角色：</strong>包装了相关的算法或行为。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/09/03/Map的几种遍历方式/#more" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/08/26/设计模式：策略模式/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1096,7 +994,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/09/03/redis问题/">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/08/03/Spring IoC学习笔记/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Horizon">
@@ -1115,7 +1013,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/Horizon.github.io/2018/09/03/redis问题/" itemprop="url">记录一些Redis在分布式环境下的实践遇到的问题</a></h1>
+                <a class="post-title-link" href="/Horizon.github.io/2018/08/03/Spring IoC学习笔记/" itemprop="url">Spring IOC学习笔记</a></h1>
         
 
         <div class="post-meta">
@@ -1127,8 +1025,156 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-03T16:47:06+08:00">
-                2018-09-03
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-03T19:11:31+08:00">
+                2018-08-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Horizon.github.io/categories/Spring/" itemprop="url" rel="index">
+                    <span itemprop="name">Spring</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>IOC 控制反转，又称依赖注入，是Spring框架的核心功能。通过依赖反转可以大大降低系统的耦合性。</p>
+<h2 id="注入方式"><a href="#注入方式" class="headerlink" title="注入方式"></a>注入方式</h2><p>接口注入 setter注入 构造器注入</p>
+<h2 id="核心类：BeanFactory、ApplicationContext"><a href="#核心类：BeanFactory、ApplicationContext" class="headerlink" title="核心类：BeanFactory、ApplicationContext"></a>核心类：BeanFactory、ApplicationContext</h2><h2 id="BeanFactory"><a href="#BeanFactory" class="headerlink" title="BeanFactory"></a>BeanFactory</h2><p><img src="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/1533123257775.png" alt="1533123257775"></p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/Horizon.github.io/2018/08/03/Spring IoC学习笔记/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/08/03/redis问题/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Horizon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/Horizon.github.io/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Horizon Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/Horizon.github.io/2018/08/03/redis问题/" itemprop="url">记录一些Redis在分布式环境下的实践遇到的问题</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-03T10:25:29+08:00">
+                2018-08-03
               </time>
             
 
@@ -1196,7 +1242,7 @@
 <p>很自然的能够想到添加redis服务器的解决方案，但是在增加redis服务器时遇到 了一些疑惑，以下作为记录：</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/09/03/redis问题/#more" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/08/03/redis问题/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1247,7 +1293,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/09/03/ThreadLocal源码研究/">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/08/02/SpringMVC如何完成一次Http请求/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Horizon">
@@ -1266,7 +1312,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/Horizon.github.io/2018/09/03/ThreadLocal源码研究/" itemprop="url">ThreadLocal源码研究</a></h1>
+                <a class="post-title-link" href="/Horizon.github.io/2018/08/02/SpringMVC如何完成一次Http请求/" itemprop="url">SpringMVC完成一次Http请求的过程</a></h1>
         
 
         <div class="post-meta">
@@ -1278,281 +1324,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-03T16:47:06+08:00">
-                2018-09-03
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p><em>ThreadLocal 是并发编程中经常用到的一个工具类，但是之前对这个类并不是很熟悉，只是觉得很高端。今天在群里看到有人讨论，索性研究一下源码以彻底掌握这个东西</em></p>
-<h2 id="ThreadLocal-是什么"><a href="#ThreadLocal-是什么" class="headerlink" title="ThreadLocal 是什么"></a>ThreadLocal 是什么</h2><p>早在JDK 1.2的版本中就提供java.lang.ThreadLocal，ThreadLocal为解决多线程程序的并发问题提供了一种新的思路。使用这个工具类可以很简洁地编写出优美的多线程程序。 </p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/09/03/ThreadLocal源码研究/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/09/03/Spring IoC学习笔记/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Horizon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/Horizon.github.io/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Horizon Notes">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/Horizon.github.io/2018/09/03/Spring IoC学习笔记/" itemprop="url">Spring IOC学习笔记</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-03T16:47:06+08:00">
-                2018-09-03
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/Horizon.github.io/categories/Spring/" itemprop="url" rel="index">
-                    <span itemprop="name">Spring</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>IOC 控制反转，又称依赖注入，是Spring框架的核心功能。通过依赖反转可以大大降低系统的耦合性。</p>
-<h2 id="注入方式"><a href="#注入方式" class="headerlink" title="注入方式"></a>注入方式</h2><p>接口注入 setter注入 构造器注入</p>
-<h2 id="核心类：BeanFactory、ApplicationContext"><a href="#核心类：BeanFactory、ApplicationContext" class="headerlink" title="核心类：BeanFactory、ApplicationContext"></a>核心类：BeanFactory、ApplicationContext</h2><h2 id="BeanFactory"><a href="#BeanFactory" class="headerlink" title="BeanFactory"></a>BeanFactory</h2><p><img src="http://oyop6c8p9.bkt.clouddn.com/1533123257775.png" alt="1533123257775"></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/09/03/Spring IoC学习笔记/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/09/03/SpringMVC如何完成一次Http请求/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Horizon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/Horizon.github.io/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Horizon Notes">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/Horizon.github.io/2018/09/03/SpringMVC如何完成一次Http请求/" itemprop="url">SpringMVC完成一次Http请求的过程</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-03T16:47:05+08:00">
-                2018-09-03
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-02T19:05:39+08:00">
+                2018-08-02
               </time>
             
 
@@ -1613,10 +1386,287 @@
       
         
           <p><em>Spring MVC 是一个十分优秀的框架，由于其易用性，甚至使用者都不需要了解它的内部工作原理就可以用来做日常开发。不过如果能从源码上了解它的工作方式，那不仅能让我们对它理解更加透彻，还能学习到它的优秀的编码思想。本篇为个人阅读源码的笔记。</em></p>
-<h1 id="SpringMVC-工作流程"><a href="#SpringMVC-工作流程" class="headerlink" title="SpringMVC 工作流程"></a>SpringMVC 工作流程</h1><p><img src="http://oyop6c8p9.bkt.clouddn.com/1533207796250.png" alt="1533207796250"><br>
+<h1 id="SpringMVC-工作流程"><a href="#SpringMVC-工作流程" class="headerlink" title="SpringMVC 工作流程"></a>SpringMVC 工作流程</h1><p><img src="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/1533207796250.png" alt="1533207796250"><br>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/09/03/SpringMVC如何完成一次Http请求/#more" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/08/02/SpringMVC如何完成一次Http请求/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/07/24/NIO Channel和Buffer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Horizon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/Horizon.github.io/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Horizon Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/Horizon.github.io/2018/07/24/NIO Channel和Buffer/" itemprop="url">深入浅出NIO Channel和Buffer</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-24T19:26:59+08:00">
+                2018-07-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Horizon.github.io/categories/网络编程/" itemprop="url" rel="index">
+                    <span itemprop="name">网络编程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>Java NIO 由以下几个核心部分组成：</p>
+<ol>
+<li>Buffer </li>
+<li>Channel</li>
+<li>Selector</li>
+</ol>
+<p>传统的IO操作面向数据流，意味着每次从流中读一个或多个字节，直至完成，数据没有被缓存在任何地方。NIO操作面向缓冲区，数据从Channel读取到Buffer缓冲区，随后在Buffer中处理数据。本文着重介绍Channel和Buffer的概念以及在文件读写方面的应用和内部实现原理。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/Horizon.github.io/2018/07/24/NIO Channel和Buffer/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/07/23/Map的几种遍历方式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Horizon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/Horizon.github.io/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Horizon Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/Horizon.github.io/2018/07/23/Map的几种遍历方式/" itemprop="url">Map的几种遍历方式</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-23T16:37:01+08:00">
+                2018-07-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p><em>在开发过程中经常会用到Map的遍历，所以对Map的几种遍历方式做一下整理；</em></p>
+<h4 id="KeySet-遍历"><a href="#KeySet-遍历" class="headerlink" title="KeySet 遍历"></a>KeySet 遍历</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Iterator it = map.keySet().iterator();</div><div class="line"> 		<span class="keyword">while</span> (it.hasNext()) &#123;</div><div class="line">              key = it.next();</div><div class="line">              value = map.get(key);</div><div class="line">              System.out.println(key + <span class="string">":"</span> + value);</div><div class="line">          &#125;</div></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/Horizon.github.io/2018/07/23/Map的几种遍历方式/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1791,7 +1841,7 @@
 
 
 
-  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
 
 
 
