@@ -81,15 +81,15 @@
 
 <meta name="description" content="问题：java读取resource中的文件，在打成jar包后路径变化，导致文件读取失败。 原因：使用这种方法可以正常读取到文件，但是打成jar包后路径就产生了变化，所以读取失败。 12URL url = TEST.class.getResource(path);Files.lines(Paths.get(url.toURI()), 解决方法：采用getResourceAsStream读取文件 12">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Horizon Notes">
+<meta property="og:title" content="记录一个Java资源文件读取的小坑">
 <meta property="og:url" content="https://originer.github.io/Horizon.github.io/2018/12/26/记录一个关于Java文件读写的坑/index.html">
 <meta property="og:site_name" content="Horizon Notes">
 <meta property="og:description" content="问题：java读取resource中的文件，在打成jar包后路径变化，导致文件读取失败。 原因：使用这种方法可以正常读取到文件，但是打成jar包后路径就产生了变化，所以读取失败。 12URL url = TEST.class.getResource(path);Files.lines(Paths.get(url.toURI()), 解决方法：采用getResourceAsStream读取文件 12">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://originer.github.io/Users/zh/Nutstore%20Files/picture/Picture-storage/blog/image-20181227000239134.png">
-<meta property="og:updated_time" content="2019-01-02T02:52:36.612Z">
+<meta property="og:updated_time" content="2019-01-02T02:59:49.559Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Horizon Notes">
+<meta name="twitter:title" content="记录一个Java资源文件读取的小坑">
 <meta name="twitter:description" content="问题：java读取resource中的文件，在打成jar包后路径变化，导致文件读取失败。 原因：使用这种方法可以正常读取到文件，但是打成jar包后路径就产生了变化，所以读取失败。 12URL url = TEST.class.getResource(path);Files.lines(Paths.get(url.toURI()), 解决方法：采用getResourceAsStream读取文件 12">
 <meta name="twitter:image" content="https://originer.github.io/Users/zh/Nutstore%20Files/picture/Picture-storage/blog/image-20181227000239134.png">
 
@@ -125,7 +125,7 @@
 
 
 
-  <title> | Horizon Notes</title>
+  <title>记录一个Java资源文件读取的小坑 | Horizon Notes</title>
   
 
 
@@ -269,7 +269,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline"></h1>
+          <h1 class="post-title" itemprop="name headline">记录一个Java资源文件读取的小坑</h1>
         
 
         <div class="post-meta">
@@ -291,6 +291,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Horizon.github.io/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -468,7 +490,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/Horizon.github.io/tags/index.html">
-                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
