@@ -86,12 +86,12 @@
 <meta property="og:site_name" content="Horizon Notes">
 <meta property="og:description" content="问题：java读取resource中的文件，在打成jar包后路径变化，导致文件读取失败。 原因：使用这种方法可以正常读取到文件，但是打成jar包后路径就产生了变化，所以读取失败。 12URL url = TEST.class.getResource(path);Files.lines(Paths.get(url.toURI()), 解决方法：采用getResourceAsStream读取文件 12">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://originer.github.io/Users/zh/Library/Application%20Support/typora-user-images/image-20181227000239134.png">
-<meta property="og:updated_time" content="2018-12-27T01:34:46.121Z">
+<meta property="og:image" content="https://originer.github.io/Users/zh/Nutstore%20Files/picture/Picture-storage/blog/image-20181227000239134.png">
+<meta property="og:updated_time" content="2019-01-02T02:52:36.612Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Horizon Notes">
 <meta name="twitter:description" content="问题：java读取resource中的文件，在打成jar包后路径变化，导致文件读取失败。 原因：使用这种方法可以正常读取到文件，但是打成jar包后路径就产生了变化，所以读取失败。 12URL url = TEST.class.getResource(path);Files.lines(Paths.get(url.toURI()), 解决方法：采用getResourceAsStream读取文件 12">
-<meta name="twitter:image" content="https://originer.github.io/Users/zh/Library/Application%20Support/typora-user-images/image-20181227000239134.png">
+<meta name="twitter:image" content="https://originer.github.io/Users/zh/Nutstore%20Files/picture/Picture-storage/blog/image-20181227000239134.png">
 
 
 
@@ -324,9 +324,10 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">URL url = TEST.class.getResource(path);</div><div class="line">Files.lines(Paths.get(url.toURI()),</div></pre></td></tr></table></figure>
 <p>解决方法：采用getResourceAsStream读取文件</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">InputStream is = <span class="keyword">this</span>.getClass().getResourceAsStream(path);</div><div class="line">BufferedReader br = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(is));</div><div class="line">String s = <span class="string">""</span>;</div><div class="line">br.lines().forEach(str -&gt; &#123;</div><div class="line">          ...</div><div class="line">        &#125;);</div></pre></td></tr></table></figure>
+<a id="more"></a>
 <h3 id="获取resource下的文件路径的方法"><a href="#获取resource下的文件路径的方法" class="headerlink" title="获取resource下的文件路径的方法"></a>获取resource下的文件路径的方法</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//注意'/'</span></div><div class="line">String path1 =  test.class.getResource(<span class="string">"/convertFile"</span>).getPath();</div><div class="line">String path2 =  test.class.getResource(<span class="string">"/convertFile"</span>).toURI().getPath();</div><div class="line">String path3 = test.class.getClassLoader().getResource(<span class="string">"convertFile"</span>).getPath();</div><div class="line">String path4= test.class.getClassLoader().getResource(<span class="string">"convertFile"</span>).toURI().getPath();</div></pre></td></tr></table></figure>
 <p>借此机会顺便整理一下关于JavaIO相关的知识，经常忘记这部分API。</p>
-<p><img src="/Users/zh/Library/Application Support/typora-user-images/image-20181227000239134.png" alt="image-20181227000239134"></p>
+<p><img src="/Users/zh/Nutstore Files/picture/Picture-storage/blog/image-20181227000239134.png" alt="image-20181227000239134"></p>
 <h3 id="InputStream、Reader"><a href="#InputStream、Reader" class="headerlink" title="InputStream、Reader"></a>InputStream、Reader</h3><p>InputStream 为字节输入流，它本身为一个抽象类，必须依靠其子类实现各种功能，此抽象类是表示字节输入流的所有类的超类。 继承自InputStream 的流都是向程序中输入数据的，且数据单位为字节（8bit）；</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">File file = <span class="keyword">new</span> File(<span class="string">"/Users/zh/as.sh"</span>);</div><div class="line">      InputStream in = <span class="keyword">new</span> FileInputStream(file);</div><div class="line">      InputStreamReader reader = <span class="keyword">new</span> InputStreamReader(in,<span class="string">"UTF-8"</span>);</div><div class="line"></div><div class="line">      StringBuffer sb = <span class="keyword">new</span> StringBuffer();</div><div class="line">      <span class="keyword">while</span> (reader.ready()) &#123;</div><div class="line">          sb.append((<span class="keyword">char</span>) reader.read());</div><div class="line">          <span class="comment">// 转成char加到StringBuffer对象中</span></div><div class="line">      &#125;</div><div class="line">      System.out.println(sb.toString());</div><div class="line">      reader.close();</div><div class="line">      in.close();</div></pre></td></tr></table></figure>
 <h3 id="OutputStream、Writer"><a href="#OutputStream、Writer" class="headerlink" title="OutputStream、Writer"></a>OutputStream、Writer</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">String str = <span class="string">"hello world"</span>;</div><div class="line"><span class="comment">// 构建FileOutputStream对象,文件不存在会自动新建</span></div><div class="line">OutputStream out = <span class="keyword">new</span> FileOutputStream(<span class="string">"src/test2.txt"</span>);</div><div class="line">out.write(str.getBytes());</div><div class="line">out.close();</div></pre></td></tr></table></figure>
@@ -536,7 +537,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
