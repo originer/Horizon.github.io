@@ -86,13 +86,10 @@
 <meta property="og:site_name" content="Horizon Notes">
 <meta property="og:description" content="redis主从复制 sentinel redis-cluster集群  一般主从搭配集群使用，可以保证redis集群的高可用性">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190218164933104.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190218172856333.png">
-<meta property="og:updated_time" content="2019-02-20T02:03:14.880Z">
+<meta property="og:updated_time" content="2019-02-27T10:38:49.402Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="redis集群相关的知识">
 <meta name="twitter:description" content="redis主从复制 sentinel redis-cluster集群  一般主从搭配集群使用，可以保证redis集群的高可用性">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190218164933104.png">
 
 
 
@@ -374,9 +371,11 @@
    <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[OK] All 16384 slots covered</div></pre></td></tr></table></figure>
 <p>​    <em>推荐使用redis-cli —cluster的命令，ruby脚本已经不再维护。</em></p>
 <h3 id="测试redis集群"><a href="#测试redis集群" class="headerlink" title="测试redis集群"></a>测试redis集群</h3><p>redis集群会根据key值hash分配一个slot，然后重定向到包含那个slot的节点。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">redis-cli -c -h 127.0.0.1 -p 7000</div><div class="line">127.0.0.1:7000&gt; set k1 13</div><div class="line"><span class="meta">-&gt;</span> Redirected to slot [12706] located at 127.0.0.1:7002</div><div class="line">OK</div></pre></td></tr></table></figure>
-<p><img src="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190218164933104.png" alt="image-20190218164933104"></p>
-<h3 id="jedis-cluster-命令执行流程"><a href="#jedis-cluster-命令执行流程" class="headerlink" title="jedis-cluster 命令执行流程"></a>jedis-cluster 命令执行流程</h3><p><img src="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190218172856333.png" alt="image-20190218172856333"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">redis-cli -c -h 127.0.0.1 -p 7000</div><div class="line">127.0.0.1:7000&gt; set k1 13</div><div class="line"><span class="meta">-&gt;</span><span class="bash"> Redirected to slot [12706] located at 127.0.0.1:7002</span></div><div class="line">OK</div></pre></td></tr></table></figure>
+<p><a href="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190218164933104.png" target="_blank" rel="external">-image-20190218164933104</a></p>
+<h3 id="jedis-cluster-命令执行流程"><a href="#jedis-cluster-命令执行流程" class="headerlink" title="jedis-cluster 命令执行流程"></a>jedis-cluster 命令执行流程</h3><p><a href="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190218172856333.png" target="_blank" rel="external">image-20190218172856333</a></p>
+<h3 id="添加主节点和从节点"><a href="#添加主节点和从节点" class="headerlink" title="添加主节点和从节点"></a>添加主节点和从节点</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash">将7379作为主节点加入到7000集群中,没有分配<span class="built_in">hash</span>槽</span></div><div class="line">redis-cli -h 127.0.0.1 -p 7379 -c --cluster add-node 127.0.0.1:7379 127.0.0.1:7000            </div><div class="line"> </div><div class="line"><span class="meta">#</span><span class="bash">添加从节点</span></div><div class="line">redis-cli -h 192.168.26.137 -p 7006 -c --cluster add-node 192.168.26.137:7010 192.168.26.137:7006 --cluster-slave --cluster-master-id 78a6892d261c4756603d09a6062d6e6a48b39a27</div></pre></td></tr></table></figure>
+<h3 id="槽分配"><a href="#槽分配" class="headerlink" title="槽分配"></a>槽分配</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> redis-cli -h 192.168.26.137 -p 7009 -c --cluster reshard 192.168.26.137:7008</span></div><div class="line">How many slots do you want to move (from 1 to 16384)?1000（输入要划分出来的slots）</div><div class="line">What is the receiving node ID?78a6892d261c4756603d09a6062d6e6a48b39a27（要接收slots的master节点id）</div><div class="line">Please enter all the source node IDs.</div><div class="line">  Type 'all' to use all the nodes as source nodes for the hash slots.</div><div class="line">  Type 'done' once you entered all the source nodes IDs.</div><div class="line">Source node #1:(这里可以添加从多个原master节点ID，最后输入done；也可以输入all，意思是平均从其他master节点处分片出来，凑齐1000slots)</div><div class="line"></div><div class="line">Do you want to proceed with the proposed reshard plan (yes/no)? yes (确认划分)</div><div class="line"></div><div class="line"><span class="meta">#</span><span class="bash">自动<span class="built_in">rehash</span>命令</span></div><div class="line">redis-cli reshard &lt;host&gt;:&lt;port&gt; --cluster-from &lt;node-id&gt; --cluster-to &lt;node-id&gt; --cluster-slots &lt;number of slots&gt; --cluster-yes</div></pre></td></tr></table></figure>
 
       
     </div>
@@ -410,6 +409,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/Horizon.github.io/2019/02/26/redis数据迁移/" rel="prev" title="">
+                 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -486,7 +489,7 @@
               
                 <a href="/Horizon.github.io/archives/">
               
-                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-count">46</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -557,7 +560,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#redis-cluster"><span class="nav-number">1.</span> <span class="nav-text">redis-cluster</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#redis数据分区"><span class="nav-number">1.1.</span> <span class="nav-text">redis数据分区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#集群限制"><span class="nav-number">1.2.</span> <span class="nav-text">集群限制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#搭建集群"><span class="nav-number">1.3.</span> <span class="nav-text">搭建集群</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置模板"><span class="nav-number">1.4.</span> <span class="nav-text">配置模板</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试redis集群"><span class="nav-number">1.5.</span> <span class="nav-text">测试redis集群</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jedis-cluster-命令执行流程"><span class="nav-number">1.6.</span> <span class="nav-text">jedis-cluster 命令执行流程</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#redis-cluster"><span class="nav-number">1.</span> <span class="nav-text">redis-cluster</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#redis数据分区"><span class="nav-number">1.1.</span> <span class="nav-text">redis数据分区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#集群限制"><span class="nav-number">1.2.</span> <span class="nav-text">集群限制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#搭建集群"><span class="nav-number">1.3.</span> <span class="nav-text">搭建集群</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置模板"><span class="nav-number">1.4.</span> <span class="nav-text">配置模板</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试redis集群"><span class="nav-number">1.5.</span> <span class="nav-text">测试redis集群</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jedis-cluster-命令执行流程"><span class="nav-number">1.6.</span> <span class="nav-text">jedis-cluster 命令执行流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加主节点和从节点"><span class="nav-number">1.7.</span> <span class="nav-text">添加主节点和从节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#槽分配"><span class="nav-number">1.8.</span> <span class="nav-text">槽分配</span></a></li></ol></li></ol></div>
             
 
           </div>

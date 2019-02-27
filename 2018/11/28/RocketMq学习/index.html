@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Horizon Notes">
 <meta property="og:description" content="RocketMq是一个阿里开源的基于Java语言的高性能、高吞吐量的分布式消息中间件。 阿里中间件团队对RocketMq的解释：http://jm.taobao.org/2017/01/12/rocketmq-quick-start-in-10-minutes/ apache-rocketmq部署：Master-Slave单主单从需要两台机器，学习可以使用虚拟机代替。 首先先从git上clone代">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-12-29T08:24:06.741Z">
+<meta property="og:updated_time" content="2019-02-20T03:54:45.220Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RocketMQ单主单从模式部署">
 <meta name="twitter:description" content="RocketMq是一个阿里开源的基于Java语言的高性能、高吞吐量的分布式消息中间件。 阿里中间件团队对RocketMq的解释：http://jm.taobao.org/2017/01/12/rocketmq-quick-start-in-10-minutes/ apache-rocketmq部署：Master-Slave单主单从需要两台机器，学习可以使用虚拟机代替。 首先先从git上clone代">
@@ -347,8 +347,7 @@
 <a id="more"></a>
 <h3 id="解压代码到指定路径：tar-zxvf-apache-rocketmq-tar-gz-C-usr-local-rocketmq"><a href="#解压代码到指定路径：tar-zxvf-apache-rocketmq-tar-gz-C-usr-local-rocketmq" class="headerlink" title="解压代码到指定路径：tar -zxvf apache-rocketmq.tar.gz -C /usr/local/rocketmq"></a>解压代码到指定路径：<code>tar -zxvf apache-rocketmq.tar.gz -C /usr/local/rocketmq</code></h3><h3 id="创建存储路径"><a href="#创建存储路径" class="headerlink" title="创建存储路径:"></a>创建存储路径:</h3><p> <code>/usr/local/rocketmq/store</code> </p>
 <p><code>mkdir /usr/local/rocketmq/store/commitlog</code></p>
-<p><code>mkdir /usr/local/rocketmq/store/commitlog</code></p>
-<p>mkdir /usr/local/rocketmq/store/consumequeue</p>
+<p><code>mkdir /usr/local/rocketmq/store/consumequeue</code></p>
 <p><code>mkdir /usr/local/rocketmq/store/index</code></p>
 <h3 id="配置文件："><a href="#配置文件：" class="headerlink" title="配置文件："></a>配置文件：</h3><p>vim /usr/local/rocketmq/conf/2m-2s-async/broker-a.properties</p>
 <p>vim /usr/local/rocketmq/conf/2m-2s-async/broker-a-s.properties</p>
@@ -362,7 +361,7 @@
 <p><code>JAVA_OPT=&quot;${JAVA_OPT} -server -Xms1g -Xmx1g -Xmn512m -XX:PermSize=128m -XX:MaxPermSize=320m&quot;</code></p>
 <h3 id="启动NameServer"><a href="#启动NameServer" class="headerlink" title="启动NameServer"></a>启动NameServer</h3><p>cd /usr/local/rocketmq/bin</p>
 <p><code>nohup sh mqnamesrv &amp;</code></p>
-<h3 id="启动A、B机器"><a href="#启动A、B机器" class="headerlink" title="启动A、B机器"></a>启动A、B机器</h3><p>cd /usr/local/rocketmq/bin<br>nohup sh mqbroker -c /usr/local/rocketmq/conf/2m-noslave/broker-a.properties<br>netstat -ntlp<br>jps<br>tail -f -n 500 /usr/local/rocketmq/logs/rocketmqlogs/broker.log<br>tail -f -n 500 /usr/local/rocketmq/logs/rocketmqlogs/namesrv.log</p>
+<h3 id="启动A、B机器"><a href="#启动A、B机器" class="headerlink" title="启动A、B机器"></a>启动A、B机器</h3><p>cd /usr/local/rocketmq/bin<br>nohup sh mqbroker -c /usr/local/rocketmq/conf/2m-2s-async/broker-a.properties<br>netstat -ntlp<br>jps<br>tail -f -n 500 /usr/local/rocketmq/logs/rocketmqlogs/broker.log<br>tail -f -n 500 /usr/local/rocketmq/logs/rocketmqlogs/namesrv.log</p>
 <h2 id="遇到的坑"><a href="#遇到的坑" class="headerlink" title="遇到的坑"></a>遇到的坑</h2><p><code>runbroker.sh</code> <code>runserver.sh</code> 里面默认的JAVA_HOME配置项需要改一下，不然会出现 Please set the JAVA_HOME variable in your environment, We need java(x64)!</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># [ ! -e "$JAVA_HOME/bin/java" ] &amp;&amp; JAVA_HOME=$HOME/jdk/java</span></div><div class="line"><span class="comment"># [ ! -e "$JAVA_HOME/bin/java" ] &amp;&amp; JAVA_HOME=/usr/java</span></div><div class="line"><span class="comment"># [ ! -e "$JAVA_HOME/bin/java" ] &amp;&amp; error_exit "Please set the JAVA_HOME variable in your environment, We need java(x64)!"</span></div><div class="line"></div><div class="line"><span class="built_in">export</span> JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_191.jdk/Contents/Home</div><div class="line"><span class="built_in">export</span> JAVA=<span class="string">"<span class="variable">$JAVA_HOME</span>/bin/java"</span></div><div class="line"><span class="built_in">export</span> BASE_DIR=$(dirname <span class="variable">$0</span>)/..</div><div class="line"><span class="built_in">export</span> CLASSPATH=.:<span class="variable">$&#123;BASE_DIR&#125;</span>/conf:<span class="variable">$&#123;CLASSPATH&#125;</span></div></pre></td></tr></table></figure>
 
@@ -484,7 +483,7 @@
               
                 <a href="/Horizon.github.io/archives/">
               
-                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-count">46</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
