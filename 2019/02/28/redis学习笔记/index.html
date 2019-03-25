@@ -81,14 +81,14 @@
 
 <meta name="description" content="底层数据结构简单字符串sds，类似StringBuilder对比常规字符串的优势： 本身记录长度，获取长度的复杂度为O(1) 杜绝缓冲区溢出，即可以自动扩容。 使用空间预分配和惰性空间释放来优化内存分配，避免频繁分配内存带来的性能开销。 二进制安全，可以保存任意格式的二进制数据。 链表用处：列表、发布与订阅、慢查询、监视器等 字典redis的字典采用哈希表作为底层实现 跳表关于跳表：http://">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Horizon Notes">
+<meta property="og:title" content="redis学习笔记">
 <meta property="og:url" content="https://originer.github.io/Horizon.github.io/2019/02/28/redis学习笔记/index.html">
 <meta property="og:site_name" content="Horizon Notes">
 <meta property="og:description" content="底层数据结构简单字符串sds，类似StringBuilder对比常规字符串的优势： 本身记录长度，获取长度的复杂度为O(1) 杜绝缓冲区溢出，即可以自动扩容。 使用空间预分配和惰性空间释放来优化内存分配，避免频繁分配内存带来的性能开销。 二进制安全，可以保存任意格式的二进制数据。 链表用处：列表、发布与订阅、慢查询、监视器等 字典redis的字典采用哈希表作为底层实现 跳表关于跳表：http://">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-03-11T10:06:58.968Z">
+<meta property="og:updated_time" content="2019-03-25T03:12:25.528Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Horizon Notes">
+<meta name="twitter:title" content="redis学习笔记">
 <meta name="twitter:description" content="底层数据结构简单字符串sds，类似StringBuilder对比常规字符串的优势： 本身记录长度，获取长度的复杂度为O(1) 杜绝缓冲区溢出，即可以自动扩容。 使用空间预分配和惰性空间释放来优化内存分配，避免频繁分配内存带来的性能开销。 二进制安全，可以保存任意格式的二进制数据。 链表用处：列表、发布与订阅、慢查询、监视器等 字典redis的字典采用哈希表作为底层实现 跳表关于跳表：http://">
 
 
@@ -123,7 +123,7 @@
 
 
 
-  <title> | Horizon Notes</title>
+  <title>redis学习笔记 | Horizon Notes</title>
   
 
 
@@ -267,7 +267,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline"></h1>
+          <h1 class="post-title" itemprop="name headline">redis学习笔记</h1>
         
 
         <div class="post-meta">
@@ -289,6 +289,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Horizon.github.io/categories/redis/" itemprop="url" rel="index">
+                    <span itemprop="name">redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -359,8 +381,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/Horizon.github.io/2019/03/13/SPI机制/" rel="prev" title="">
-                 <i class="fa fa-chevron-right"></i>
+              <a href="/Horizon.github.io/2019/03/13/SPI机制/" rel="prev" title="浅谈SPI机制">
+                浅谈SPI机制 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -438,7 +460,7 @@
               
                 <a href="/Horizon.github.io/archives/">
               
-                  <span class="site-state-item-count">47</span>
+                  <span class="site-state-item-count">48</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -449,7 +471,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/Horizon.github.io/categories/index.html">
-                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-count">22</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>

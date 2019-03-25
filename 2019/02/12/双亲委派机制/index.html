@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="loadClass与forName的区别： loadClass只是获取ClassLoader，并没有实际装载。forName会对类进行装载，即会初始化类。 类加载器类加载器（ClassLoader）就是在系统运行过程中动态的将字节码文件加载到 JVM 中的工具，基于这个工具的整套类加载流程，我们称作类加载机制。我们在 IDE 中编写的都是源代码文件，以后缀名 .java 的文件形式存在于磁盘上，通">
+<meta name="description" content="先引出一个面试的问题，loadClass与forName的区别：loadClass只是获取ClassLoader，并没有实际装载。forName会对类进行装载，即会初始化类。 类加载器什么是类加载器类加载器（ClassLoader）就是在系统运行过程中动态的将字节码文件加载到 JVM 中的工具，基于这个工具的整套类加载流程，我们称作类加载机制。我们在 IDE 中编写的都是源代码文件，以后缀名 .j">
 <meta property="og:type" content="article">
 <meta property="og:title" content="双亲委派机制">
 <meta property="og:url" content="https://originer.github.io/Horizon.github.io/2019/02/12/双亲委派机制/index.html">
 <meta property="og:site_name" content="Horizon Notes">
-<meta property="og:description" content="loadClass与forName的区别： loadClass只是获取ClassLoader，并没有实际装载。forName会对类进行装载，即会初始化类。 类加载器类加载器（ClassLoader）就是在系统运行过程中动态的将字节码文件加载到 JVM 中的工具，基于这个工具的整套类加载流程，我们称作类加载机制。我们在 IDE 中编写的都是源代码文件，以后缀名 .java 的文件形式存在于磁盘上，通">
+<meta property="og:description" content="先引出一个面试的问题，loadClass与forName的区别：loadClass只是获取ClassLoader，并没有实际装载。forName会对类进行装载，即会初始化类。 类加载器什么是类加载器类加载器（ClassLoader）就是在系统运行过程中动态的将字节码文件加载到 JVM 中的工具，基于这个工具的整套类加载流程，我们称作类加载机制。我们在 IDE 中编写的都是源代码文件，以后缀名 .j">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-03-13T03:51:43.977Z">
+<meta property="og:updated_time" content="2019-03-25T03:06:55.027Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="双亲委派机制">
-<meta name="twitter:description" content="loadClass与forName的区别： loadClass只是获取ClassLoader，并没有实际装载。forName会对类进行装载，即会初始化类。 类加载器类加载器（ClassLoader）就是在系统运行过程中动态的将字节码文件加载到 JVM 中的工具，基于这个工具的整套类加载流程，我们称作类加载机制。我们在 IDE 中编写的都是源代码文件，以后缀名 .java 的文件形式存在于磁盘上，通">
+<meta name="twitter:description" content="先引出一个面试的问题，loadClass与forName的区别：loadClass只是获取ClassLoader，并没有实际装载。forName会对类进行装载，即会初始化类。 类加载器什么是类加载器类加载器（ClassLoader）就是在系统运行过程中动态的将字节码文件加载到 JVM 中的工具，基于这个工具的整套类加载流程，我们称作类加载机制。我们在 IDE 中编写的都是源代码文件，以后缀名 .j">
 
 
 
@@ -339,10 +339,14 @@
       
 
       
-        <p>loadClass与forName的区别：</p>
-<p>loadClass只是获取ClassLoader，并没有实际装载。forName会对类进行装载，即会初始化类。</p>
-<h3 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h3><p>类加载器（ClassLoader）就是在系统运行过程中动态的将字节码文件加载到 JVM 中的工具，基于这个工具的整套类加载流程，我们称作类加载机制。我们在 IDE 中编写的都是源代码文件，以后缀名 <code>.java</code> 的文件形式存在于磁盘上，通过编译后生成后缀名 <code>.class</code> 的字节码文件，ClassLoader 加载的就是这些字节码文件。</p>
-<p>Java 默认提供了三个 ClassLoader，分别是 AppClassLoader、ExtClassLoader、BootStrapClassLoader，依次后者分别是前者的「父加载器」。</p>
+        <p>先引出一个面试的问题，loadClass与forName的区别：<br>loadClass只是获取ClassLoader，并没有实际装载。forName会对类进行装载，即会初始化类。</p>
+<h3 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h3><h4 id="什么是类加载器"><a href="#什么是类加载器" class="headerlink" title="什么是类加载器"></a>什么是类加载器</h4><p>类加载器（ClassLoader）就是在系统运行过程中动态的将字节码文件加载到 JVM 中的工具，基于这个工具的整套类加载流程，我们称作类加载机制。我们在 IDE 中编写的都是源代码文件，以后缀名 <code>.java</code> 的文件形式存在于磁盘上，通过编译后生成后缀名 <code>.class</code> 的字节码文件，ClassLoader 加载的就是这些字节码文件。</p>
+<h4 id="类加载器的类型"><a href="#类加载器的类型" class="headerlink" title="类加载器的类型"></a>类加载器的类型</h4><p>Java 默认提供了三个 ClassLoader，分别是 AppClassLoader、ExtClassLoader、BootStrapClassLoader，依次后者分别是前者的「父加载器」。</p>
+<ul>
+<li>启动类加载器(Bootstrap ClassLoader)<br>启动类加载器负责将存放在<java_home>\lib目录中的，或者被-Xbootclasspath参数所指定的路径中的，并且是虚拟机识别的类库加载到虚拟机内存中。启动类加载器无法被Java程序直接引用。</java_home></li>
+<li>扩展类加载器(Extension ClassLoader)<br>扩展类加载器由sun.misc.Launcher$ExtClassLoader实现，它负责加载<java_home>\lib\ext目录中，或者被java.ext.dirs系统变量所指定的路径中的所有类库，开发者可以直接使用扩展类加载器。</java_home></li>
+<li>应用程序类加载器(Application Classloader)<br>应用程序类加载器由sun.misc.Launcher$App-ClassLoader实现。应用程序类加载器也称之为系统类加载器。它负责加载用户类路径(ClassPath)上所指定的类库。应用程序中如果没有自定义类加载器，那一般情况下应用程序类加载器就是程序中默认的类加载器。</li>
+</ul>
 
       
     </div>
@@ -456,7 +460,7 @@
               
                 <a href="/Horizon.github.io/archives/">
               
-                  <span class="site-state-item-count">47</span>
+                  <span class="site-state-item-count">48</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -467,7 +471,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/Horizon.github.io/categories/index.html">
-                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-count">22</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -527,7 +531,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#类加载器"><span class="nav-number">1.</span> <span class="nav-text">类加载器</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#类加载器"><span class="nav-number">1.</span> <span class="nav-text">类加载器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#什么是类加载器"><span class="nav-number">1.1.</span> <span class="nav-text">什么是类加载器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#类加载器的类型"><span class="nav-number">1.2.</span> <span class="nav-text">类加载器的类型</span></a></li></ol></li></ol></div>
             
 
           </div>
