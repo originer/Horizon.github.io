@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="Horizon Notes">
 <meta property="og:description" content="redis主从复制 sentinel redis-cluster集群  一般主从搭配集群使用，可以保证redis集群的高可用性">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-03-28T15:34:42.838Z">
+<meta property="og:updated_time" content="2019-04-01T16:44:30.950Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="redis集群相关的知识">
 <meta name="twitter:description" content="redis主从复制 sentinel redis-cluster集群  一般主从搭配集群使用，可以保证redis集群的高可用性">
@@ -370,7 +370,8 @@
 <p>如果槽全部分配成功说明集群创建成功</p>
    <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[OK] All 16384 slots covered</div></pre></td></tr></table></figure>
 <p>​    <em>推荐使用redis-cli —cluster的命令，ruby脚本已经不再维护。</em></p>
-<h3 id="测试redis集群"><a href="#测试redis集群" class="headerlink" title="测试redis集群"></a>测试redis集群</h3><p>redis集群会根据key值hash分配一个slot，然后重定向到包含那个slot的节点。</p>
+<h3 id="测试redis集群"><a href="#测试redis集群" class="headerlink" title="测试redis集群"></a>测试redis集群</h3><p><strong><em>可以使用 <code>debug populate 50000</code>来添加测试数据；</em></strong></p>
+<p>redis集群会根据key值hash分配一个slot，然后重定向到包含那个slot的节点。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">redis-cli -c -h 127.0.0.1 -p 7000</div><div class="line">127.0.0.1:7000&gt; set k1 13</div><div class="line"><span class="meta">-&gt;</span> Redirected to slot [12706] located at 127.0.0.1:7002</div><div class="line">OK</div></pre></td></tr></table></figure>
 <p><a href="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190218164933104.png" target="_blank" rel="external">image-20190218164933104</a></p>
 <h3 id="jedis-cluster-命令执行流程"><a href="#jedis-cluster-命令执行流程" class="headerlink" title="jedis-cluster 命令执行流程"></a>jedis-cluster 命令执行流程</h3><p><a href="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190218172856333.png" target="_blank" rel="external">image-20190218172856333</a></p>

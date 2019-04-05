@@ -90,9 +90,9 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190328013415166.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190328014136324.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190328014343386.png">
-<meta property="og:image" content="https://originer.github.io/Users/zh/Library/Application%20Support/typora-user-images/image-20190328234518975.png">
-<meta property="og:image" content="https://originer.github.io/Users/zh/Library/Application%20Support/typora-user-images/image-20190328235018001.png">
-<meta property="og:updated_time" content="2019-03-28T15:50:47.354Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190328234518975.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190328235018001.png">
+<meta property="og:updated_time" content="2019-03-29T04:13:48.946Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="redis学习笔记">
 <meta name="twitter:description" content="底层数据结构简单字符串sds，类似StringBuilder对比常规字符串的优势： 本身记录长度，获取长度的复杂度为O(1) 杜绝缓冲区溢出，即可以自动扩容。 使用空间预分配和惰性空间释放来优化内存分配，避免频繁分配内存带来的性能开销。 二进制安全，可以保存任意格式的二进制数据。 链表用处：列表、发布与订阅、慢查询、监视器等 字典redis的字典采用哈希表作为底层实现 跳表关于跳表：http://">
@@ -369,10 +369,10 @@
 <h5 id="psync部分重同步的实现机制"><a href="#psync部分重同步的实现机制" class="headerlink" title="psync部分重同步的实现机制"></a>psync部分重同步的实现机制</h5><p>主从服务器会维护一个偏移量，通过对比偏移量就可以看主从服务器是否是一致的。同时主服务器还会维护一个<code>复制积压缓冲区</code>，这是一个FIFO队列，默认大小为1MB。主服务器在向从服务器发送同步的指令时会同时把指令发送给缓冲区，这样从服务器在断线重同步时，如果通过偏移量发现从服务器丢失的数据仍存在于缓冲区中，就会触发部分重同步，否则就执行完整重同步。</p>
 <h3 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h3><p>redis主要通过 <code>multi``exec``watch</code>来实现事务</p>
 <h4 id="multi"><a href="#multi" class="headerlink" title="multi"></a>multi</h4><p>将执行命令的redis客户端切换成事务状态。在事务状态下，除了exec、watch、discard、multi之外的指令都会被放到一个队列里。</p>
-<p><img src="/Users/zh/Library/Application Support/typora-user-images/image-20190328234518975.png" alt="image-20190328234518975"></p>
+<p><img src="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190328234518975.png" alt="image-20190328234518975"></p>
 <h4 id="exec"><a href="#exec" class="headerlink" title="exec"></a>exec</h4><p>执行事务，把事务队列中的指令执行完，然后清空队列，切换成非事务状态。</p>
 <h4 id="watch"><a href="#watch" class="headerlink" title="watch"></a>watch</h4><p>检测某个键是否被更改过，在检测期间更改检测key的值的客户端的标识<code>REDIS_DIRTY_CAS</code>会被打开。此标志会影响exec命令的执行。所以watch相当于一个乐观锁。</p>
-<p><img src="/Users/zh/Library/Application Support/typora-user-images/image-20190328235018001.png" alt="image-20190328235018001"></p>
+<p><img src="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190328235018001.png" alt="image-20190328235018001"></p>
 
       
     </div>
