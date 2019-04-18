@@ -87,7 +87,7 @@
 <meta property="og:description" content="为什么会出现跨域跨域问题来源于JavaScript的同源策略，即只有 协议+主机名+端口号(如存在)相同，则允许相互访问。也就是说JavaScript只能访问和操作自己域下的资源，不能访问和操作其他域下的资源。跨域问题是针对JS和ajax的，html本身没有跨域问题，比如a标签、script标签、甚至form标签（可以直接跨域发送数据并接收数据）等。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://okydwk9zh.bkt.clouddn.com/17-5-28/79583948.jpg">
-<meta property="og:updated_time" content="2018-07-03T12:14:40.000Z">
+<meta property="og:updated_time" content="2019-04-18T07:55:15.250Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Ajax跨域解决方案">
 <meta name="twitter:description" content="为什么会出现跨域跨域问题来源于JavaScript的同源策略，即只有 协议+主机名+端口号(如存在)相同，则允许相互访问。也就是说JavaScript只能访问和操作自己域下的资源，不能访问和操作其他域下的资源。跨域问题是针对JS和ajax的，html本身没有跨域问题，比如a标签、script标签、甚至form标签（可以直接跨域发送数据并接收数据）等。">
@@ -360,7 +360,7 @@
 <ul>
 <li><p>添加响应头，允许跨域 </p>
 <p>  addHeader(‘Access-Control-Allow-Origin:*’);//允许所有来源访问 </p>
-<p>　　addHeader(‘Access-Control-Allow-Method:POST,GET’);//允许访问的方式</p>
+<p>  　　addHeader(‘Access-Control-Allow-Method:POST,GET’);//允许访问的方式</p>
 </li>
 <li><p>代理的方式 </p>
 <p>服务器A的test01.html页面想访问服务器B的后台action，返回“test”字符串，此时就出现跨域请求，浏览器控制台会出现报错提示，由于跨域是浏览器的同源策略造成的，对于服务器后台不存在该问题，可以在服务器A中添加一个代理action，在该action中完成对服务器B中action数据的请求，然后在返回到test01.html页面。</p>
@@ -381,7 +381,8 @@
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$.ajax(&#123;</div><div class="line">   url: base +<span class="string">"/get1"</span>,</div><div class="line">   dataType: <span class="string">"jsonp"</span>,</div><div class="line">   jsonp: <span class="string">"callback2"</span>,</div><div class="line">   cache:<span class="literal">true</span>,</div><div class="line">   success: <span class="function"><span class="keyword">function</span>(<span class="params">json</span>)</span>&#123;</div><div class="line">      result = json;</div><div class="line">   &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
 <p>后台接收也要做一些修改：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@ControllerAdvice</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JsonpAdvice</span> <span class="keyword">extends</span> <span class="title">AbstractJsonpResponseBodyAdvice</span> </span>&#123;</div><div class="line"></div><div class="line">   <span class="function"><span class="keyword">public</span> <span class="title">JsonpAdvice</span><span class="params">()</span> </span>&#123;</div><div class="line">      <span class="comment">// TODO Auto-generated constructor stub</span></div><div class="line">      <span class="keyword">super</span>(<span class="string">"callback2"</span>);</div><div class="line">   &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>​    </p>
+<h2 id="使用Spring的跨域解决方案"><a href="#使用Spring的跨域解决方案" class="headerlink" title="使用Spring的跨域解决方案"></a>使用Spring的跨域解决方案</h2><p>添加 <code>@CrossOrigin</code>注解</p>
+<p><a href="https://spring.io/blog/2015/06/08/cors-support-in-spring-framework" target="_blank" rel="external">https://spring.io/blog/2015/06/08/cors-support-in-spring-framework</a></p>
 
       
     </div>
@@ -566,7 +567,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么会出现跨域"><span class="nav-number">1.</span> <span class="nav-text">为什么会出现跨域</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何解决跨域问题"><span class="nav-number">2.</span> <span class="nav-text">如何解决跨域问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#浏览器解除限制"><span class="nav-number">2.1.</span> <span class="nav-text">浏览器解除限制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#XHR请求"><span class="nav-number">2.2.</span> <span class="nav-text">XHR请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#请求本身是跨域"><span class="nav-number">2.3.</span> <span class="nav-text">请求本身是跨域</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JSONP解决方案"><span class="nav-number">3.</span> <span class="nav-text">JSONP解决方案</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么会出现跨域"><span class="nav-number">1.</span> <span class="nav-text">为什么会出现跨域</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何解决跨域问题"><span class="nav-number">2.</span> <span class="nav-text">如何解决跨域问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#浏览器解除限制"><span class="nav-number">2.1.</span> <span class="nav-text">浏览器解除限制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#XHR请求"><span class="nav-number">2.2.</span> <span class="nav-text">XHR请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#请求本身是跨域"><span class="nav-number">2.3.</span> <span class="nav-text">请求本身是跨域</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JSONP解决方案"><span class="nav-number">3.</span> <span class="nav-text">JSONP解决方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用Spring的跨域解决方案"><span class="nav-number">4.</span> <span class="nav-text">使用Spring的跨域解决方案</span></a></li></ol></div>
             
 
           </div>
