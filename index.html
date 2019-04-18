@@ -627,36 +627,18 @@
 
       
         
-          
-            <h3 id="底层数据结构"><a href="#底层数据结构" class="headerlink" title="底层数据结构"></a>底层数据结构</h3><h4 id="简单字符串sds，类似StringBuilder"><a href="#简单字符串sds，类似StringBuilder" class="headerlink" title="简单字符串sds，类似StringBuilder"></a>简单字符串sds，类似StringBuilder</h4><p>对比常规字符串的优势：</p>
+          <h3 id="底层数据结构"><a href="#底层数据结构" class="headerlink" title="底层数据结构"></a>底层数据结构</h3><h4 id="简单字符串sds，类似StringBuilder"><a href="#简单字符串sds，类似StringBuilder" class="headerlink" title="简单字符串sds，类似StringBuilder"></a>简单字符串sds，类似StringBuilder</h4><p>对比常规字符串的优势：</p>
 <p>本身记录长度，获取长度的复杂度为O(1)</p>
 <p>杜绝缓冲区溢出，即可以自动扩容。</p>
 <p>使用空间预分配和惰性空间释放来优化内存分配，避免频繁分配内存带来的性能开销。</p>
 <p>二进制安全，可以保存任意格式的二进制数据。</p>
-<h5 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h5><p>用处：列表、发布与订阅、慢查询、监视器等</p>
-<h5 id="字典"><a href="#字典" class="headerlink" title="字典"></a>字典</h5><p>redis的字典采用哈希表作为底层实现</p>
-<h5 id="跳表"><a href="#跳表" class="headerlink" title="跳表"></a>跳表</h5><p>关于跳表：<a href="http://blog.jobbole.com/111731/" target="_blank" rel="external">http://blog.jobbole.com/111731/</a></p>
-<h3 id="持久化"><a href="#持久化" class="headerlink" title="持久化"></a>持久化</h3><p>redis持久化有rdb和aof两种方式</p>
-<h4 id="rdb"><a href="#rdb" class="headerlink" title="rdb"></a>rdb</h4><p>rdb类似内存快照，即把内存中的数据生成一份二进制的数据文件，可以还原到内存。rdb可以通过手动<code>save</code>命令保存，此过程会导致redis阻塞，也可以定义一系列的策略来自动生成rdb文件。bgsave的过程是fork一个当前线程，然后进行写文件。读文件没有相应的指令，服务器检测到rdb文件会自动载入，另外aof文件的优先级比rdb文件高，redis一般会优先执行aof文件。<br>在rdb文件载入时，redis会处于阻塞状态。</p>
-<p><img src="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190328003158199.png" alt="image-20190328003158199"></p>
-<h4 id="aof"><a href="#aof" class="headerlink" title="aof"></a>aof</h4><p>aof保存的不是具体的数据，而是一系列的命令。</p>
-<p><img src="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190328013415166.png" alt="image-20190328013415166"></p>
-<h3 id="事件"><a href="#事件" class="headerlink" title="事件"></a>事件</h3><h4 id="文件事件"><a href="#文件事件" class="headerlink" title="文件事件"></a>文件事件</h4><p>文件事件处理器使用的是单线程，通过IO多路复用的网络模型来同时监听多个socket，可以参考netty的网络模型。</p>
-<p><img src="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190328014136324.png" alt="image-20190328014136324"></p>
-<p>redis实现了多套底层的IO多路复用API，在编译时会根据系统自动选择性能最高的。</p>
-<p><img src="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190328014343386.png" alt="image-20190328014343386"></p>
-<h4 id="时间事件"><a href="#时间事件" class="headerlink" title="时间事件"></a>时间事件</h4><p>redis底层把时间事件保存在一个无序链表中，每次时间事件执行时都需要遍历整个链表。</p>
-<h3 id="同步"><a href="#同步" class="headerlink" title="同步"></a>同步</h3><h4 id="sync、psync"><a href="#sync、psync" class="headerlink" title="sync、psync"></a>sync、psync</h4><p>sync是旧版的同步，sync对初次同步的支持效果还可以，但是对于断线重连的情况处理的比较低效，需要主服务器进行bgsave产生rdb文件并发送给从服务器，非常消耗资源，并且所有命令都需要同步，包括很多无效的指令。</p>
-<p>redis2.7之后添加了psync，psync新增了部分同步模式，用于处理断线重连。执行psync主服务器只会发送断线期间产生的写指令，不需要在发送rdb文件，相比sync高效了很多。</p>
-<h5 id="psync部分重同步的实现机制"><a href="#psync部分重同步的实现机制" class="headerlink" title="psync部分重同步的实现机制"></a>psync部分重同步的实现机制</h5><p>主从服务器会维护一个偏移量，通过对比偏移量就可以看主从服务器是否是一致的。同时主服务器还会维护一个<code>复制积压缓冲区</code>，这是一个FIFO队列，默认大小为1MB。主服务器在向从服务器发送同步的指令时会同时把指令发送给缓冲区，这样从服务器在断线重同步时，如果通过偏移量发现从服务器丢失的数据仍存在于缓冲区中，就会触发部分重同步，否则就执行完整重同步。</p>
-<h3 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h3><p>redis主要通过 <code>multi``exec``watch</code>来实现事务</p>
-<h4 id="multi"><a href="#multi" class="headerlink" title="multi"></a>multi</h4><p>将执行命令的redis客户端切换成事务状态。在事务状态下，除了exec、watch、discard、multi之外的指令都会被放到一个队列里。</p>
-<p><img src="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190328234518975.png" alt="image-20190328234518975"></p>
-<h4 id="exec"><a href="#exec" class="headerlink" title="exec"></a>exec</h4><p>执行事务，把事务队列中的指令执行完，然后清空队列，切换成非事务状态。</p>
-<h4 id="watch"><a href="#watch" class="headerlink" title="watch"></a>watch</h4><p>检测某个键是否被更改过，在检测期间更改检测key的值的客户端的标识<code>REDIS_DIRTY_CAS</code>会被打开。此标志会影响exec命令的执行。所以watch相当于一个乐观锁。</p>
-<p><img src="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190328235018001.png" alt="image-20190328235018001"></p>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/Horizon.github.io/2019/02/28/redis学习笔记/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>

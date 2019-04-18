@@ -79,12 +79,12 @@
 
 
 
-<meta name="description" content="底层数据结构简单字符串sds，类似StringBuilder对比常规字符串的优势： 本身记录长度，获取长度的复杂度为O(1) 杜绝缓冲区溢出，即可以自动扩容。 使用空间预分配和惰性空间释放来优化内存分配，避免频繁分配内存带来的性能开销。 二进制安全，可以保存任意格式的二进制数据。 链表用处：列表、发布与订阅、慢查询、监视器等 字典redis的字典采用哈希表作为底层实现 跳表关于跳表：http://">
+<meta name="description" content="底层数据结构简单字符串sds，类似StringBuilder对比常规字符串的优势： 本身记录长度，获取长度的复杂度为O(1) 杜绝缓冲区溢出，即可以自动扩容。 使用空间预分配和惰性空间释放来优化内存分配，避免频繁分配内存带来的性能开销。 二进制安全，可以保存任意格式的二进制数据。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="redis学习笔记">
 <meta property="og:url" content="https://originer.github.io/Horizon.github.io/2019/02/28/redis学习笔记/index.html">
 <meta property="og:site_name" content="Horizon Notes">
-<meta property="og:description" content="底层数据结构简单字符串sds，类似StringBuilder对比常规字符串的优势： 本身记录长度，获取长度的复杂度为O(1) 杜绝缓冲区溢出，即可以自动扩容。 使用空间预分配和惰性空间释放来优化内存分配，避免频繁分配内存带来的性能开销。 二进制安全，可以保存任意格式的二进制数据。 链表用处：列表、发布与订阅、慢查询、监视器等 字典redis的字典采用哈希表作为底层实现 跳表关于跳表：http://">
+<meta property="og:description" content="底层数据结构简单字符串sds，类似StringBuilder对比常规字符串的优势： 本身记录长度，获取长度的复杂度为O(1) 杜绝缓冲区溢出，即可以自动扩容。 使用空间预分配和惰性空间释放来优化内存分配，避免频繁分配内存带来的性能开销。 二进制安全，可以保存任意格式的二进制数据。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190328003158199.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190328013415166.png">
@@ -92,10 +92,10 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190328014343386.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190328234518975.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190328235018001.png">
-<meta property="og:updated_time" content="2019-03-29T04:13:48.946Z">
+<meta property="og:updated_time" content="2019-04-18T08:04:42.273Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="redis学习笔记">
-<meta name="twitter:description" content="底层数据结构简单字符串sds，类似StringBuilder对比常规字符串的优势： 本身记录长度，获取长度的复杂度为O(1) 杜绝缓冲区溢出，即可以自动扩容。 使用空间预分配和惰性空间释放来优化内存分配，避免频繁分配内存带来的性能开销。 二进制安全，可以保存任意格式的二进制数据。 链表用处：列表、发布与订阅、慢查询、监视器等 字典redis的字典采用哈希表作为底层实现 跳表关于跳表：http://">
+<meta name="twitter:description" content="底层数据结构简单字符串sds，类似StringBuilder对比常规字符串的优势： 本身记录长度，获取长度的复杂度为O(1) 杜绝缓冲区溢出，即可以自动扩容。 使用空间预分配和惰性空间释放来优化内存分配，避免频繁分配内存带来的性能开销。 二进制安全，可以保存任意格式的二进制数据。">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190328003158199.png">
 
 
@@ -351,6 +351,7 @@
 <p>杜绝缓冲区溢出，即可以自动扩容。</p>
 <p>使用空间预分配和惰性空间释放来优化内存分配，避免频繁分配内存带来的性能开销。</p>
 <p>二进制安全，可以保存任意格式的二进制数据。</p>
+<a id="more"></a>
 <h5 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h5><p>用处：列表、发布与订阅、慢查询、监视器等</p>
 <h5 id="字典"><a href="#字典" class="headerlink" title="字典"></a>字典</h5><p>redis的字典采用哈希表作为底层实现</p>
 <h5 id="跳表"><a href="#跳表" class="headerlink" title="跳表"></a>跳表</h5><p>关于跳表：<a href="http://blog.jobbole.com/111731/" target="_blank" rel="external">http://blog.jobbole.com/111731/</a></p>
