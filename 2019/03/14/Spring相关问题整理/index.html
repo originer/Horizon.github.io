@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="Horizon Notes">
 <meta property="og:description" content="问题描述：有配置具体的bean，且可以被扫描到，但是无法注入,报错：No bean named ‘financeDao’ is defined原因：dao的interface注入问题，由于使用了mybaties，需要在mybaties的xml配置中添加该接口的路径，配置路径可以使用,;\t\n进行分隔； 问题描述：SpringMVC使用@Value无法获取application.propertie">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-05-09T02:45:11.024Z">
+<meta property="og:updated_time" content="2019-05-28T08:38:08.855Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring相关问题记录">
 <meta name="twitter:description" content="问题描述：有配置具体的bean，且可以被扫描到，但是无法注入,报错：No bean named ‘financeDao’ is defined原因：dao的interface注入问题，由于使用了mybaties，需要在mybaties的xml配置中添加该接口的路径，配置路径可以使用,;\t\n进行分隔； 问题描述：SpringMVC使用@Value无法获取application.propertie">
@@ -342,6 +342,7 @@
         <h3 id="问题描述：有配置具体的bean，且可以被扫描到，但是无法注入-报错：No-bean-named-‘financeDao’-is-defined"><a href="#问题描述：有配置具体的bean，且可以被扫描到，但是无法注入-报错：No-bean-named-‘financeDao’-is-defined" class="headerlink" title="问题描述：有配置具体的bean，且可以被扫描到，但是无法注入,报错：No bean named ‘financeDao’ is defined"></a>问题描述：有配置具体的bean，且可以被扫描到，但是无法注入,报错：No bean named ‘financeDao’ is defined</h3><p>原因：dao的interface注入问题，由于使用了mybaties，需要在mybaties的xml配置中添加该接口的路径，配置路径可以使用<code>,;\t\n</code>进行分隔；</p>
 <h3 id="问题描述：SpringMVC使用-Value无法获取application-properties中的数据"><a href="#问题描述：SpringMVC使用-Value无法获取application-properties中的数据" class="headerlink" title="问题描述：SpringMVC使用@Value无法获取application.properties中的数据"></a>问题描述：SpringMVC使用@Value无法获取application.properties中的数据</h3><p>原因：在项目中，spring的配置和springmvc是分离的，需要在springmvc的配置文件中加入</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">context:property-placeholder</span> <span class="attr">ignore-resource-not-found</span>=<span class="string">"false"</span> <span class="attr">location</span>=<span class="string">"classpath*:application.properties"</span>/&gt;</span></div></pre></td></tr></table></figure>
+<a id="more"></a>
 <h3 id="问题描述：mybatie-在使用-in-id-时的问题"><a href="#问题描述：mybatie-在使用-in-id-时的问题" class="headerlink" title="问题描述：mybatie 在使用 in (#{id}) 时的问题"></a>问题描述：mybatie 在使用 in (#{id}) 时的问题</h3><p>原因：mybatie自动生成的字段 #{}是带引号的，会自己包装一层。${}是把原本的字符串拼接到sql中，所以一般推荐使用#{}防止sql注入。 在使用 in 语法时推荐使用<foreach>进行拼接。</foreach></p>
 <h3 id="问题描述：Spring-使用注解注入为null"><a href="#问题描述：Spring-使用注解注入为null" class="headerlink" title="问题描述：Spring 使用注解注入为null"></a>问题描述：Spring 使用注解注入为null</h3><p>原因：1、spring不会为new出的对象进行装配，一定要所有的对象都是通过spring配置的bean获取的；</p>
 <h3 id="ORDER-BY-RAND-LIMIT-1"><a href="#ORDER-BY-RAND-LIMIT-1" class="headerlink" title="ORDER BY RAND() LIMIT 1"></a>ORDER BY RAND() LIMIT 1</h3><p>mysql 随机取一行</p>

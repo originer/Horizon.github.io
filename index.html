@@ -343,7 +343,7 @@
 <p>Supervisor (<a href="http://supervisord.org/" target="_blank" rel="external">http://supervisord.org</a>) 是一个用 Python 写的进程管理工具，可以很方便的用来启动、重启、关闭进程（不仅仅是 Python 进程）。除了对单个进程的控制，还可以同时启动、关闭多个进程，比如很不幸的服务器出问题导致所有应用程序都被杀死，此时可以用 supervisor 同时启动所有应用程序而不是一个一个地敲命令启动。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2019/05/28/supervisor/#espandi" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2019/05/28/supervisor/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -486,20 +486,16 @@
 
       
         
-          
-            <p>volatile</p>
+          <p>volatile</p>
 <h3 id="内存可见性"><a href="#内存可见性" class="headerlink" title="内存可见性"></a>内存可见性</h3><p>java内存模型规定，volatile变量的每次修改都必须立即回写到主内存中，volatile变量的每次使用都必须从主内存刷新最新的值。</p>
-<h3 id="禁止指令重排序"><a href="#禁止指令重排序" class="headerlink" title="禁止指令重排序"></a>禁止指令重排序</h3><h3 id="实现：内存屏障"><a href="#实现：内存屏障" class="headerlink" title="实现：内存屏障"></a>实现：内存屏障</h3><p>volatile关键字只能保证可见性和有序性，不能保证原子性，要解决原子性的问题，还是只能通过加锁或使用原子类的方式解决。</p>
-<p>进而，我们得出volatile关键字使用的场景：</p>
-<p>（1）运算的结果并不依赖于变量的当前值，或者能够确保只有单一的线程修改变量的值；</p>
-<p>（2）变量不需要与其他状态变量共同参与不变约束。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>（1）volatile关键字可以保证可见性；</p>
-<p>（2）volatile关键字可以保证有序性；</p>
-<p>（3）volatile关键字不可以保证原子性；</p>
-<p>（4）volatile关键字的底层主要是通过内存屏障来实现的；</p>
-<p>（5）volatile关键字的使用场景必须是场景本身就是原子的；</p>
-
-          
+<h3 id="禁止指令重排序"><a href="#禁止指令重排序" class="headerlink" title="禁止指令重排序"></a>禁止指令重排序</h3>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/Horizon.github.io/2019/05/22/volatile/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -638,16 +634,16 @@
 
       
         
-          
-            <h3 id="问题描述：有配置具体的bean，且可以被扫描到，但是无法注入-报错：No-bean-named-‘financeDao’-is-defined"><a href="#问题描述：有配置具体的bean，且可以被扫描到，但是无法注入-报错：No-bean-named-‘financeDao’-is-defined" class="headerlink" title="问题描述：有配置具体的bean，且可以被扫描到，但是无法注入,报错：No bean named ‘financeDao’ is defined"></a>问题描述：有配置具体的bean，且可以被扫描到，但是无法注入,报错：No bean named ‘financeDao’ is defined</h3><p>原因：dao的interface注入问题，由于使用了mybaties，需要在mybaties的xml配置中添加该接口的路径，配置路径可以使用<code>,;\t\n</code>进行分隔；</p>
+          <h3 id="问题描述：有配置具体的bean，且可以被扫描到，但是无法注入-报错：No-bean-named-‘financeDao’-is-defined"><a href="#问题描述：有配置具体的bean，且可以被扫描到，但是无法注入-报错：No-bean-named-‘financeDao’-is-defined" class="headerlink" title="问题描述：有配置具体的bean，且可以被扫描到，但是无法注入,报错：No bean named ‘financeDao’ is defined"></a>问题描述：有配置具体的bean，且可以被扫描到，但是无法注入,报错：No bean named ‘financeDao’ is defined</h3><p>原因：dao的interface注入问题，由于使用了mybaties，需要在mybaties的xml配置中添加该接口的路径，配置路径可以使用<code>,;\t\n</code>进行分隔；</p>
 <h3 id="问题描述：SpringMVC使用-Value无法获取application-properties中的数据"><a href="#问题描述：SpringMVC使用-Value无法获取application-properties中的数据" class="headerlink" title="问题描述：SpringMVC使用@Value无法获取application.properties中的数据"></a>问题描述：SpringMVC使用@Value无法获取application.properties中的数据</h3><p>原因：在项目中，spring的配置和springmvc是分离的，需要在springmvc的配置文件中加入</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">context:property-placeholder</span> <span class="attr">ignore-resource-not-found</span>=<span class="string">"false"</span> <span class="attr">location</span>=<span class="string">"classpath*:application.properties"</span>/&gt;</span></div></pre></td></tr></table></figure>
-<h3 id="问题描述：mybatie-在使用-in-id-时的问题"><a href="#问题描述：mybatie-在使用-in-id-时的问题" class="headerlink" title="问题描述：mybatie 在使用 in (#{id}) 时的问题"></a>问题描述：mybatie 在使用 in (#{id}) 时的问题</h3><p>原因：mybatie自动生成的字段 #{}是带引号的，会自己包装一层。${}是把原本的字符串拼接到sql中，所以一般推荐使用#{}防止sql注入。 在使用 in 语法时推荐使用<foreach>进行拼接。</foreach></p>
-<h3 id="问题描述：Spring-使用注解注入为null"><a href="#问题描述：Spring-使用注解注入为null" class="headerlink" title="问题描述：Spring 使用注解注入为null"></a>问题描述：Spring 使用注解注入为null</h3><p>原因：1、spring不会为new出的对象进行装配，一定要所有的对象都是通过spring配置的bean获取的；</p>
-<h3 id="ORDER-BY-RAND-LIMIT-1"><a href="#ORDER-BY-RAND-LIMIT-1" class="headerlink" title="ORDER BY RAND() LIMIT 1"></a>ORDER BY RAND() LIMIT 1</h3><p>mysql 随机取一行</p>
-<h3 id="jdbcTemplate-批量执行缓慢"><a href="#jdbcTemplate-批量执行缓慢" class="headerlink" title="jdbcTemplate 批量执行缓慢"></a>jdbcTemplate 批量执行缓慢</h3><p>原因：jdbcTemplate批量插入时默认是一条条执行的，需要在数据库连接配置后面添加<code>&amp;rewriteBatchedStatements=true</code></p>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/Horizon.github.io/2019/03/14/Spring相关问题整理/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -935,7 +931,7 @@
 <p>二进制安全，可以保存任意格式的二进制数据。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2019/02/28/redis学习笔记/#espandi" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2019/02/28/redis学习笔记/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1083,7 +1079,7 @@
 <p>一般主从搭配集群使用，可以保证redis集群的高可用性</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2019/02/17/redis集群相关/#espandi" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2019/02/17/redis集群相关/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1529,7 +1525,7 @@
 <p>以逗号作为分隔符，打印分割后第一个变量</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2019/01/07/linux常用指令/#espandi" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2019/01/07/linux常用指令/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
