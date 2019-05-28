@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="Horizon Notes">
 <meta property="og:description" content="mkdir：         XX (创建一个空目录 XX指目录名) pwd：          显示当前目录的路径。 git init          把当前的目录变成可以管理的git仓库，生成隐藏.git文件。 git add XX       把xx文件添加到暂存区去。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-03-13T11:01:17.848Z">
+<meta property="og:updated_time" content="2019-05-21T09:03:40.514Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Git常用命令整理">
 <meta name="twitter:description" content="mkdir：         XX (创建一个空目录 XX指目录名) pwd：          显示当前目录的路径。 git init          把当前的目录变成可以管理的git仓库，生成隐藏.git文件。 git add XX       把xx文件添加到暂存区去。">
@@ -385,6 +385,7 @@
 <li>git ls-files -d | xargs echo -e | xargs git checkout –  恢复commit中被删除的文件 (xagrs echo -e 用于转义中文，如果文件中没有中文字符可以省略)</li>
 <li>git ls-files -m | xargs echo -e | xargs git checkout –  恢复commit中被修改的文件</li>
 <li>git reset –soft HEAD^  撤销上一次commit，代码不会变动</li>
+<li>git commit –amend -m [message]    使用一次新的commit，替代上一次提交,如果代码没有任何新变化，则用来改写上一次commit的提交信息</li>
 </ul>
 
       
@@ -490,7 +491,7 @@
               
                 <a href="/Horizon.github.io/archives/">
               
-                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-count">50</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -501,7 +502,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/Horizon.github.io/categories/index.html">
-                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-count">23</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
