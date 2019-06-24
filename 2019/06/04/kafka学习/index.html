@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="kafka," />
 
 
 
@@ -79,14 +79,22 @@
 
 
 
+<meta name="description" content="kafka 消息引擎 消息引擎的作用：削峰填谷 采用追加写，利用了磁盘顺序写的性能 采用零拷贝技术 sendfile  高吞吐低延时的原因：  kafka架构图  专业术语：broker：kafka服务器、topic：主题、partition：分区、replica：副本 部署部署在linux上的优势： 利用了epoll模型和零拷贝技术； epoll：https://segmentfault.com">
+<meta name="keywords" content="kafka">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Horizon Notes">
+<meta property="og:title" content="Kafka学习笔记(一)">
 <meta property="og:url" content="https://originer.github.io/Horizon.github.io/2019/06/04/kafka学习/index.html">
 <meta property="og:site_name" content="Horizon Notes">
+<meta property="og:description" content="kafka 消息引擎 消息引擎的作用：削峰填谷 采用追加写，利用了磁盘顺序写的性能 采用零拷贝技术 sendfile  高吞吐低延时的原因：  kafka架构图  专业术语：broker：kafka服务器、topic：主题、partition：分区、replica：副本 部署部署在linux上的优势： 利用了epoll模型和零拷贝技术； epoll：https://segmentfault.com">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-06-04T14:41:11.801Z">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/006tNc79gy1g4ccxopt3cj314o07yab8.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/006tNc79gy1g4ccxo8gduj30vk0eq757.jpg">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/006tNc79gy1g3yg94zouzj30dd07rdg0.jpg">
+<meta property="og:updated_time" content="2019-06-24T09:09:27.678Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Horizon Notes">
+<meta name="twitter:title" content="Kafka学习笔记(一)">
+<meta name="twitter:description" content="kafka 消息引擎 消息引擎的作用：削峰填谷 采用追加写，利用了磁盘顺序写的性能 采用零拷贝技术 sendfile  高吞吐低延时的原因：  kafka架构图  专业术语：broker：kafka服务器、topic：主题、partition：分区、replica：副本 部署部署在linux上的优势： 利用了epoll模型和零拷贝技术； epoll：https://segmentfault.com">
+<meta name="twitter:image" content="http://ww2.sinaimg.cn/large/006tNc79gy1g4ccxopt3cj314o07yab8.jpg">
 
 
 
@@ -120,7 +128,7 @@
 
 
 
-  <title> | Horizon Notes</title>
+  <title>Kafka学习笔记(一) | Horizon Notes</title>
   
 
 
@@ -264,7 +272,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline"></h1>
+          <h1 class="post-title" itemprop="name headline">Kafka学习笔记(一)</h1>
         
 
         <div class="post-meta">
@@ -286,6 +294,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Horizon.github.io/categories/kafka/" itemprop="url" rel="index">
+                    <span itemprop="name">kafka</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -314,7 +344,27 @@
       
 
       
-        
+        <p>kafka 消息引擎</p>
+<p>消息引擎的作用：<strong>削峰填谷</strong></p>
+<p>采用追加写，利用了磁盘顺序写的性能</p>
+<p>采用零拷贝技术 sendfile </p>
+<p>高吞吐低延时的原因：</p>
+<p><img src="http://ww2.sinaimg.cn/large/006tNc79gy1g4ccxopt3cj314o07yab8.jpg" alt="image-20190605003155865"></p>
+<p>kafka架构图</p>
+<p><img src="http://ww4.sinaimg.cn/large/006tNc79gy1g4ccxo8gduj30vk0eq757.jpg" alt="image-20190605004344392"></p>
+<p>专业术语：<br>broker：kafka服务器、topic：主题、partition：分区、replica：副本</p>
+<h3 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h3><p>部署在linux上的优势：</p>
+<p>利用了epoll模型和零拷贝技术；</p>
+<p>epoll：<a href="https://segmentfault.com/a/1190000003063859" target="_blank" rel="external">https://segmentfault.com/a/1190000003063859</a></p>
+<p>Zero copy:<a href="https://www.ibm.com/developerworks/cn/linux/l-cn-zerocopy1/index.html" target="_blank" rel="external">https://www.ibm.com/developerworks/cn/linux/l-cn-zerocopy1/index.html</a></p>
+<p><a href="https://blog.csdn.net/u013256816/article/details/52589524" target="_blank" rel="external">https://blog.csdn.net/u013256816/article/details/52589524</a></p>
+<p><a href="https://blog.csdn.net/linsongbin1/article/details/77650105" target="_blank" rel="external">https://blog.csdn.net/linsongbin1/article/details/77650105</a></p>
+<p><img src="http://ww2.sinaimg.cn/large/006tNc79gy1g3yg94zouzj30dd07rdg0.jpg" alt="å¾ 1. ä¼ ç»ä½¿ç¨ read å write ç³»ç»è°ç¨çæ°æ®ä¼ è¾"></p>
+<p>在普通的io传输中，数据由磁盘发送到socket缓冲区至少要复制四次；</p>
+<p>磁盘-&gt;页缓存-&gt;应用程序缓存-&gt;socket缓冲区-&gt;发送</p>
+<p>改进后的处理过程如下：</p>
+<p>1.将文件拷贝到kernel buffer中；<br>2.向socket buffer中追加当前要发生的数据在kernel buffer中的位置和偏移量；<br>3.根据socket buffer中的位置和偏移量直接将kernel buffer的数据copy到网卡设备（protocol engine）中；</p>
+
       
     </div>
     
@@ -328,6 +378,12 @@
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/Horizon.github.io/tags/kafka/" rel="tag"># kafka</a>
+          
+        </div>
       
 
       
@@ -402,8 +458,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -418,7 +483,7 @@
               
                 <a href="/Horizon.github.io/archives/">
               
-                  <span class="site-state-item-count">52</span>
+                  <span class="site-state-item-count">53</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -429,7 +494,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/Horizon.github.io/categories/index.html">
-                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-count">24</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -440,7 +505,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/Horizon.github.io/tags/index.html">
-                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -479,6 +544,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#部署"><span class="nav-number">1.</span> <span class="nav-text">部署</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
