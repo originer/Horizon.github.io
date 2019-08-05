@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Horizon Notes">
 <meta property="og:description" content="RocketMq是一个阿里开源的基于Java语言的高性能、高吞吐量的分布式消息中间件。 阿里中间件团队对RocketMq的解释：http://jm.taobao.org/2017/01/12/rocketmq-quick-start-in-10-minutes/ apache-rocketmq部署：Master-Slave单主单从需要两台机器，学习可以使用虚拟机代替。 首先先从git上clone代">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-02-20T03:54:45.220Z">
+<meta property="og:updated_time" content="2019-07-25T04:04:51.369Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RocketMQ单主单从模式部署">
 <meta name="twitter:description" content="RocketMq是一个阿里开源的基于Java语言的高性能、高吞吐量的分布式消息中间件。 阿里中间件团队对RocketMq的解释：http://jm.taobao.org/2017/01/12/rocketmq-quick-start-in-10-minutes/ apache-rocketmq部署：Master-Slave单主单从需要两台机器，学习可以使用虚拟机代替。 首先先从git上clone代">
@@ -364,6 +364,9 @@
 <h3 id="启动A、B机器"><a href="#启动A、B机器" class="headerlink" title="启动A、B机器"></a>启动A、B机器</h3><p>cd /usr/local/rocketmq/bin<br>nohup sh mqbroker -c /usr/local/rocketmq/conf/2m-2s-async/broker-a.properties<br>netstat -ntlp<br>jps<br>tail -f -n 500 /usr/local/rocketmq/logs/rocketmqlogs/broker.log<br>tail -f -n 500 /usr/local/rocketmq/logs/rocketmqlogs/namesrv.log</p>
 <h2 id="遇到的坑"><a href="#遇到的坑" class="headerlink" title="遇到的坑"></a>遇到的坑</h2><p><code>runbroker.sh</code> <code>runserver.sh</code> 里面默认的JAVA_HOME配置项需要改一下，不然会出现 Please set the JAVA_HOME variable in your environment, We need java(x64)!</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># [ ! -e "$JAVA_HOME/bin/java" ] &amp;&amp; JAVA_HOME=$HOME/jdk/java</span></div><div class="line"><span class="comment"># [ ! -e "$JAVA_HOME/bin/java" ] &amp;&amp; JAVA_HOME=/usr/java</span></div><div class="line"><span class="comment"># [ ! -e "$JAVA_HOME/bin/java" ] &amp;&amp; error_exit "Please set the JAVA_HOME variable in your environment, We need java(x64)!"</span></div><div class="line"></div><div class="line"><span class="built_in">export</span> JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_191.jdk/Contents/Home</div><div class="line"><span class="built_in">export</span> JAVA=<span class="string">"<span class="variable">$JAVA_HOME</span>/bin/java"</span></div><div class="line"><span class="built_in">export</span> BASE_DIR=$(dirname <span class="variable">$0</span>)/..</div><div class="line"><span class="built_in">export</span> CLASSPATH=.:<span class="variable">$&#123;BASE_DIR&#125;</span>/conf:<span class="variable">$&#123;CLASSPATH&#125;</span></div></pre></td></tr></table></figure>
+<p>rocketmq-console</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker run -e &quot;JAVA_OPTS=-Drocketmq.namesrv.addr=192.168.1.112:9876 -Dcom.rocketmq.sendMessageWithVIPChannel=false&quot; -p 8080:8080 -t styletang/rocketmq-console-ng</div></pre></td></tr></table></figure>
+<h3 id="查看broker注册列表"><a href="#查看broker注册列表" class="headerlink" title="查看broker注册列表"></a>查看broker注册列表</h3><p>sh mqadmin clusterList -n 192.168.1.126:9876</p>
 
       
     </div>
@@ -483,7 +486,7 @@
               
                 <a href="/Horizon.github.io/archives/">
               
-                  <span class="site-state-item-count">53</span>
+                  <span class="site-state-item-count">54</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -494,7 +497,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/Horizon.github.io/categories/index.html">
-                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-count">25</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -505,7 +508,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/Horizon.github.io/tags/index.html">
-                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-count">15</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -554,7 +557,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#apache-rocketmq部署：Master-Slave"><span class="nav-number">1.</span> <span class="nav-text">apache-rocketmq部署：Master-Slave</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#解压代码到指定路径：tar-zxvf-apache-rocketmq-tar-gz-C-usr-local-rocketmq"><span class="nav-number">1.1.</span> <span class="nav-text">解压代码到指定路径：tar -zxvf apache-rocketmq.tar.gz -C /usr/local/rocketmq</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建存储路径"><span class="nav-number">1.2.</span> <span class="nav-text">创建存储路径:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置文件："><span class="nav-number">1.3.</span> <span class="nav-text">配置文件：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改日志配置："><span class="nav-number">1.4.</span> <span class="nav-text">修改日志配置：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改配置文件"><span class="nav-number">1.5.</span> <span class="nav-text">修改配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改启动脚本参数："><span class="nav-number">1.6.</span> <span class="nav-text">修改启动脚本参数：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动NameServer"><span class="nav-number">1.7.</span> <span class="nav-text">启动NameServer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动A、B机器"><span class="nav-number">1.8.</span> <span class="nav-text">启动A、B机器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#遇到的坑"><span class="nav-number">2.</span> <span class="nav-text">遇到的坑</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#apache-rocketmq部署：Master-Slave"><span class="nav-number">1.</span> <span class="nav-text">apache-rocketmq部署：Master-Slave</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#解压代码到指定路径：tar-zxvf-apache-rocketmq-tar-gz-C-usr-local-rocketmq"><span class="nav-number">1.1.</span> <span class="nav-text">解压代码到指定路径：tar -zxvf apache-rocketmq.tar.gz -C /usr/local/rocketmq</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建存储路径"><span class="nav-number">1.2.</span> <span class="nav-text">创建存储路径:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置文件："><span class="nav-number">1.3.</span> <span class="nav-text">配置文件：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改日志配置："><span class="nav-number">1.4.</span> <span class="nav-text">修改日志配置：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改配置文件"><span class="nav-number">1.5.</span> <span class="nav-text">修改配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改启动脚本参数："><span class="nav-number">1.6.</span> <span class="nav-text">修改启动脚本参数：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动NameServer"><span class="nav-number">1.7.</span> <span class="nav-text">启动NameServer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动A、B机器"><span class="nav-number">1.8.</span> <span class="nav-text">启动A、B机器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#遇到的坑"><span class="nav-number">2.</span> <span class="nav-text">遇到的坑</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#查看broker注册列表"><span class="nav-number">2.1.</span> <span class="nav-text">查看broker注册列表</span></a></li></ol></li></ol></div>
             
 
           </div>

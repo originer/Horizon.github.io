@@ -79,21 +79,21 @@
 
 
 
-<meta name="description" content="kafka 消息引擎 消息引擎的作用：削峰填谷 采用追加写，利用了磁盘顺序写的性能 采用零拷贝技术 sendfile  高吞吐低延时的原因：  kafka架构图  专业术语：broker：kafka服务器、topic：主题、partition：分区、replica：副本 部署部署在linux上的优势： 利用了epoll模型和零拷贝技术； epoll：https://segmentfault.com">
+<meta name="description" content="kafka 消息引擎 消息引擎的作用：削峰填谷 采用追加写，利用了磁盘顺序写的性能 采用零拷贝技术 sendfile  高吞吐低延时的原因：">
 <meta name="keywords" content="kafka">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Kafka学习笔记(一)">
 <meta property="og:url" content="https://originer.github.io/Horizon.github.io/2019/06/04/kafka学习/index.html">
 <meta property="og:site_name" content="Horizon Notes">
-<meta property="og:description" content="kafka 消息引擎 消息引擎的作用：削峰填谷 采用追加写，利用了磁盘顺序写的性能 采用零拷贝技术 sendfile  高吞吐低延时的原因：  kafka架构图  专业术语：broker：kafka服务器、topic：主题、partition：分区、replica：副本 部署部署在linux上的优势： 利用了epoll模型和零拷贝技术； epoll：https://segmentfault.com">
+<meta property="og:description" content="kafka 消息引擎 消息引擎的作用：削峰填谷 采用追加写，利用了磁盘顺序写的性能 采用零拷贝技术 sendfile  高吞吐低延时的原因：">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://ww2.sinaimg.cn/large/006tNc79gy1g4ccxopt3cj314o07yab8.jpg">
 <meta property="og:image" content="http://ww4.sinaimg.cn/large/006tNc79gy1g4ccxo8gduj30vk0eq757.jpg">
 <meta property="og:image" content="http://ww2.sinaimg.cn/large/006tNc79gy1g3yg94zouzj30dd07rdg0.jpg">
-<meta property="og:updated_time" content="2019-06-24T09:09:27.678Z">
+<meta property="og:updated_time" content="2019-06-24T09:50:28.367Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kafka学习笔记(一)">
-<meta name="twitter:description" content="kafka 消息引擎 消息引擎的作用：削峰填谷 采用追加写，利用了磁盘顺序写的性能 采用零拷贝技术 sendfile  高吞吐低延时的原因：  kafka架构图  专业术语：broker：kafka服务器、topic：主题、partition：分区、replica：副本 部署部署在linux上的优势： 利用了epoll模型和零拷贝技术； epoll：https://segmentfault.com">
+<meta name="twitter:description" content="kafka 消息引擎 消息引擎的作用：削峰填谷 采用追加写，利用了磁盘顺序写的性能 采用零拷贝技术 sendfile  高吞吐低延时的原因：">
 <meta name="twitter:image" content="http://ww2.sinaimg.cn/large/006tNc79gy1g4ccxopt3cj314o07yab8.jpg">
 
 
@@ -348,8 +348,7 @@
 <p>消息引擎的作用：<strong>削峰填谷</strong></p>
 <p>采用追加写，利用了磁盘顺序写的性能</p>
 <p>采用零拷贝技术 sendfile </p>
-<p>高吞吐低延时的原因：</p>
-<p><img src="http://ww2.sinaimg.cn/large/006tNc79gy1g4ccxopt3cj314o07yab8.jpg" alt="image-20190605003155865"></p>
+<p>高吞吐低延时的原因：<br><a id="more"></a><br><img src="http://ww2.sinaimg.cn/large/006tNc79gy1g4ccxopt3cj314o07yab8.jpg" alt="image-20190605003155865"></p>
 <p>kafka架构图</p>
 <p><img src="http://ww4.sinaimg.cn/large/006tNc79gy1g4ccxo8gduj30vk0eq757.jpg" alt="image-20190605004344392"></p>
 <p>专业术语：<br>broker：kafka服务器、topic：主题、partition：分区、replica：副本</p>
@@ -483,7 +482,7 @@
               
                 <a href="/Horizon.github.io/archives/">
               
-                  <span class="site-state-item-count">53</span>
+                  <span class="site-state-item-count">54</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -494,7 +493,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/Horizon.github.io/categories/index.html">
-                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-count">25</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -505,7 +504,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/Horizon.github.io/tags/index.html">
-                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-count">15</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

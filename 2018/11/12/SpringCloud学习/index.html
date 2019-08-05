@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="个人理解SpringClound是以SpringBoot为骨架，整合了注册中心网关负载均衡RPC等功能的分布式框架。 eureka 服务注册中心 ribbon 负载均衡 feign 声明式的http客户端 Hystrix 断路器，服务调用失败时快速响应失败 zuul网关 可以做一些服务转发路由，并且可以做一些过滤和安全校验">
+<meta name="description" content="个人理解SpringClound是以SpringBoot为骨架，整合了注册中心网关负载均衡RPC等功能的分布式框架。 eureka 服务注册中心 ribbon 负载均衡 feign 声明式的http客户端 Hystrix 断路器，服务调用失败时快速响应失败 zuul网关 可以做一些服务转发路由，并且可以做一些过滤和安全校验 SpringClound采用rest调用RestTemplate: 一个易">
 <meta name="keywords" content="SpringClound">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SpringCloud学习">
 <meta property="og:url" content="https://originer.github.io/Horizon.github.io/2018/11/12/SpringCloud学习/index.html">
 <meta property="og:site_name" content="Horizon Notes">
-<meta property="og:description" content="个人理解SpringClound是以SpringBoot为骨架，整合了注册中心网关负载均衡RPC等功能的分布式框架。 eureka 服务注册中心 ribbon 负载均衡 feign 声明式的http客户端 Hystrix 断路器，服务调用失败时快速响应失败 zuul网关 可以做一些服务转发路由，并且可以做一些过滤和安全校验">
+<meta property="og:description" content="个人理解SpringClound是以SpringBoot为骨架，整合了注册中心网关负载均衡RPC等功能的分布式框架。 eureka 服务注册中心 ribbon 负载均衡 feign 声明式的http客户端 Hystrix 断路器，服务调用失败时快速响应失败 zuul网关 可以做一些服务转发路由，并且可以做一些过滤和安全校验 SpringClound采用rest调用RestTemplate: 一个易">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-02-20T02:35:53.617Z">
+<meta property="og:updated_time" content="2019-07-17T17:40:32.950Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SpringCloud学习">
-<meta name="twitter:description" content="个人理解SpringClound是以SpringBoot为骨架，整合了注册中心网关负载均衡RPC等功能的分布式框架。 eureka 服务注册中心 ribbon 负载均衡 feign 声明式的http客户端 Hystrix 断路器，服务调用失败时快速响应失败 zuul网关 可以做一些服务转发路由，并且可以做一些过滤和安全校验">
+<meta name="twitter:description" content="个人理解SpringClound是以SpringBoot为骨架，整合了注册中心网关负载均衡RPC等功能的分布式框架。 eureka 服务注册中心 ribbon 负载均衡 feign 声明式的http客户端 Hystrix 断路器，服务调用失败时快速响应失败 zuul网关 可以做一些服务转发路由，并且可以做一些过滤和安全校验 SpringClound采用rest调用RestTemplate: 一个易">
 
 
 
@@ -346,6 +346,7 @@
 <p>feign 声明式的http客户端</p>
 <p>Hystrix 断路器，服务调用失败时快速响应失败</p>
 <p>zuul网关 可以做一些服务转发路由，并且可以做一些过滤和安全校验</p>
+<h4 id="SpringClound采用rest调用"><a href="#SpringClound采用rest调用" class="headerlink" title="SpringClound采用rest调用"></a>SpringClound采用rest调用</h4><p>RestTemplate: 一个易用的httpClient</p>
 
       
     </div>
@@ -440,8 +441,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -456,7 +466,7 @@
               
                 <a href="/Horizon.github.io/archives/">
               
-                  <span class="site-state-item-count">53</span>
+                  <span class="site-state-item-count">54</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -467,7 +477,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/Horizon.github.io/categories/index.html">
-                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-count">25</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -478,7 +488,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/Horizon.github.io/tags/index.html">
-                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-count">15</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -517,6 +527,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#SpringClound采用rest调用"><span class="nav-number">1.</span> <span class="nav-text">SpringClound采用rest调用</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
