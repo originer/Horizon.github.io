@@ -339,21 +339,17 @@
 
       
         
-          
-            <h2 id="zookeeper的定义"><a href="#zookeeper的定义" class="headerlink" title="zookeeper的定义"></a>zookeeper的定义</h2><h3 id="zookeeper本质是一个分布式数据库；"><a href="#zookeeper本质是一个分布式数据库；" class="headerlink" title="zookeeper本质是一个分布式数据库；"></a><strong>zookeeper</strong>本质是一个分布式数据库；</h3><p>增加写性能：两阶段发送</p>
+          <h2 id="zookeeper的定义"><a href="#zookeeper的定义" class="headerlink" title="zookeeper的定义"></a>zookeeper的定义</h2><h3 id="zookeeper本质是一个分布式数据库；"><a href="#zookeeper本质是一个分布式数据库；" class="headerlink" title="zookeeper本质是一个分布式数据库；"></a><strong>zookeeper</strong>本质是一个分布式数据库；</h3><p>增加写性能：两阶段发送</p>
 <p>增加读性能：添加observer节点，只读不写</p>
 <p>脑裂解决方法：过半机制 zookeeper集群节点个数最好是单数</p>
 <p>zk数据一致性保证的是CP C 一致性 A 可用性 P 分区容错性</p>
-<h2 id="领导者选举过程"><a href="#领导者选举过程" class="headerlink" title="领导者选举过程"></a>领导者选举过程</h2><p>1.先投给自己</p>
-<p> 2.比较zxid(事务id)，如果一样就比较myid </p>
-<p>3.投票给数据更新的节点 </p>
-<p>4.投票箱统计</p>
-<p> 5.获取票数最多的人当选</p>
-<h3 id="核心机制"><a href="#核心机制" class="headerlink" title="核心机制"></a>核心机制</h3><p>过半机制、两阶段提交<code>2pc</code></p>
-<h2 id="zk节点的数据结构"><a href="#zk节点的数据结构" class="headerlink" title="zk节点的数据结构"></a>zk节点的数据结构</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">[zk: 0.0.0.0:2181(CONNECTED) 12] get /zk test </div><div class="line"><span class="meta">#</span><span class="bash">节点创建时的zxid.</span></div><div class="line">cZxid = 0x100000004</div><div class="line"><span class="meta">#</span><span class="bash">节点创建时的时间戳.</span></div><div class="line">ctime = Tue Jul 30 15:12:29 CST 2019 </div><div class="line"><span class="meta">#</span><span class="bash">节点最新一次更新发生时的zxid.</span></div><div class="line">mZxid = 0x100000005 </div><div class="line"><span class="meta">#</span><span class="bash">节点最新一次更新发生时的时间戳.</span></div><div class="line">mtime = Tue Jul 30 15:12:46 CST 2019 </div><div class="line">pZxid = 0x100000004</div><div class="line"><span class="meta">#</span><span class="bash"> 其子节点的更新次数.</span></div><div class="line">cversion = 0 </div><div class="line"><span class="meta">#</span><span class="bash">节点数据的更新次数.</span></div><div class="line">dataVersion = 1 </div><div class="line"><span class="meta">#</span><span class="bash">节点ACL(授权信息)的更新次数.</span></div><div class="line">aclVersion = 0 </div><div class="line"><span class="meta">#</span><span class="bash">如果该节点为ephemeral节点, ephemeralOwner值表示与该节点绑定的session id. 如果该节点不是ephemeral节点, ephemeralOwner值为0. 至于什么是ephemeral节点, 请看后面的讲述.</span></div><div class="line">ephemeralOwner = 0x0 </div><div class="line"><span class="meta">#</span><span class="bash">节点数据的字节数.</span></div><div class="line">dataLength = 4 </div><div class="line"><span class="meta">#</span><span class="bash">子节点个数.</span></div><div class="line">numChildren = 0</div></pre></td></tr></table></figure>
-<h2 id="zookeeper总体运行流程"><a href="#zookeeper总体运行流程" class="headerlink" title="zookeeper总体运行流程"></a>zookeeper总体运行流程</h2><p><img src="https://blog.reactor.top/2018/03/15/Zookeeper%E6%BA%90%E7%A0%81-%E6%80%BB%E4%BD%93%E6%B5%81%E7%A8%8B%E6%A6%82%E8%A7%88/images/1521034934473.png" alt="img"></p>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/Horizon.github.io/2019/08/05/zookeeper/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
