@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="volatile 内存可见性java内存模型规定，volatile变量的每次修改都必须立即回写到主内存中，volatile变量的每次使用都必须从主内存刷新最新的值。 禁止指令重排序">
+<meta name="description" content="volatile 内存可见性java内存模型规定，volatile变量的每次修改都必须立即回写到主内存中，volatile变量的每次使用都必须从主内存刷新最新的值。 带有volatile修饰的变量的汇编指令会被lock前缀修饰，lock有两个作用： 1、当变量值改变时立即写回主内存； 2、同时把在总线中的相同变量置为无效状态（MESI协议） 禁止指令重排序">
 <meta property="og:type" content="article">
 <meta property="og:title" content="volatile">
 <meta property="og:url" content="https://originer.github.io/Horizon.github.io/2019/05/22/volatile/index.html">
 <meta property="og:site_name" content="Horizon Notes">
-<meta property="og:description" content="volatile 内存可见性java内存模型规定，volatile变量的每次修改都必须立即回写到主内存中，volatile变量的每次使用都必须从主内存刷新最新的值。 禁止指令重排序">
+<meta property="og:description" content="volatile 内存可见性java内存模型规定，volatile变量的每次修改都必须立即回写到主内存中，volatile变量的每次使用都必须从主内存刷新最新的值。 带有volatile修饰的变量的汇编指令会被lock前缀修饰，lock有两个作用： 1、当变量值改变时立即写回主内存； 2、同时把在总线中的相同变量置为无效状态（MESI协议） 禁止指令重排序">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-06-11T03:17:40.187Z">
+<meta property="og:updated_time" content="2019-08-07T17:17:50.647Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="volatile">
-<meta name="twitter:description" content="volatile 内存可见性java内存模型规定，volatile变量的每次修改都必须立即回写到主内存中，volatile变量的每次使用都必须从主内存刷新最新的值。 禁止指令重排序">
+<meta name="twitter:description" content="volatile 内存可见性java内存模型规定，volatile变量的每次修改都必须立即回写到主内存中，volatile变量的每次使用都必须从主内存刷新最新的值。 带有volatile修饰的变量的汇编指令会被lock前缀修饰，lock有两个作用： 1、当变量值改变时立即写回主内存； 2、同时把在总线中的相同变量置为无效状态（MESI协议） 禁止指令重排序">
 
 
 
@@ -340,7 +340,10 @@
 
       
         <p>volatile</p>
-<h3 id="内存可见性"><a href="#内存可见性" class="headerlink" title="内存可见性"></a>内存可见性</h3><p>java内存模型规定，volatile变量的每次修改都必须立即回写到主内存中，volatile变量的每次使用都必须从主内存刷新最新的值。</p>
+<h3 id="内存可见性"><a href="#内存可见性" class="headerlink" title="内存可见性"></a>内存可见性</h3><p>java内存模型规定，volatile变量的每次修改都必须<strong>立即</strong>回写到主内存中，volatile变量的每次使用都必须从主内存刷新最新的值。</p>
+<p>带有volatile修饰的变量的汇编指令会被lock前缀修饰，lock有两个作用：</p>
+<p>1、当变量值改变时立即写回主内存；</p>
+<p>2、同时把在总线中的相同变量置为无效状态（MESI协议）</p>
 <h3 id="禁止指令重排序"><a href="#禁止指令重排序" class="headerlink" title="禁止指令重排序"></a>禁止指令重排序</h3><a id="more"></a>
 <h3 id="实现：内存屏障"><a href="#实现：内存屏障" class="headerlink" title="实现：内存屏障"></a>实现：内存屏障</h3><p>volatile关键字只能保证可见性和有序性，不能保证原子性，要解决原子性的问题，还是只能通过加锁或使用原子类的方式解决。</p>
 <p>进而，我们得出volatile关键字使用的场景：</p>
@@ -464,7 +467,7 @@
               
                 <a href="/Horizon.github.io/archives/">
               
-                  <span class="site-state-item-count">54</span>
+                  <span class="site-state-item-count">55</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
