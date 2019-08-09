@@ -321,7 +321,7 @@
 <h2 id="ThreadLocal-是什么"><a href="#ThreadLocal-是什么" class="headerlink" title="ThreadLocal 是什么"></a>ThreadLocal 是什么</h2><p>早在JDK 1.2的版本中就提供java.lang.ThreadLocal，ThreadLocal为解决多线程程序的并发问题提供了一种新的思路。使用这个工具类可以很简洁地编写出优美的多线程程序。 </p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/11/12/ThreadLocal源码研究/#more" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/11/12/ThreadLocal源码研究/#espandi" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -471,7 +471,7 @@
 </blockquote>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/11/09/ConcurrentHashMap源码研究/#more" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/11/09/ConcurrentHashMap源码研究/#espandi" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -617,7 +617,7 @@
           <h1 id="Channel分析"><a href="#Channel分析" class="headerlink" title="Channel分析"></a>Channel分析</h1><h2 id="Channel接口"><a href="#Channel接口" class="headerlink" title="Channel接口"></a>Channel接口</h2><p><img src="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/1530494504140.png" alt="1530236109956"></p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/11/09/Netty核心组件：Channel与Pipline/#more" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/11/09/Netty核心组件：Channel与Pipline/#espandi" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -763,7 +763,7 @@
           <p>我们知道，数据在网络上都是通过字节流传输的，Netty作为一款网络通讯框架，编解码是很重要的一个模块。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/11/09/Netty核心组件：解码器编码器/#more" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/11/09/Netty核心组件：解码器编码器/#espandi" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -925,7 +925,7 @@
 <p>下面忽略数组的环形结构，介绍一下如何实现无锁设计。整个过程通过原子变量CAS，保证操作的线程安全。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/11/08/生产者消费者模型-并发框架Disruptor/#more" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/11/08/生产者消费者模型-并发框架Disruptor/#espandi" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1072,7 +1072,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Sigleton</span> </span>&#123;</div><div class="line">    <span class="comment">//饿汉模式 outInstance是私有的</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Sigleton ourInstance = <span class="keyword">new</span> Sigleton();</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 此实现是线程安全的  JVM在加载此类时，因为对于static属性的初始化只能由一个线程执行且仅执行一次</span></div><div class="line"><span class="comment">     * 缺点：instance在类装载时就实例化 这时候初始化instance显然没有达到lazy loading的效果</span></div><div class="line"><span class="comment">     * <span class="doctag">@return</span></span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Sigleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> ourInstance;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">//把构造函数声明为private 客户对象无法创建该实例</span></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Sigleton</span><span class="params">()</span> </span>&#123;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/09/16/设计模式：单例模式/#more" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/09/16/设计模式：单例模式/#espandi" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1369,7 +1369,7 @@
 <h3 id="问-在哪里accept连接"><a href="#问-在哪里accept连接" class="headerlink" title="问:在哪里accept连接?"></a>问:在哪里accept连接?</h3><p>答:端口绑定:Pipeline调用fireChannelActive()传播active事件,HeadContext使用readIfIsAutoRead()重新绑定OP_ACCEPT事件,新连接接入Selector轮询到OP_ACCEPT事件将连接交给Netty处理</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/08/27/Netty相关的经典问题/#more" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/08/27/Netty相关的经典问题/#espandi" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1516,7 +1516,7 @@
 <p>之所以把<em>HashSet</em>和<em>HashMap</em>放在一起讲解，是因为二者在Java里有着相同的实现，前者仅仅是对后者做了一层包装，也就是说<em>HashSet里面有一个HashMap</em>（适配器模式）<em>*。因此本文将重点分析</em>HashMap*。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/08/26/HashSet和HashMap/#more" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/08/26/HashSet和HashMap/#espandi" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1667,7 +1667,7 @@
 <p>（3）在平时开发的时候，使用热部署的话，应该对Tomcat进行相应的设置，这样的话修改的jsp界面什么的东西才可以及时的显示出来。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/08/26/IDEA部署tomcat/#more" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/08/26/IDEA部署tomcat/#espandi" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
