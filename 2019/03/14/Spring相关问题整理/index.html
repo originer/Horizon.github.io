@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="Horizon Notes">
 <meta property="og:description" content="问题描述：有配置具体的bean，且可以被扫描到，但是无法注入,报错：No bean named ‘financeDao’ is defined原因：dao的interface注入问题，由于使用了mybaties，需要在mybaties的xml配置中添加该接口的路径，配置路径可以使用,;\t\n进行分隔； 问题描述：SpringMVC使用@Value无法获取application.propertie">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-05-28T08:38:08.855Z">
+<meta property="og:updated_time" content="2019-10-11T07:44:04.079Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring相关问题记录">
 <meta name="twitter:description" content="问题描述：有配置具体的bean，且可以被扫描到，但是无法注入,报错：No bean named ‘financeDao’ is defined原因：dao的interface注入问题，由于使用了mybaties，需要在mybaties的xml配置中添加该接口的路径，配置路径可以使用,;\t\n进行分隔； 问题描述：SpringMVC使用@Value无法获取application.propertie">
@@ -347,6 +347,7 @@
 <h3 id="问题描述：Spring-使用注解注入为null"><a href="#问题描述：Spring-使用注解注入为null" class="headerlink" title="问题描述：Spring 使用注解注入为null"></a>问题描述：Spring 使用注解注入为null</h3><p>原因：1、spring不会为new出的对象进行装配，一定要所有的对象都是通过spring配置的bean获取的；</p>
 <h3 id="ORDER-BY-RAND-LIMIT-1"><a href="#ORDER-BY-RAND-LIMIT-1" class="headerlink" title="ORDER BY RAND() LIMIT 1"></a>ORDER BY RAND() LIMIT 1</h3><p>mysql 随机取一行</p>
 <h3 id="jdbcTemplate-批量执行缓慢"><a href="#jdbcTemplate-批量执行缓慢" class="headerlink" title="jdbcTemplate 批量执行缓慢"></a>jdbcTemplate 批量执行缓慢</h3><p>原因：jdbcTemplate批量插入时默认是一条条执行的，需要在数据库连接配置后面添加<code>&amp;rewriteBatchedStatements=true</code></p>
+<h3 id="java-bean-属性名为mId，jsp无法解析"><a href="#java-bean-属性名为mId，jsp无法解析" class="headerlink" title="java bean 属性名为mId，jsp无法解析"></a>java bean 属性名为mId，jsp无法解析</h3><p>参考java bean规范：规范中一个特别的地方就是，第二个字母为大写的属性名要区别对待。如果属性名的第二个字母是大写的，那么该属性名直接用作 getter/setter 方法中 get/set 的后部分，就是说大小写不变。这就是为什么 sName 对应的存取方法是 getsName()/setsName() 的原因，不能不说这条规则很令人费解。</p>
 
       
     </div>
@@ -460,7 +461,7 @@
               
                 <a href="/Horizon.github.io/archives/">
               
-                  <span class="site-state-item-count">55</span>
+                  <span class="site-state-item-count">56</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -482,7 +483,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/Horizon.github.io/tags/index.html">
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -531,7 +532,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#问题描述：有配置具体的bean，且可以被扫描到，但是无法注入-报错：No-bean-named-‘financeDao’-is-defined"><span class="nav-number">1.</span> <span class="nav-text">问题描述：有配置具体的bean，且可以被扫描到，但是无法注入,报错：No bean named ‘financeDao’ is defined</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题描述：SpringMVC使用-Value无法获取application-properties中的数据"><span class="nav-number">2.</span> <span class="nav-text">问题描述：SpringMVC使用@Value无法获取application.properties中的数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题描述：mybatie-在使用-in-id-时的问题"><span class="nav-number">3.</span> <span class="nav-text">问题描述：mybatie 在使用 in (#{id}) 时的问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题描述：Spring-使用注解注入为null"><span class="nav-number">4.</span> <span class="nav-text">问题描述：Spring 使用注解注入为null</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ORDER-BY-RAND-LIMIT-1"><span class="nav-number">5.</span> <span class="nav-text">ORDER BY RAND() LIMIT 1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jdbcTemplate-批量执行缓慢"><span class="nav-number">6.</span> <span class="nav-text">jdbcTemplate 批量执行缓慢</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#问题描述：有配置具体的bean，且可以被扫描到，但是无法注入-报错：No-bean-named-‘financeDao’-is-defined"><span class="nav-number">1.</span> <span class="nav-text">问题描述：有配置具体的bean，且可以被扫描到，但是无法注入,报错：No bean named ‘financeDao’ is defined</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题描述：SpringMVC使用-Value无法获取application-properties中的数据"><span class="nav-number">2.</span> <span class="nav-text">问题描述：SpringMVC使用@Value无法获取application.properties中的数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题描述：mybatie-在使用-in-id-时的问题"><span class="nav-number">3.</span> <span class="nav-text">问题描述：mybatie 在使用 in (#{id}) 时的问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题描述：Spring-使用注解注入为null"><span class="nav-number">4.</span> <span class="nav-text">问题描述：Spring 使用注解注入为null</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ORDER-BY-RAND-LIMIT-1"><span class="nav-number">5.</span> <span class="nav-text">ORDER BY RAND() LIMIT 1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jdbcTemplate-批量执行缓慢"><span class="nav-number">6.</span> <span class="nav-text">jdbcTemplate 批量执行缓慢</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#java-bean-属性名为mId，jsp无法解析"><span class="nav-number">7.</span> <span class="nav-text">java bean 属性名为mId，jsp无法解析</span></a></li></ol></div>
             
 
           </div>

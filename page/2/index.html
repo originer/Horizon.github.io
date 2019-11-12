@@ -247,6 +247,156 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2019/02/28/redis学习笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Horizon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/Horizon.github.io/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Horizon Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/Horizon.github.io/2019/02/28/redis学习笔记/" itemprop="url">redis学习笔记</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-28T00:24:37+08:00">
+                2019-02-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Horizon.github.io/categories/redis/" itemprop="url" rel="index">
+                    <span itemprop="name">redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="底层数据结构"><a href="#底层数据结构" class="headerlink" title="底层数据结构"></a>底层数据结构</h3><h4 id="简单字符串sds，类似StringBuilder"><a href="#简单字符串sds，类似StringBuilder" class="headerlink" title="简单字符串sds，类似StringBuilder"></a>简单字符串sds，类似StringBuilder</h4><p>对比常规字符串的优势：</p>
+<p>本身记录长度，获取长度的复杂度为O(1)</p>
+<p>杜绝缓冲区溢出，即可以自动扩容。</p>
+<p>使用空间预分配和惰性空间释放来优化内存分配，避免频繁分配内存带来的性能开销。</p>
+<p>二进制安全，可以保存任意格式的二进制数据。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/Horizon.github.io/2019/02/28/redis学习笔记/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2019/02/17/redis集群相关/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -344,7 +494,7 @@
 <p>一般主从搭配集群使用，可以保证redis集群的高可用性</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2019/02/17/redis集群相关/#espandi" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2019/02/17/redis集群相关/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -790,7 +940,7 @@
 <p>以逗号作为分隔符，打印分割后第一个变量</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2019/01/07/linux常用指令/#espandi" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2019/01/07/linux常用指令/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -939,12 +1089,14 @@
 <li><p>[ ] 掌握RocketMQ</p>
 </li>
 <li><p>[ ] 读5本技术类的书籍</p>
+<p>redis设计实现、redis开发与运维、深入mysql底层</p>
 </li>
 <li><p>[ ] 读5本其他书籍</p>
 </li>
 <li><p>[ ] github弄一个小项目</p>
 </li>
-<li style="list-style: none"><input type="checkbox"> 坚持每个月一篇博客</li>
+<li><p>[ ] 坚持每个月一篇博客</p>
+</li>
 </ul>
 <h3 id="生活相关"><a href="#生活相关" class="headerlink" title="生活相关"></a>生活相关</h3>
           
@@ -1093,7 +1245,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">InputStream is = <span class="keyword">this</span>.getClass().getResourceAsStream(path);</div><div class="line">BufferedReader br = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(is));</div><div class="line">String s = <span class="string">""</span>;</div><div class="line">br.lines().forEach(str -&gt; &#123;</div><div class="line">          ...</div><div class="line">        &#125;);</div></pre></td></tr></table></figure>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/12/26/记录一个关于Java文件读写的坑/#espandi" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/12/26/记录一个关于Java文件读写的坑/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1242,7 +1394,7 @@
 <p>首先先从git上clone代码，然后maven编译，编译完可以在  <code>../rocketmq-master/distribution/target</code>路径下找到<code>apache-rocketmq.tar.gz</code></p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/11/28/RocketMq学习/#espandi" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/11/28/RocketMq学习/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1389,7 +1541,7 @@
 <p><strong>sql及索引、数据表结构、系统配置、硬件</strong>这四个按顺序效果越来越小，成本越来越高，所以对数据库性能进行优化一般都是从sql语句和索引入手。<br>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/11/28/MySql性能优化/#espandi" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/11/28/MySql性能优化/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1540,153 +1692,7 @@
 </ul>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/11/28/Git命令整理/#espandi" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/11/27/Netty核心组件：EventLoop和EventLoopGroup/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Horizon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/Horizon.github.io/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Horizon Notes">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/Horizon.github.io/2018/11/27/Netty核心组件：EventLoop和EventLoopGroup/" itemprop="url">Netty核心组件：EventLoop和EventLoopGroup</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-27T17:08:12+08:00">
-                2018-11-27
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/Horizon.github.io/categories/网络编程/" itemprop="url" rel="index">
-                    <span itemprop="name">网络编程</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="线程模型"><a href="#线程模型" class="headerlink" title="线程模型"></a>线程模型</h2><p><a href="https://www.infoq.cn/article/netty-threading-model#mainLogin" target="_blank" rel="external">https://www.infoq.cn/article/netty-threading-model#mainLogin</a></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/11/27/Netty核心组件：EventLoop和EventLoopGroup/#espandi" rel="contents">
+            <a class="btn" href="/Horizon.github.io/2018/11/28/Git命令整理/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1774,7 +1780,7 @@
               
                 <a href="/Horizon.github.io/archives/">
               
-                  <span class="site-state-item-count">55</span>
+                  <span class="site-state-item-count">56</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1796,7 +1802,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/Horizon.github.io/tags/index.html">
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
