@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="redis," />
 
 
 
@@ -79,17 +79,18 @@
 
 
 
-<meta name="description" content="设置expire过期时间的key主动删除redis会定时轮询，删除过期的key，轮询间隔可以通过hz配置； 惰性删除过期的key一般还会持久化在内存中，当被再次访问后redis会检测是否过期，如果已经过期就会进行删除； 没设置expire的key 内存淘汰管理机制redis在内存使用超过设置的阈值后会自动清理 具体配置：memory-policy  可以根据具体业务进行配置  volatile.l">
+<meta name="description" content="##  1、有设置expire过期时间的key主动删除redis会定时轮询，删除过期的key，轮询间隔可以通过hz配置； 惰性删除过期的key一般还会持久化在内存中，当被再次访问后redis会检测是否过期，如果已经过期就会进行删除； 2、没设置expire的key 内存淘汰管理机制redis在内存使用超过设置的阈值后会自动清理 具体配置：memory-policy  可以根据具体业务进行配置  v">
+<meta name="keywords" content="redis">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Horizon Notes">
+<meta property="og:title" content="redis缓存淘汰机制总结">
 <meta property="og:url" content="https://originer.github.io/Horizon.github.io/2020/03/11/redis缓存淘汰机制/index.html">
 <meta property="og:site_name" content="Horizon Notes">
-<meta property="og:description" content="设置expire过期时间的key主动删除redis会定时轮询，删除过期的key，轮询间隔可以通过hz配置； 惰性删除过期的key一般还会持久化在内存中，当被再次访问后redis会检测是否过期，如果已经过期就会进行删除； 没设置expire的key 内存淘汰管理机制redis在内存使用超过设置的阈值后会自动清理 具体配置：memory-policy  可以根据具体业务进行配置  volatile.l">
+<meta property="og:description" content="##  1、有设置expire过期时间的key主动删除redis会定时轮询，删除过期的key，轮询间隔可以通过hz配置； 惰性删除过期的key一般还会持久化在内存中，当被再次访问后redis会检测是否过期，如果已经过期就会进行删除； 2、没设置expire的key 内存淘汰管理机制redis在内存使用超过设置的阈值后会自动清理 具体配置：memory-policy  可以根据具体业务进行配置  v">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-03-10T16:34:38.672Z">
+<meta property="og:updated_time" content="2020-09-15T09:54:34.213Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Horizon Notes">
-<meta name="twitter:description" content="设置expire过期时间的key主动删除redis会定时轮询，删除过期的key，轮询间隔可以通过hz配置； 惰性删除过期的key一般还会持久化在内存中，当被再次访问后redis会检测是否过期，如果已经过期就会进行删除； 没设置expire的key 内存淘汰管理机制redis在内存使用超过设置的阈值后会自动清理 具体配置：memory-policy  可以根据具体业务进行配置  volatile.l">
+<meta name="twitter:title" content="redis缓存淘汰机制总结">
+<meta name="twitter:description" content="##  1、有设置expire过期时间的key主动删除redis会定时轮询，删除过期的key，轮询间隔可以通过hz配置； 惰性删除过期的key一般还会持久化在内存中，当被再次访问后redis会检测是否过期，如果已经过期就会进行删除； 2、没设置expire的key 内存淘汰管理机制redis在内存使用超过设置的阈值后会自动清理 具体配置：memory-policy  可以根据具体业务进行配置  v">
 
 
 
@@ -123,7 +124,7 @@
 
 
 
-  <title> | Horizon Notes</title>
+  <title>redis缓存淘汰机制总结 | Horizon Notes</title>
   
 
 
@@ -267,7 +268,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline"></h1>
+          <h1 class="post-title" itemprop="name headline">redis缓存淘汰机制总结</h1>
         
 
         <div class="post-meta">
@@ -289,6 +290,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Horizon.github.io/categories/redis/" itemprop="url" rel="index">
+                    <span itemprop="name">redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -317,9 +340,10 @@
       
 
       
-        <h2 id="设置expire过期时间的key"><a href="#设置expire过期时间的key" class="headerlink" title="设置expire过期时间的key"></a>设置expire过期时间的key</h2><h3 id="主动删除"><a href="#主动删除" class="headerlink" title="主动删除"></a>主动删除</h3><p>redis会定时轮询，删除过期的key，轮询间隔可以通过<code>hz</code>配置；</p>
+        <p>## </p>
+<h2 id="1、有设置expire过期时间的key"><a href="#1、有设置expire过期时间的key" class="headerlink" title="1、有设置expire过期时间的key"></a>1、有设置expire过期时间的key</h2><h3 id="主动删除"><a href="#主动删除" class="headerlink" title="主动删除"></a>主动删除</h3><p>redis会定时轮询，删除过期的key，轮询间隔可以通过<code>hz</code>配置；</p>
 <h3 id="惰性删除"><a href="#惰性删除" class="headerlink" title="惰性删除"></a>惰性删除</h3><p>过期的key一般还会持久化在内存中，当被再次访问后redis会检测是否过期，如果已经过期就会进行删除；</p>
-<h2 id="没设置expire的key-内存淘汰管理机制"><a href="#没设置expire的key-内存淘汰管理机制" class="headerlink" title="没设置expire的key 内存淘汰管理机制"></a>没设置expire的key 内存淘汰管理机制</h2><p>redis在内存使用超过设置的阈值后会自动清理</p>
+<h2 id="2、没设置expire的key-内存淘汰管理机制"><a href="#2、没设置expire的key-内存淘汰管理机制" class="headerlink" title="2、没设置expire的key 内存淘汰管理机制"></a>2、没设置expire的key 内存淘汰管理机制</h2><p>redis在内存使用超过设置的阈值后会自动清理</p>
 <p>具体配置：<code>memory-policy</code>  可以根据具体业务进行配置</p>
 <p> volatile.lru .&gt; Evict using approximated LRU among the keys with an expire set.<br> allkeys.lru .&gt; Evict any key using approximated LRU.<br> volatile.lfu .&gt; Evict using approximated LFU among the keys with an expire set.<br> allkeys.lfu .&gt; Evict any key using approximated LFU.<br> volatile.random .&gt; Remove a random key among the ones with an expire set.<br> allkeys.random .&gt; Remove a random key, any key.<br> volatile.ttl .&gt; Remove the key with the nearest expire time (minor TTL)<br> noeviction .&gt; Don’t evict anything, just return an error on write operations.</p>
 
@@ -336,6 +360,12 @@
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/Horizon.github.io/tags/redis/" rel="tag"># redis</a>
+          
+        </div>
       
 
       
@@ -356,8 +386,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/Horizon.github.io/2020/07/08/分布式id生成策略总结/" rel="prev" title="">
-                 <i class="fa fa-chevron-right"></i>
+              <a href="/Horizon.github.io/2020/07/30/amp技术/" rel="prev" title="AMP实践记录">
+                AMP实践记录 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -435,7 +465,7 @@
               
                 <a href="/Horizon.github.io/archives/">
               
-                  <span class="site-state-item-count">59</span>
+                  <span class="site-state-item-count">58</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -457,7 +487,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/Horizon.github.io/tags/index.html">
-                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-count">18</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -506,7 +536,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#设置expire过期时间的key"><span class="nav-number">1.</span> <span class="nav-text">设置expire过期时间的key</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#主动删除"><span class="nav-number">1.1.</span> <span class="nav-text">主动删除</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#惰性删除"><span class="nav-number">1.2.</span> <span class="nav-text">惰性删除</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#没设置expire的key-内存淘汰管理机制"><span class="nav-number">2.</span> <span class="nav-text">没设置expire的key 内存淘汰管理机制</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、有设置expire过期时间的key"><span class="nav-number">1.</span> <span class="nav-text">1、有设置expire过期时间的key</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#主动删除"><span class="nav-number">1.1.</span> <span class="nav-text">主动删除</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#惰性删除"><span class="nav-number">1.2.</span> <span class="nav-text">惰性删除</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、没设置expire的key-内存淘汰管理机制"><span class="nav-number">2.</span> <span class="nav-text">2、没设置expire的key 内存淘汰管理机制</span></a></li></ol></div>
             
 
           </div>
