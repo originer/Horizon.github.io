@@ -79,24 +79,31 @@
 
 
 
-<meta name="description" content="底层数据结构简单字符串sds，类似StringBuilder对比常规字符串的优势： 本身记录长度，获取长度的复杂度为O(1) 杜绝缓冲区溢出，即可以自动扩容。 使用空间预分配和惰性空间释放来优化内存分配，避免频繁分配内存带来的性能开销。 二进制安全，可以保存任意格式的二进制数据。">
+<meta name="description" content="底层数据结构 stringSDS字符串简单字符串sds，类似StringBuilder对比常规字符串的优势：  本身记录长度，获取长度的复杂度为O(1)  杜绝缓冲区溢出，即可以自动扩容。  使用空间预分配和惰性空间释放来优化内存分配，避免频繁分配内存带来的性能开销。  二进制安全，可以保存任意格式的二进制数据。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="redis学习笔记">
 <meta property="og:url" content="https://originer.github.io/Horizon.github.io/2019/02/28/redis学习笔记/index.html">
 <meta property="og:site_name" content="Horizon Notes">
-<meta property="og:description" content="底层数据结构简单字符串sds，类似StringBuilder对比常规字符串的优势： 本身记录长度，获取长度的复杂度为O(1) 杜绝缓冲区溢出，即可以自动扩容。 使用空间预分配和惰性空间释放来优化内存分配，避免频繁分配内存带来的性能开销。 二进制安全，可以保存任意格式的二进制数据。">
+<meta property="og:description" content="底层数据结构 stringSDS字符串简单字符串sds，类似StringBuilder对比常规字符串的优势：  本身记录长度，获取长度的复杂度为O(1)  杜绝缓冲区溢出，即可以自动扩容。  使用空间预分配和惰性空间释放来优化内存分配，避免频繁分配内存带来的性能开销。  二进制安全，可以保存任意格式的二进制数据。">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://live.staticflickr.com/65535/49067491278_456ef6c07a_o.png">
+<meta property="og:image" content="https://live.staticflickr.com/65535/49067690077_90a1dbe91c_o.png">
+<meta property="og:image" content="https://live.staticflickr.com/65535/49066965193_92556ca9cd_o.png">
+<meta property="og:image" content="https://live.staticflickr.com/65535/49067689062_eed62b6f67_o.png">
+<meta property="og:image" content="https://live.staticflickr.com/65535/49067689377_8ff1e1fa93_o.png">
+<meta property="og:image" content="https://originer.github.io/Users/zh/Library/Application%20Support/typora-user-images/image-20191114171819692.png">
+<meta property="og:image" content="https://live.staticflickr.com/65535/49067689557_ebffa4ee40_o.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190328003158199.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190328013415166.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190328014136324.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190328014343386.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190328234518975.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190328235018001.png">
-<meta property="og:updated_time" content="2019-04-18T08:04:42.273Z">
+<meta property="og:updated_time" content="2019-11-15T06:40:49.936Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="redis学习笔记">
-<meta name="twitter:description" content="底层数据结构简单字符串sds，类似StringBuilder对比常规字符串的优势： 本身记录长度，获取长度的复杂度为O(1) 杜绝缓冲区溢出，即可以自动扩容。 使用空间预分配和惰性空间释放来优化内存分配，避免频繁分配内存带来的性能开销。 二进制安全，可以保存任意格式的二进制数据。">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190328003158199.png">
+<meta name="twitter:description" content="底层数据结构 stringSDS字符串简单字符串sds，类似StringBuilder对比常规字符串的优势：  本身记录长度，获取长度的复杂度为O(1)  杜绝缓冲区溢出，即可以自动扩容。  使用空间预分配和惰性空间释放来优化内存分配，避免频繁分配内存带来的性能开销。  二进制安全，可以保存任意格式的二进制数据。">
+<meta name="twitter:image" content="https://live.staticflickr.com/65535/49067491278_456ef6c07a_o.png">
 
 
 
@@ -346,15 +353,40 @@
       
 
       
-        <h3 id="底层数据结构"><a href="#底层数据结构" class="headerlink" title="底层数据结构"></a>底层数据结构</h3><h4 id="简单字符串sds，类似StringBuilder"><a href="#简单字符串sds，类似StringBuilder" class="headerlink" title="简单字符串sds，类似StringBuilder"></a>简单字符串sds，类似StringBuilder</h4><p>对比常规字符串的优势：</p>
-<p>本身记录长度，获取长度的复杂度为O(1)</p>
-<p>杜绝缓冲区溢出，即可以自动扩容。</p>
-<p>使用空间预分配和惰性空间释放来优化内存分配，避免频繁分配内存带来的性能开销。</p>
-<p>二进制安全，可以保存任意格式的二进制数据。</p>
+        <h3 id="底层数据结构"><a href="#底层数据结构" class="headerlink" title="底层数据结构"></a>底层数据结构</h3><p><img src="https://live.staticflickr.com/65535/49067491278_456ef6c07a_o.png" alt="image-20191115144032780"></p>
+<h4 id="string"><a href="#string" class="headerlink" title="string"></a>string</h4><h5 id="SDS字符串"><a href="#SDS字符串" class="headerlink" title="SDS字符串"></a>SDS字符串</h5><p>简单字符串sds，类似StringBuilder<br>对比常规字符串的优势：</p>
+<ul>
+<li><p>本身记录长度，获取长度的复杂度为O(1)</p>
+</li>
+<li><p>杜绝缓冲区溢出，即可以自动扩容。</p>
+</li>
+<li><p>使用空间预分配和惰性空间释放来优化内存分配，避免频繁分配内存带来的性能开销。</p>
+</li>
+<li><p>二进制安全，可以保存任意格式的二进制数据。</p>
+</li>
+</ul>
 <a id="more"></a>
-<h5 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h5><p>用处：列表、发布与订阅、慢查询、监视器等</p>
-<h5 id="字典"><a href="#字典" class="headerlink" title="字典"></a>字典</h5><p>redis的字典采用哈希表作为底层实现</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">SDS</span>&lt;T&gt; &#123;</span></div><div class="line">  T capacity; <span class="comment">// 数组容量</span></div><div class="line">  T len; <span class="comment">// 数组长度</span></div><div class="line">  byte flags; <span class="comment">// 特殊标识位，不理睬它</span></div><div class="line">  byte[] content; <span class="comment">// 数组内容</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="https://live.staticflickr.com/65535/49067690077_90a1dbe91c_o.png" alt="image-20191114171845228"></p>
+<h4 id="list"><a href="#list" class="headerlink" title="list"></a>list</h4><p>用处：列表、发布与订阅、慢查询、监视器等</p>
+<h5 id="压缩列表-ziplist"><a href="#压缩列表-ziplist" class="headerlink" title="压缩列表 ziplist"></a>压缩列表 ziplist</h5><p>Redis 为了节约内存空间使用，zset 和 hash 容器对象在元素个数较少的时候，采用压缩列表 (ziplist) 进行存储。压缩列表是一块连续的内存空间，元素之间紧挨着存储，没有任何冗余空隙。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ziplist</span>&lt;T&gt; &#123;</span></div><div class="line">    int32 zlbytes; <span class="comment">// 整个压缩列表占用字节数</span></div><div class="line">    int32 zltail_offset; <span class="comment">// 最后一个元素距离压缩列表起始位置的偏移量，用于快速定位到最后一个节点</span></div><div class="line">    int16 zllength; <span class="comment">// 元素个数</span></div><div class="line">    T[] entries; <span class="comment">// 元素内容列表，挨个挨个紧凑存储</span></div><div class="line">    int8 zlend; <span class="comment">// 标志压缩列表的结束，值恒为 0xFF</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="https://live.staticflickr.com/65535/49066965193_92556ca9cd_o.png" alt="image-20191114173409431"></p>
+<p><strong>不适合存储大型字符串：</strong></p>
+<p>因为 ziplist 都是紧凑存储，没有冗余空间 (对比一下 Redis 的字符串结构)。意味着插入一个新的元素就需要调用 realloc 扩展内存。取决于内存分配器算法和当前的 ziplist 内存大小，realloc 可能会重新分配新的内存空间，并将之前的内容一次性拷贝到新的地址，也可能在原有的地址上进行扩展，这时就不需要进行旧内容的内存拷贝。</p>
+<p>如果 ziplist 占据内存太大，重新分配内存和拷贝内存就会有很大的消耗。所以 ziplist 不适合存储大型字符串，存储的元素也不宜过多。</p>
+<p><strong>级联更新问题：</strong></p>
+<h5 id="快速列表-quicklist"><a href="#快速列表-quicklist" class="headerlink" title="快速列表 quicklist"></a>快速列表 quicklist</h5><p>redis 早期版本存储 list 列表数据结构使用的是压缩列表 ziplist 和普通的双向链表 linkedlist，也就是元素少时用 ziplist，元素多时用 linkedlist。后来考虑到链表的附加空间相对太高，prev 和 next 指针就要占去 16 个字节 (64bit 系统的指针是 8 个字节)，另外每个节点的内存都是单独分配，会加剧内存的碎片化，影响内存管理效率。后续版本对列表数据结构进行了改造，使用 quicklist 代替了 ziplist 和 linkedlist。</p>
+<p>quicklist相当于ziplist和linkedlist的混合</p>
+<p><img src="https://live.staticflickr.com/65535/49067689062_eed62b6f67_o.png" alt="image-20191114171645585"></p>
+<h5 id="紧凑列表-listpack"><a href="#紧凑列表-listpack" class="headerlink" title="紧凑列表 listpack"></a>紧凑列表 listpack</h5><p>Redis 5.0 又引入了一个新的数据结构 listpack，它是对 ziplist 结构的改进，在存储空间上会更加节省，而且结构上也比 ziplist 要精简。并且解决了<strong>级联更新问题</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">listpack</span>&lt;T&gt; &#123;</span></div><div class="line">    int32 total_bytes; <span class="comment">// 占用的总字节数</span></div><div class="line">    int16 size; <span class="comment">// 元素个数</span></div><div class="line">    T[] entries; <span class="comment">// 紧凑排列的元素列表</span></div><div class="line">    int8 end; <span class="comment">// 同 zlend 一样，恒为 0xFF</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="https://live.staticflickr.com/65535/49067689377_8ff1e1fa93_o.png" alt="image-20191114173937934"></p>
+<h4 id="hash"><a href="#hash" class="headerlink" title="hash"></a>hash</h4><h5 id="字典"><a href="#字典" class="headerlink" title="字典"></a>字典</h5><p>redis的字典采用哈希表作为底层实现，dict 结构内部包含两个 hashtable，通常情况下只有一个 hashtable 是有值的。但是在 dict 扩容缩容时，需要分配新的 hashtable，然后进行渐进式搬迁，这时候两个 hashtable 存储的分别是旧的 hashtable 和新的 hashtable。待搬迁结束后，旧的 hashtable 被删除，新的 hashtable 取而代之。</p>
+<p><img src="/Users/zh/Library/Application Support/typora-user-images/image-20191114171819692.png" alt="image-20191114171819692"></p>
+<h4 id="zset"><a href="#zset" class="headerlink" title="zset"></a>zset</h4><p>zset 的内部实现是一个 hash 字典加一个跳跃列表 (skiplist)。</p>
 <h5 id="跳表"><a href="#跳表" class="headerlink" title="跳表"></a>跳表</h5><p>关于跳表：<a href="http://blog.jobbole.com/111731/" target="_blank" rel="external">http://blog.jobbole.com/111731/</a></p>
+<p><img src="https://live.staticflickr.com/65535/49067689557_ebffa4ee40_o.png" alt="image-20191114172711175"></p>
 <h3 id="持久化"><a href="#持久化" class="headerlink" title="持久化"></a>持久化</h3><p>redis持久化有rdb和aof两种方式</p>
 <h4 id="rdb"><a href="#rdb" class="headerlink" title="rdb"></a>rdb</h4><p>rdb类似内存快照，即把内存中的数据生成一份二进制的数据文件，可以还原到内存。rdb可以通过手动<code>save</code>命令保存，此过程会导致redis阻塞，也可以定义一系列的策略来自动生成rdb文件。bgsave的过程是fork一个当前线程，然后进行写文件。读文件没有相应的指令，服务器检测到rdb文件会自动载入，另外aof文件的优先级比rdb文件高，redis一般会优先执行aof文件。<br>在rdb文件载入时，redis会处于阻塞状态。</p>
 <p><img src="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190328003158199.png" alt="image-20190328003158199"></p>
@@ -487,7 +519,7 @@
               
                 <a href="/Horizon.github.io/archives/">
               
-                  <span class="site-state-item-count">56</span>
+                  <span class="site-state-item-count">59</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -498,7 +530,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/Horizon.github.io/categories/index.html">
-                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-count">26</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -509,7 +541,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/Horizon.github.io/tags/index.html">
-                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-count">17</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -558,7 +590,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#底层数据结构"><span class="nav-number">1.</span> <span class="nav-text">底层数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#简单字符串sds，类似StringBuilder"><span class="nav-number">1.1.</span> <span class="nav-text">简单字符串sds，类似StringBuilder</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#链表"><span class="nav-number">1.1.1.</span> <span class="nav-text">链表</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#字典"><span class="nav-number">1.1.2.</span> <span class="nav-text">字典</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#跳表"><span class="nav-number">1.1.3.</span> <span class="nav-text">跳表</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#持久化"><span class="nav-number">2.</span> <span class="nav-text">持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#rdb"><span class="nav-number">2.1.</span> <span class="nav-text">rdb</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#aof"><span class="nav-number">2.2.</span> <span class="nav-text">aof</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事件"><span class="nav-number">3.</span> <span class="nav-text">事件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#文件事件"><span class="nav-number">3.1.</span> <span class="nav-text">文件事件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#时间事件"><span class="nav-number">3.2.</span> <span class="nav-text">时间事件</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#同步"><span class="nav-number">4.</span> <span class="nav-text">同步</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#sync、psync"><span class="nav-number">4.1.</span> <span class="nav-text">sync、psync</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#psync部分重同步的实现机制"><span class="nav-number">4.1.1.</span> <span class="nav-text">psync部分重同步的实现机制</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事务"><span class="nav-number">5.</span> <span class="nav-text">事务</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#multi"><span class="nav-number">5.1.</span> <span class="nav-text">multi</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#exec"><span class="nav-number">5.2.</span> <span class="nav-text">exec</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#watch"><span class="nav-number">5.3.</span> <span class="nav-text">watch</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#底层数据结构"><span class="nav-number">1.</span> <span class="nav-text">底层数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#string"><span class="nav-number">1.1.</span> <span class="nav-text">string</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#SDS字符串"><span class="nav-number">1.1.1.</span> <span class="nav-text">SDS字符串</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#list"><span class="nav-number">1.2.</span> <span class="nav-text">list</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#压缩列表-ziplist"><span class="nav-number">1.2.1.</span> <span class="nav-text">压缩列表 ziplist</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#快速列表-quicklist"><span class="nav-number">1.2.2.</span> <span class="nav-text">快速列表 quicklist</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#紧凑列表-listpack"><span class="nav-number">1.2.3.</span> <span class="nav-text">紧凑列表 listpack</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hash"><span class="nav-number">1.3.</span> <span class="nav-text">hash</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#字典"><span class="nav-number">1.3.1.</span> <span class="nav-text">字典</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#zset"><span class="nav-number">1.4.</span> <span class="nav-text">zset</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#跳表"><span class="nav-number">1.4.1.</span> <span class="nav-text">跳表</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#持久化"><span class="nav-number">2.</span> <span class="nav-text">持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#rdb"><span class="nav-number">2.1.</span> <span class="nav-text">rdb</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#aof"><span class="nav-number">2.2.</span> <span class="nav-text">aof</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事件"><span class="nav-number">3.</span> <span class="nav-text">事件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#文件事件"><span class="nav-number">3.1.</span> <span class="nav-text">文件事件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#时间事件"><span class="nav-number">3.2.</span> <span class="nav-text">时间事件</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#同步"><span class="nav-number">4.</span> <span class="nav-text">同步</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#sync、psync"><span class="nav-number">4.1.</span> <span class="nav-text">sync、psync</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#psync部分重同步的实现机制"><span class="nav-number">4.1.1.</span> <span class="nav-text">psync部分重同步的实现机制</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事务"><span class="nav-number">5.</span> <span class="nav-text">事务</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#multi"><span class="nav-number">5.1.</span> <span class="nav-text">multi</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#exec"><span class="nav-number">5.2.</span> <span class="nav-text">exec</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#watch"><span class="nav-number">5.3.</span> <span class="nav-text">watch</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -578,7 +610,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
