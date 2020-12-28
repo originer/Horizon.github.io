@@ -247,6 +247,814 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/11/21/SpringMVC数据绑定总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Horizon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/Horizon.github.io/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Horizon Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/Horizon.github.io/2018/11/21/SpringMVC数据绑定总结/" itemprop="url">SpringMVC数据绑定总结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-21T14:19:24+08:00">
+                2018-11-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Horizon.github.io/categories/Spring相关/" itemprop="url" rel="index">
+                    <span itemprop="name">Spring相关</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="SpringMVC数据绑定原理"><a href="#SpringMVC数据绑定原理" class="headerlink" title="SpringMVC数据绑定原理"></a>SpringMVC数据绑定原理</h2><p>SpringMVC的数据绑定像一个黑盒子，通过ajax请求发送过来的字段都能被我们后端定义的字段精准接收到，看上去很神奇其实原理挺简单的，http请求传递的数据都是String类型的，我们可以在方法中定义参数的类型，当请求中的数据包含这个参数的时候，会使用<strong>转码器</strong>自动转化成我们需要的数据类型。</p>
+<h2 id="能够传递的数据类型"><a href="#能够传递的数据类型" class="headerlink" title="能够传递的数据类型"></a>能够传递的数据类型</h2><h3 id="基本类型"><a href="#基本类型" class="headerlink" title="基本类型"></a>基本类型</h3><p>基本类型名称与前端名称对应</p>
+<h3 id="包装类型"><a href="#包装类型" class="headerlink" title="包装类型"></a>包装类型</h3><p>使用包装类型传的值可以为null</p>
+<h3 id="获取参数的方式"><a href="#获取参数的方式" class="headerlink" title="获取参数的方式"></a>获取参数的方式</h3><h4 id="一：直接将请求参数名作为Controller中方法的形参"><a href="#一：直接将请求参数名作为Controller中方法的形参" class="headerlink" title="一：直接将请求参数名作为Controller中方法的形参"></a>一：直接将请求参数名作为Controller中方法的形参</h4><p>public  String login (String username,String password)   ：</p>
+<p>解释：括号中的参数必须与页面Form 表单中的 name 名字相同</p>
+<h4 id="二：使用-RequestParam-绑定请求参数参数值"><a href="#二：使用-RequestParam-绑定请求参数参数值" class="headerlink" title="二：使用@RequestParam 绑定请求参数参数值"></a>二：使用@RequestParam 绑定请求参数参数值</h4><p>举例：public String login(RequestParam (“username”) String name) :</p>
+<p>解释：双引号中的username 必须与页面 name 名字相同，String name 中的name可以随便写</p>
+<h4 id="三：用注解-RequestMapping接收参数的方法"><a href="#三：用注解-RequestMapping接收参数的方法" class="headerlink" title="三：用注解@RequestMapping接收参数的方法"></a>三：用注解@RequestMapping接收参数的方法</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@RequestMapping</span>(value=<span class="string">"/login/&#123;username&#125;/&#123;password&#125;"</span>)</div></pre></td></tr></table></figure>
+<p>public String login(@PathVariable(“username”) String name，@PathVariable(“password”) String name)   </p>
+<p>解释:上面的 @RequestMapping(value=”/login/{username}/{password}”) 是以注解的方式写在方法上的。注解上的usernname和 password 必须好页面上name 相同</p>
+<h4 id="四：使用Pojo对象（就是封装的类，类中封装的字段作为参数）绑定请求参数值，原理是利用Set的页面反射机制找到User对象中的属性"><a href="#四：使用Pojo对象（就是封装的类，类中封装的字段作为参数）绑定请求参数值，原理是利用Set的页面反射机制找到User对象中的属性" class="headerlink" title="四：使用Pojo对象（就是封装的类，类中封装的字段作为参数）绑定请求参数值，原理是利用Set的页面反射机制找到User对象中的属性"></a>四：使用Pojo对象（就是封装的类，类中封装的字段作为参数）绑定请求参数值，原理是利用Set的页面反射机制找到User对象中的属性</h4><p>举例：@ReauestMapping（value=/login”）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> String <span class="title">login</span><span class="params">(User user)</span></span>&#123;</div></pre></td></tr></table></figure>
+<p>  解释：就是把封装的一个类当成一个参数放在方法中，封装类中的属性就是就是参数。</p>
+<h4 id="五：使用原生的Servlet-API-作为Controller-方法的参数"><a href="#五：使用原生的Servlet-API-作为Controller-方法的参数" class="headerlink" title="五：使用原生的Servlet API 作为Controller 方法的参数"></a>五：使用原生的Servlet API 作为Controller 方法的参数</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> String <span class="title">login</span><span class="params">(HttpServletRequest request)</span> </span>&#123;</div><div class="line"></div><div class="line">String usernma=Request.getParameter(<span class="string">"username"</span>);</div><div class="line"></div><div class="line">｝</div></pre></td></tr></table></figure>
+<p>另外，如果有特殊需求，SpringMVC支持自定义参数转码器，比较常用的比如日期转码。</p>
+<h2 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h2><p>核心接口 <code>HandlerMethodArgumentResolver</code> 可以通过实现这个接口自定义参数解析器</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">HandlerMethodArgumentResolver</span> </span>&#123;</div><div class="line">    <span class="comment">//该解析器是否支持parameter参数的解析</span></div><div class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">supportsParameter</span><span class="params">(MethodParameter parameter)</span></span>;</div><div class="line"></div><div class="line">    <span class="comment">//将方法参数从给定请求(webRequest)解析为参数值并返回</span></div><div class="line">    <span class="function">Object <span class="title">resolveArgument</span><span class="params">(MethodParameter parameter,</span></span></div><div class="line"><span class="function"><span class="params">                          ModelAndViewContainer mavContainer,</span></span></div><div class="line"><span class="function"><span class="params">                          NativeWebRequest webRequest,</span></span></div><div class="line"><span class="function"><span class="params">                          WebDataBinderFactory binderFactory)</span> <span class="keyword">throws</span> Exception</span>;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>初始化：RequestMappingHandlerAdapter.java类的afterPropertiesSet</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">afterPropertiesSet</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.argumentResolvers == <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="comment">//初始化SpringMVC默认的方法参数解析器，并添加至argumentResolvers（HandlerMethodArgumentResolverComposite）</span></div><div class="line">        List&lt;HandlerMethodArgumentResolver&gt; resolvers = getDefaultArgumentResolvers();</div><div class="line">        <span class="keyword">this</span>.argumentResolvers = <span class="keyword">new</span> HandlerMethodArgumentResolverComposite().addResolvers(resolvers);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.initBinderArgumentResolvers == <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="comment">//初始化SpringMVC默认的初始化绑定器(@InitBinder)参数解析器，并添加至initBinderArgumentResolvers（HandlerMethodArgumentResolverComposite）</span></div><div class="line">        List&lt;HandlerMethodArgumentResolver&gt; resolvers = getDefaultInitBinderArgumentResolvers();</div><div class="line">        <span class="keyword">this</span>.initBinderArgumentResolvers = <span class="keyword">new</span> HandlerMethodArgumentResolverComposite().addResolvers(resolvers);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.returnValueHandlers == <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="comment">//获取默认的方法返回值解析器</span></div><div class="line">        List&lt;HandlerMethodReturnValueHandler&gt; handlers = getDefaultReturnValueHandlers();</div><div class="line">        <span class="keyword">this</span>.returnValueHandlers = <span class="keyword">new</span> HandlerMethodReturnValueHandlerComposite().addHandlers(handlers);</div><div class="line">    &#125;</div><div class="line">    initControllerAdviceCache();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>添加默认的解析器：getDefaultArgumentResolvers</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//默认的参数解析，创建了默认的24个参数解析器，并添加至resolvers</span></div><div class="line"><span class="comment">//这里的24个参数解析器都是针对不同的参数类型来解析的</span></div><div class="line"><span class="function"><span class="keyword">private</span> List&lt;HandlerMethodArgumentResolver&gt; <span class="title">getDefaultArgumentResolvers</span><span class="params">()</span> </span>&#123;</div><div class="line">    List&lt;HandlerMethodArgumentResolver&gt; resolvers = <span class="keyword">new</span> ArrayList&lt;HandlerMethodArgumentResolver&gt;();</div><div class="line"></div><div class="line">    <span class="comment">// 基于注解的参数解析器</span></div><div class="line"></div><div class="line">    <span class="comment">//一般用于带有@RequestParam注解的简单参数绑定，简单参数比如byte、int、long、double、String以及对应的包装类型</span></div><div class="line">    resolvers.add(<span class="keyword">new</span> RequestParamMethodArgumentResolver(getBeanFactory(), <span class="keyword">false</span>));</div><div class="line">    <span class="comment">//用于处理带有@RequestParam注解，且参数类型为Map的解析绑定</span></div><div class="line">    resolvers.add(<span class="keyword">new</span> RequestParamMapMethodArgumentResolver());</div><div class="line">    <span class="comment">//一般用于处理带有@PathVariable注解的默认参数绑定</span></div><div class="line">    resolvers.add(<span class="keyword">new</span> PathVariableMethodArgumentResolver());</div><div class="line">    <span class="comment">//也是用于带有@PathVariable注解的Map相关参数绑定，后续还有一些默认的参数解析器。后续还有一些参数解析器，我这里都不一一解释了。想具体确认某个参数会交个哪个参数解析器处理，可以通过以下解析器的supportsParameter(MethodParameter parameter)方法得知</span></div><div class="line">    resolvers.add(<span class="keyword">new</span> PathVariableMapMethodArgumentResolver());</div><div class="line">    resolvers.add(<span class="keyword">new</span> MatrixVariableMethodArgumentResolver());</div><div class="line">    resolvers.add(<span class="keyword">new</span> MatrixVariableMapMethodArgumentResolver());</div><div class="line">    resolvers.add(<span class="keyword">new</span> ServletModelAttributeMethodProcessor(<span class="keyword">false</span>));</div><div class="line">    resolvers.add(<span class="keyword">new</span> RequestResponseBodyMethodProcessor(getMessageConverters()));</div><div class="line">    resolvers.add(<span class="keyword">new</span> RequestPartMethodArgumentResolver(getMessageConverters()));</div><div class="line">    resolvers.add(<span class="keyword">new</span> RequestHeaderMethodArgumentResolver(getBeanFactory()));</div><div class="line">    resolvers.add(<span class="keyword">new</span> RequestHeaderMapMethodArgumentResolver());</div><div class="line">    resolvers.add(<span class="keyword">new</span> ServletCookieValueMethodArgumentResolver(getBeanFactory()));</div><div class="line">    resolvers.add(<span class="keyword">new</span> ExpressionValueMethodArgumentResolver(getBeanFactory()));</div><div class="line"></div><div class="line">    <span class="comment">// 基于类型的参数解析器</span></div><div class="line">    resolvers.add(<span class="keyword">new</span> ServletRequestMethodArgumentResolver());</div><div class="line">    resolvers.add(<span class="keyword">new</span> ServletResponseMethodArgumentResolver());</div><div class="line">    resolvers.add(<span class="keyword">new</span> HttpEntityMethodProcessor(getMessageConverters()));</div><div class="line">    resolvers.add(<span class="keyword">new</span> RedirectAttributesMethodArgumentResolver());</div><div class="line">    resolvers.add(<span class="keyword">new</span> ModelMethodProcessor());</div><div class="line">    resolvers.add(<span class="keyword">new</span> MapMethodProcessor());</div><div class="line">    resolvers.add(<span class="keyword">new</span> ErrorsMethodArgumentResolver());</div><div class="line">    resolvers.add(<span class="keyword">new</span> SessionStatusMethodArgumentResolver());</div><div class="line">    resolvers.add(<span class="keyword">new</span> UriComponentsBuilderMethodArgumentResolver());</div><div class="line"></div><div class="line">    <span class="comment">// Custom arguments</span></div><div class="line">    <span class="keyword">if</span> (getCustomArgumentResolvers() != <span class="keyword">null</span>) &#123;</div><div class="line">        resolvers.addAll(getCustomArgumentResolvers());</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//它的元素在RequestMappingHandlerAdapter类的afterPropertiesSet方法中被添加，存放的是SpringMVC一些默认的HandlerMethodArgumentResolver参数解析器</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> List&lt;HandlerMethodArgumentResolver&gt; argumentResolvers =</div><div class="line">            <span class="keyword">new</span> LinkedList&lt;HandlerMethodArgumentResolver&gt;();</div><div class="line"><span class="comment">//存放已经解析过的参数，已经对应的HandlerMethodArgumentResolver解析器。加快查找过程</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> Map&lt;MethodParameter, HandlerMethodArgumentResolver&gt; argumentResolverCache =</div><div class="line">        <span class="keyword">new</span> ConcurrentHashMap&lt;MethodParameter, HandlerMethodArgumentResolver&gt;(<span class="number">256</span>);</div></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/11/20/Java虚拟机学习笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Horizon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/Horizon.github.io/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Horizon Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/Horizon.github.io/2018/11/20/Java虚拟机学习笔记/" itemprop="url">Java虚拟机学习笔记</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-20T10:06:37+08:00">
+                2018-11-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Horizon.github.io/categories/JVM/" itemprop="url" rel="index">
+                    <span itemprop="name">JVM</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="Java内存区域与内存溢出异常"><a href="#Java内存区域与内存溢出异常" class="headerlink" title="Java内存区域与内存溢出异常"></a>Java内存区域与内存溢出异常</h2><h3 id="运行时数据区域"><a href="#运行时数据区域" class="headerlink" title="运行时数据区域"></a>运行时数据区域</h3><p>下图是Java运行时数据区域划分图</p>
+<p><img src="https://user-gold-cdn.xitu.io/2017/12/12/1604a8492a45653e?imageView2/0/w/1280/h/960/ignore-error/1" alt="运行时数据区域"></p>
+<table>
+<thead>
+<tr>
+<th>区域</th>
+<th>是否线程共享</th>
+<th>是否会内存溢出</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>程序计数器</td>
+<td>否</td>
+<td>不会</td>
+</tr>
+<tr>
+<td>java虚拟机栈</td>
+<td>否</td>
+<td>会</td>
+</tr>
+<tr>
+<td>本地方法栈</td>
+<td>否</td>
+<td>会</td>
+</tr>
+<tr>
+<td>堆</td>
+<td>是</td>
+<td>会</td>
+</tr>
+<tr>
+<td>方法区</td>
+<td>是</td>
+<td>会</td>
+</tr>
+</tbody>
+</table>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/Horizon.github.io/2018/11/20/Java虚拟机学习笔记/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/11/19/常用排序算法总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Horizon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/Horizon.github.io/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Horizon Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/Horizon.github.io/2018/11/19/常用排序算法总结/" itemprop="url">常用排序算法总结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-19T17:25:10+08:00">
+                2018-11-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Horizon.github.io/categories/算法/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p><em>都是一些比较经典和基础的排序算法，应该是每个开发者都要掌握的，但是工作中用到的机会其实不多，时间长了会忘记。但是面试的时候也许会用到，所以做一个总结，方便自己复习。</em></p>
+<p>排序动态视图展示：<a href="https://visualgo.net/en/sorting" target="_blank" rel="external">https://visualgo.net/en/sorting</a></p>
+<p><img src="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/sort.png" alt="1542608413490"></p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/Horizon.github.io/2018/11/19/常用排序算法总结/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/11/19/缓存相关/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Horizon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/Horizon.github.io/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Horizon Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/Horizon.github.io/2018/11/19/缓存相关/" itemprop="url">Java常用的缓存方案</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-19T15:37:45+08:00">
+                2018-11-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Horizon.github.io/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="缓存命中率"><a href="#缓存命中率" class="headerlink" title="缓存命中率"></a>缓存命中率</h2><p>缓存的设计要考虑到具体的业务场景，一般来说，并发量越大，缓存的收益就越大。</p>
+<h2 id="缓存的分类"><a href="#缓存的分类" class="headerlink" title="缓存的分类"></a>缓存的分类</h2><h3 id="本地缓存"><a href="#本地缓存" class="headerlink" title="本地缓存"></a>本地缓存</h3><p>编程实现（成员变量、局部变量、静态变量）Guava Cache</p>
+<h3 id="分布式缓存"><a href="#分布式缓存" class="headerlink" title="分布式缓存"></a>分布式缓存</h3><p>Memcache、Redis</p>
+<h4 id="Guava-Cache"><a href="#Guava-Cache" class="headerlink" title="Guava Cache"></a>Guava Cache</h4><p><img src="C:\Users\Zz\AppData\Local\Temp\1529342215282.png" alt="1529342215282"></p>
+<p>类似一个ConcurrentHashMap、包含了多余的信息，使用LRU策略来实现缓存。</p>
+<h4 id="Memcache"><a href="#Memcache" class="headerlink" title="Memcache"></a>Memcache</h4><p><img src="C:\Users\Zz\AppData\Local\Temp\1529342293171.png" alt="1529342293171"></p>
+<p>Memcache本身不提供分布式解决方案，需要在应用服务器上进行实现。</p>
+<p>Memcache的内存结构</p>
+<p><img src="C:\Users\Zz\AppData\Local\Temp\1529342483370.png" alt="1529342483370"></p>
+<p>redis</p>
+<p><img src="C:\Users\Zz\AppData\Local\Temp\1529344638979.png" alt="1529344638979"></p>
+<p><img src="C:\Users\Zz\AppData\Local\Temp\1529346488980.png" alt="1529346488980"></p>
+<h2 id="缓存穿透"><a href="#缓存穿透" class="headerlink" title="缓存穿透"></a>缓存穿透</h2><h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>访问一个不存在的key，缓存不起作用，请求会穿透到DB，流量大时DB会挂掉。</p>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><ol>
+<li>采用布隆过滤器，使用一个足够大的bitmap，用于存储可能访问的key，不存在的key直接被过滤；</li>
+<li>访问key未在DB查询到值，也将空值写进缓存，但可以设置较短过期时间。</li>
+</ol>
+<h2 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h2><h3 id="概念-1"><a href="#概念-1" class="headerlink" title="概念"></a>概念</h3><p>大量的key设置了相同的过期时间，导致在缓存在同一时刻全部失效，造成瞬时DB请求量大、压力骤增，引起雪崩。</p>
+<h3 id="解决方案-1"><a href="#解决方案-1" class="headerlink" title="解决方案"></a>解决方案</h3><p>可以给缓存设置过期时间时加上一个随机值时间，使得每个key的过期时间分布开来，不会集中在同一时刻失效。</p>
+<h2 id="缓存击穿"><a href="#缓存击穿" class="headerlink" title="缓存击穿"></a>缓存击穿</h2><h3 id="概念-2"><a href="#概念-2" class="headerlink" title="概念"></a>概念</h3><p>一个存在的key，在缓存过期的一刻，同时有大量的请求，这些请求都会击穿到DB，造成瞬时DB请求量大、压力骤增。</p>
+<h3 id="解决方案-2"><a href="#解决方案-2" class="headerlink" title="解决方案"></a>解决方案</h3><p>在访问key之前，采用SETNX（set if not exists）来设置另一个短期key来锁住当前key的访问，访问结束再删除该短期key。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/11/18/CopyOnWriteArrayList详解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Horizon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/Horizon.github.io/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Horizon Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/Horizon.github.io/2018/11/18/CopyOnWriteArrayList详解/" itemprop="url">CopyOnWriteArrayList详解</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-18T20:05:41+08:00">
+                2018-11-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Horizon.github.io/categories/Java集合框架/" itemprop="url" rel="index">
+                    <span itemprop="name">Java集合框架</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="CopyOnWriteArrayList与JMM"><a href="#CopyOnWriteArrayList与JMM" class="headerlink" title="CopyOnWriteArrayList与JMM"></a>CopyOnWriteArrayList与JMM</h2><h1 id="一-CopyOnWriteArrayList与JMM"><a href="#一-CopyOnWriteArrayList与JMM" class="headerlink" title="一 CopyOnWriteArrayList与JMM"></a>一 CopyOnWriteArrayList与JMM</h1><p>说明：本文代码均以JDK1.8的源码为准。</p>
+<h2 id="1-什么是CopyOnWriteArrayList"><a href="#1-什么是CopyOnWriteArrayList" class="headerlink" title="1 什么是CopyOnWriteArrayList"></a>1 什么是CopyOnWriteArrayList</h2><p>关于CopyOnWriteArrayList是什么以及基本用法，在这里不多说，网上可以搜到大量这方面的文章。在这里只做简要说明：CopyOnWriteArrayList相当于线程安全的ArrayList，是一个可变数组。它具有如下特性：</p>
+<ul>
+<li>是线程安全的</li>
+<li>写操作会复制整个基础数组，因此写操作开销很大</li>
+<li>适用于如下情况：数组大小较小，并且读操作比写操作多很多的情形</li>
+</ul>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/Horizon.github.io/2018/11/18/CopyOnWriteArrayList详解/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/11/17/HTTP协议相关笔记/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -951,762 +1759,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/11/09/Netty核心组件：Channel与Pipline/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Horizon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/Horizon.github.io/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Horizon Notes">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/Horizon.github.io/2018/11/09/Netty核心组件：Channel与Pipline/" itemprop="url">Netty核心组件：Channel和Pipline</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-09T15:06:35+08:00">
-                2018-11-09
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/Horizon.github.io/categories/网络编程/" itemprop="url" rel="index">
-                    <span itemprop="name">网络编程</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="Channel分析"><a href="#Channel分析" class="headerlink" title="Channel分析"></a>Channel分析</h1><h2 id="Channel接口"><a href="#Channel接口" class="headerlink" title="Channel接口"></a>Channel接口</h2><p><img src="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/1530494504140.png" alt="1530236109956"></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/11/09/Netty核心组件：Channel与Pipline/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/11/09/Netty核心组件：解码器编码器/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Horizon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/Horizon.github.io/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Horizon Notes">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/Horizon.github.io/2018/11/09/Netty核心组件：解码器编码器/" itemprop="url">Netty核心组件：解码器/编码器</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-09T14:50:47+08:00">
-                2018-11-09
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/Horizon.github.io/categories/网络编程/" itemprop="url" rel="index">
-                    <span itemprop="name">网络编程</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>我们知道，数据在网络上都是通过字节流传输的，Netty作为一款网络通讯框架，编解码是很重要的一个模块。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/11/09/Netty核心组件：解码器编码器/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/11/08/生产者消费者模型-并发框架Disruptor/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Horizon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/Horizon.github.io/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Horizon Notes">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/Horizon.github.io/2018/11/08/生产者消费者模型-并发框架Disruptor/" itemprop="url">并发框架Disruptor学习</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-08T13:17:21+08:00">
-                2018-11-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/Horizon.github.io/categories/并发编程/" itemprop="url" rel="index">
-                    <span itemprop="name">并发编程</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <blockquote>
-<p>Disruptor 是一个基于生产者消费者模型的高性能并发框架，可以用来代替Java内置的阻塞队列实现的生产者消费者模型。</p>
-</blockquote>
-<h2 id="Disruptor高效的原因"><a href="#Disruptor高效的原因" class="headerlink" title="Disruptor高效的原因"></a>Disruptor高效的原因</h2><p>Disruptor通过以下设计来解决队列速度慢的问题：</p>
-<ul>
-<li>环形数组结构</li>
-</ul>
-<p>为了避免垃圾回收，采用数组而非链表。同时，数组对处理器的缓存机制更加友好。</p>
-<ul>
-<li>元素位置定位</li>
-</ul>
-<p>数组长度2^n，通过位运算，加快定位的速度。下标采取递增的形式。不用担心index溢出的问题。index是long类型，即使100万QPS的处理速度，也需要30万年才能用完。</p>
-<ul>
-<li>无锁设计</li>
-</ul>
-<p>每个生产者或者消费者线程，会先申请可以操作的元素在数组中的位置，申请到之后，直接在该位置写入或者读取数据。</p>
-<p>下面忽略数组的环形结构，介绍一下如何实现无锁设计。整个过程通过原子变量CAS，保证操作的线程安全。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/11/08/生产者消费者模型-并发框架Disruptor/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/09/16/设计模式：单例模式/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Horizon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/Horizon.github.io/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Horizon Notes">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/Horizon.github.io/2018/09/16/设计模式：单例模式/" itemprop="url">Java设计模式：单例模式</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-16T23:26:54+08:00">
-                2018-09-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/Horizon.github.io/categories/设计模式/" itemprop="url" rel="index">
-                    <span itemprop="name">设计模式</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p><strong>饿汉模式</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Sigleton</span> </span>&#123;</div><div class="line">    <span class="comment">//饿汉模式 outInstance是私有的</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Sigleton ourInstance = <span class="keyword">new</span> Sigleton();</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 此实现是线程安全的  JVM在加载此类时，因为对于static属性的初始化只能由一个线程执行且仅执行一次</span></div><div class="line"><span class="comment">     * 缺点：instance在类装载时就实例化 这时候初始化instance显然没有达到lazy loading的效果</span></div><div class="line"><span class="comment">     * <span class="doctag">@return</span></span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Sigleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> ourInstance;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">//把构造函数声明为private 客户对象无法创建该实例</span></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Sigleton</span><span class="params">()</span> </span>&#123;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/Horizon.github.io/2018/09/16/设计模式：单例模式/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/09/07/性能调优手记/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Horizon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/Horizon.github.io/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Horizon Notes">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/Horizon.github.io/2018/09/07/性能调优手记/" itemprop="url">Java性能调优</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-07T09:31:36+08:00">
-                2018-09-07
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/Horizon.github.io/categories/Java/" itemprop="url" rel="index">
-                    <span itemprop="name">Java</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>1.在程序调用过程中，有一段代码是通过动态反射调用的，如果频繁创建元数据性能会比直接调用低很多。</p>
-<p>解决方法：可以给动态反射调用添加缓存，关闭安全检查。</p>
-<p>2.对相似独立的任务采用线程池处理</p>
-<p>解决方法：优化线程池的配置，缓存线程池和固定线程数的效率差不多，但是缓存线程池在任务接收速度很快的情况下CPU占用会飙升，变的很卡，所以还是选择FIXED线程池，线程数可以设置为  cpu core+1。</p>
-<p>3.多线程情况下，调用工具类的静态方法速度反而会更加慢？</p>
-<p>4.每处理一笔委托大约需要20ms，现在要把时间压缩到5ms左右。</p>
-<p>5.优化点：对于需要频繁创建的大对象做静态化处理，或者把对象缓存起来</p>
-<p>参考：</p>
-<p><a href="https://my.oschina.net/xianggao/blog/77224" target="_blank" rel="external">https://my.oschina.net/xianggao/blog/77224</a> </p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/Horizon.github.io/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/Horizon.github.io/">1</a><span class="space">&hellip;</span><a class="page-number" href="/Horizon.github.io/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/Horizon.github.io/page/5/">5</a><a class="page-number" href="/Horizon.github.io/page/6/">6</a><a class="extend next" rel="next" href="/Horizon.github.io/page/5/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/Horizon.github.io/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/Horizon.github.io/">1</a><span class="space">&hellip;</span><a class="page-number" href="/Horizon.github.io/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/Horizon.github.io/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/Horizon.github.io/page/7/">7</a><a class="extend next" rel="next" href="/Horizon.github.io/page/5/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1752,7 +1809,7 @@
               
                 <a href="/Horizon.github.io/archives/">
               
-                  <span class="site-state-item-count">58</span>
+                  <span class="site-state-item-count">63</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1763,7 +1820,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/Horizon.github.io/categories/index.html">
-                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -1774,7 +1831,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/Horizon.github.io/tags/index.html">
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">20</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

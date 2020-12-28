@@ -79,12 +79,12 @@
 
 
 
-<meta name="description" content="底层数据结构 stringSDS字符串简单字符串sds，类似StringBuilder对比常规字符串的优势：  本身记录长度，获取长度的复杂度为O(1)  杜绝缓冲区溢出，即可以自动扩容。  使用空间预分配和惰性空间释放来优化内存分配，避免频繁分配内存带来的性能开销。  二进制安全，可以保存任意格式的二进制数据。">
+<meta name="description" content="底层数据结构 stringSDS字符串简单字符串sds，类似StringBuilder对比常规字符串的优势：  本身记录长度，获取长度的复杂度为O(1) 杜绝缓冲区溢出，即可以自动扩容。 使用空间预分配和惰性空间释放来优化内存分配，避免频繁分配内存带来的性能开销。 二进制安全，可以保存任意格式的二进制数据。  123456789101112typedef char *sds;struct sdsh">
 <meta property="og:type" content="article">
 <meta property="og:title" content="redis学习笔记">
 <meta property="og:url" content="https://originer.github.io/Horizon.github.io/2019/02/28/redis学习笔记/index.html">
 <meta property="og:site_name" content="Horizon Notes">
-<meta property="og:description" content="底层数据结构 stringSDS字符串简单字符串sds，类似StringBuilder对比常规字符串的优势：  本身记录长度，获取长度的复杂度为O(1)  杜绝缓冲区溢出，即可以自动扩容。  使用空间预分配和惰性空间释放来优化内存分配，避免频繁分配内存带来的性能开销。  二进制安全，可以保存任意格式的二进制数据。">
+<meta property="og:description" content="底层数据结构 stringSDS字符串简单字符串sds，类似StringBuilder对比常规字符串的优势：  本身记录长度，获取长度的复杂度为O(1) 杜绝缓冲区溢出，即可以自动扩容。 使用空间预分配和惰性空间释放来优化内存分配，避免频繁分配内存带来的性能开销。 二进制安全，可以保存任意格式的二进制数据。  123456789101112typedef char *sds;struct sdsh">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://live.staticflickr.com/65535/49067491278_456ef6c07a_o.png">
 <meta property="og:image" content="https://live.staticflickr.com/65535/49067690077_90a1dbe91c_o.png">
@@ -99,10 +99,10 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190328014343386.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190328234518975.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/originer/Picture-storage/master/blog/image-20190328235018001.png">
-<meta property="og:updated_time" content="2019-11-15T06:40:49.936Z">
+<meta property="og:updated_time" content="2020-11-14T17:10:07.734Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="redis学习笔记">
-<meta name="twitter:description" content="底层数据结构 stringSDS字符串简单字符串sds，类似StringBuilder对比常规字符串的优势：  本身记录长度，获取长度的复杂度为O(1)  杜绝缓冲区溢出，即可以自动扩容。  使用空间预分配和惰性空间释放来优化内存分配，避免频繁分配内存带来的性能开销。  二进制安全，可以保存任意格式的二进制数据。">
+<meta name="twitter:description" content="底层数据结构 stringSDS字符串简单字符串sds，类似StringBuilder对比常规字符串的优势：  本身记录长度，获取长度的复杂度为O(1) 杜绝缓冲区溢出，即可以自动扩容。 使用空间预分配和惰性空间释放来优化内存分配，避免频繁分配内存带来的性能开销。 二进制安全，可以保存任意格式的二进制数据。  123456789101112typedef char *sds;struct sdsh">
 <meta name="twitter:image" content="https://live.staticflickr.com/65535/49067491278_456ef6c07a_o.png">
 
 
@@ -356,15 +356,12 @@
         <h3 id="底层数据结构"><a href="#底层数据结构" class="headerlink" title="底层数据结构"></a>底层数据结构</h3><p><img src="https://live.staticflickr.com/65535/49067491278_456ef6c07a_o.png" alt="image-20191115144032780"></p>
 <h4 id="string"><a href="#string" class="headerlink" title="string"></a>string</h4><h5 id="SDS字符串"><a href="#SDS字符串" class="headerlink" title="SDS字符串"></a>SDS字符串</h5><p>简单字符串sds，类似StringBuilder<br>对比常规字符串的优势：</p>
 <ul>
-<li><p>本身记录长度，获取长度的复杂度为O(1)</p>
-</li>
-<li><p>杜绝缓冲区溢出，即可以自动扩容。</p>
-</li>
-<li><p>使用空间预分配和惰性空间释放来优化内存分配，避免频繁分配内存带来的性能开销。</p>
-</li>
-<li><p>二进制安全，可以保存任意格式的二进制数据。</p>
-</li>
+<li>本身记录长度，获取长度的复杂度为O(1)</li>
+<li>杜绝缓冲区溢出，即可以自动扩容。</li>
+<li>使用空间预分配和惰性空间释放来优化内存分配，避免频繁分配内存带来的性能开销。</li>
+<li>二进制安全，可以保存任意格式的二进制数据。</li>
 </ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">typedef char *sds;</div><div class="line"></div><div class="line">struct sdshdr &#123;</div><div class="line">        // 记录 buf 数组中已使用字节的数量</div><div class="line">        // 等于 SDS 所保存字符串的长度</div><div class="line">        int len;</div><div class="line">        // 记录 buf 数组中未使用字节的数量</div><div class="line">        int free;</div><div class="line">        // 字节数组，用于保存字符串</div><div class="line">        char buf[];</div><div class="line">&#125;;</div><div class="line">当buf的大小在44byte以内的话，redis会使用连续的内存块，利用cpu的缓存提高性能（cpu缓存行为64byte）</div></pre></td></tr></table></figure>
 <a id="more"></a>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">SDS</span>&lt;T&gt; &#123;</span></div><div class="line">  T capacity; <span class="comment">// 数组容量</span></div><div class="line">  T len; <span class="comment">// 数组长度</span></div><div class="line">  byte flags; <span class="comment">// 特殊标识位，不理睬它</span></div><div class="line">  byte[] content; <span class="comment">// 数组内容</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p><img src="https://live.staticflickr.com/65535/49067690077_90a1dbe91c_o.png" alt="image-20191114171845228"></p>
@@ -519,7 +516,7 @@
               
                 <a href="/Horizon.github.io/archives/">
               
-                  <span class="site-state-item-count">58</span>
+                  <span class="site-state-item-count">63</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -530,7 +527,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/Horizon.github.io/categories/index.html">
-                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -541,7 +538,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/Horizon.github.io/tags/index.html">
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">20</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
