@@ -79,17 +79,19 @@
 
 
 
-<meta name="description" content="在开发过程中经常会用到Map的遍历，所以对Map的几种遍历方式做一下整理； KeySet 遍历123456Iterator it = map.keySet().iterator(); 		while (it.hasNext()) &amp;#123;              key = it.next();              value = map.get(key);">
+<meta name="description" content="1、yml文件配置1234567spring:  messages:    basename: i18n/messages #配置messages配置文件的的路径    encoding: UTF-8  freemarker:    settings:      auto_import: /spring.ftl as spring #自动引入spring.ftl">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Map的几种遍历方式">
-<meta property="og:url" content="https://originer.github.io/Horizon.github.io/2018/07/23/Map的几种遍历方式/index.html">
+<meta property="og:title" content="spring国际化i18n配合freemaker使用">
+<meta property="og:url" content="https://originer.github.io/Horizon.github.io/2020/12/30/Spring国际化i18n配合freemaker使用/index.html">
 <meta property="og:site_name" content="Horizon Notes">
-<meta property="og:description" content="在开发过程中经常会用到Map的遍历，所以对Map的几种遍历方式做一下整理； KeySet 遍历123456Iterator it = map.keySet().iterator(); 		while (it.hasNext()) &amp;#123;              key = it.next();              value = map.get(key);">
+<meta property="og:description" content="1、yml文件配置1234567spring:  messages:    basename: i18n/messages #配置messages配置文件的的路径    encoding: UTF-8  freemarker:    settings:      auto_import: /spring.ftl as spring #自动引入spring.ftl">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-05-14T07:32:55.636Z">
+<meta property="og:image" content="https://originer.github.io/Users/zh/Library/Application%20Support/typora-user-images/image-20201230174449328.png">
+<meta property="og:updated_time" content="2020-12-30T09:48:57.510Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Map的几种遍历方式">
-<meta name="twitter:description" content="在开发过程中经常会用到Map的遍历，所以对Map的几种遍历方式做一下整理； KeySet 遍历123456Iterator it = map.keySet().iterator(); 		while (it.hasNext()) &amp;#123;              key = it.next();              value = map.get(key);">
+<meta name="twitter:title" content="spring国际化i18n配合freemaker使用">
+<meta name="twitter:description" content="1、yml文件配置1234567spring:  messages:    basename: i18n/messages #配置messages配置文件的的路径    encoding: UTF-8  freemarker:    settings:      auto_import: /spring.ftl as spring #自动引入spring.ftl">
+<meta name="twitter:image" content="https://originer.github.io/Users/zh/Library/Application%20Support/typora-user-images/image-20201230174449328.png">
 
 
 
@@ -123,7 +125,7 @@
 
 
 
-  <title>Map的几种遍历方式 | Horizon Notes</title>
+  <title>spring国际化i18n配合freemaker使用 | Horizon Notes</title>
   
 
 
@@ -250,7 +252,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2018/07/23/Map的几种遍历方式/">
+    <link itemprop="mainEntityOfPage" href="https://originer.github.io/Horizon.github.io/Horizon.github.io/2020/12/30/Spring国际化i18n配合freemaker使用/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Horizon">
@@ -267,7 +269,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Map的几种遍历方式</h1>
+          <h1 class="post-title" itemprop="name headline">spring国际化i18n配合freemaker使用</h1>
         
 
         <div class="post-meta">
@@ -279,8 +281,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-23T16:37:01+08:00">
-                2018-07-23
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-12-30T15:35:33+08:00">
+                2020-12-30
               </time>
             
 
@@ -289,6 +291,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/Horizon.github.io/categories/“spring/" itemprop="url" rel="index">
+                    <span itemprop="name">“spring"</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -317,12 +341,13 @@
       
 
       
-        <p><em>在开发过程中经常会用到Map的遍历，所以对Map的几种遍历方式做一下整理；</em></p>
-<h4 id="KeySet-遍历"><a href="#KeySet-遍历" class="headerlink" title="KeySet 遍历"></a>KeySet 遍历</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Iterator it = map.keySet().iterator();</div><div class="line"> 		<span class="keyword">while</span> (it.hasNext()) &#123;</div><div class="line">              key = it.next();</div><div class="line">              value = map.get(key);</div><div class="line">              System.out.println(key + <span class="string">":"</span> + value);</div><div class="line">          &#125;</div></pre></td></tr></table></figure>
+        <h3 id="1、yml文件配置"><a href="#1、yml文件配置" class="headerlink" title="1、yml文件配置"></a>1、yml文件配置</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="attr">spring:</span></div><div class="line"><span class="attr">  messages:</span></div><div class="line"><span class="attr">    basename:</span> <span class="string">i18n/messages</span> <span class="comment">#配置messages配置文件的的路径</span></div><div class="line"><span class="attr">    encoding:</span> <span class="string">UTF-8</span></div><div class="line"><span class="attr">  freemarker:</span></div><div class="line"><span class="attr">    settings:</span></div><div class="line"><span class="attr">      auto_import:</span> <span class="string">/spring.ftl</span> <span class="string">as</span> <span class="string">spring</span> <span class="comment">#自动引入spring.ftl</span></div></pre></td></tr></table></figure>
 <a id="more"></a>
-<h4 id="EntrySet-遍历"><a href="#EntrySet-遍历" class="headerlink" title="EntrySet 遍历"></a>EntrySet 遍历</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">Iterator it1 = map.entrySet().iterator();</div><div class="line">    <span class="keyword">while</span> (it1.hasNext()) &#123;</div><div class="line">        Map.Entry entry = (Map.Entry) it1.next();</div><div class="line">        key = entry.getKey();</div><div class="line">        value = entry.getValue();</div><div class="line">        System.out.println(key + <span class="string">"="</span> + value);</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
-<h4 id="Java8-的-lambda-遍历"><a href="#Java8-的-lambda-遍历" class="headerlink" title="Java8 的 lambda 遍历"></a>Java8 的 lambda 遍历</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">map.forEach((k, v) -&gt; &#123;</div><div class="line">            System.out.println(<span class="string">"key="</span>+k+<span class="string">":"</span>+<span class="string">"value="</span>+v);</div><div class="line">        &#125;);</div></pre></td></tr></table></figure>
-<p>使用 EntrySet 效率比 KeySet 高，EntrySet 相比KeySet 少了遍历table的过程。java8 下可以配合lambda直接使用 map.foreach() 实际上还是使用entrySet的方式遍历。</p>
+<h3 id="2、在对应位置编写国际化文本-格式为key-value"><a href="#2、在对应位置编写国际化文本-格式为key-value" class="headerlink" title="2、在对应位置编写国际化文本,格式为key=value"></a>2、在对应位置编写国际化文本,格式为key=value</h3><p><img src="/Users/zh/Library/Application%20Support/typora-user-images/image-20201230174449328.png" alt="image-20201230174449328"></p>
+<h3 id="3、配置默认解析器和拦截器"><a href="#3、配置默认解析器和拦截器" class="headerlink" title="3、配置默认解析器和拦截器"></a>3、配置默认解析器和拦截器</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 默认解析器 其中locale表示默认语言</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="meta">@Bean</span></div><div class="line"><span class="function"><span class="keyword">public</span> LocaleResolver <span class="title">localeResolver</span><span class="params">()</span> </span>&#123;</div><div class="line">    SessionLocaleResolver localeResolver = <span class="keyword">new</span> SessionLocaleResolver();</div><div class="line">    localeResolver.setDefaultLocale(<span class="keyword">new</span> Locale(<span class="string">"en"</span>));</div><div class="line">    <span class="keyword">return</span> localeResolver;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//拦截器需要继承WebMvcConfigurationSupport实现addInterceptors方法</span></div><div class="line"><span class="meta">@Bean</span></div><div class="line"><span class="function"><span class="keyword">public</span> LocaleChangeInterceptor <span class="title">localeChangeInterceptor</span><span class="params">()</span> </span>&#123;</div><div class="line">    LocaleChangeInterceptor lci = <span class="keyword">new</span> LocaleChangeInterceptor();</div><div class="line">    <span class="comment">// 参数名，从请求的lang参数获取区域信息</span></div><div class="line">    lci.setParamName(<span class="string">"lang"</span>);</div><div class="line">    <span class="keyword">return</span> lci;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">addInterceptors</span><span class="params">(InterceptorRegistry registry)</span> </span>&#123;</div><div class="line">    registry.addInterceptor(localeChangeInterceptor());</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="4、在freemaker文件中使用"><a href="#4、在freemaker文件中使用" class="headerlink" title="4、在freemaker文件中使用"></a>4、在freemaker文件中使用</h3><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">//使用这种写法就可以引入配置好的值</div><div class="line">&lt;@spring.message "key"/&gt;</div></pre></td></tr></table></figure>
+<p>同理，使用同样的方法也可以把国际化应用到jsp thymeleaf等其他模板引擎中。</p>
 
       
     </div>
@@ -347,8 +372,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/Horizon.github.io/2018/07/03/ajax跨域问题/" rel="next" title="Ajax跨域解决方案">
-                <i class="fa fa-chevron-left"></i> Ajax跨域解决方案
+              <a href="/Horizon.github.io/2020/12/28/Spring学习笔记：IoC依赖查找/" rel="next" title="spring学习笔记：IoC依赖查找">
+                <i class="fa fa-chevron-left"></i> spring学习笔记：IoC依赖查找
               </a>
             
           </div>
@@ -356,10 +381,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/Horizon.github.io/2018/07/24/NIO Channel和Buffer/" rel="prev" title="深入浅出NIO Channel和Buffer">
-                深入浅出NIO Channel和Buffer <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -507,7 +528,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#KeySet-遍历"><span class="nav-number">1.</span> <span class="nav-text">KeySet 遍历</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#EntrySet-遍历"><span class="nav-number">2.</span> <span class="nav-text">EntrySet 遍历</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Java8-的-lambda-遍历"><span class="nav-number">3.</span> <span class="nav-text">Java8 的 lambda 遍历</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、yml文件配置"><span class="nav-number">1.</span> <span class="nav-text">1、yml文件配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、在对应位置编写国际化文本-格式为key-value"><span class="nav-number">2.</span> <span class="nav-text">2、在对应位置编写国际化文本,格式为key=value</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、配置默认解析器和拦截器"><span class="nav-number">3.</span> <span class="nav-text">3、配置默认解析器和拦截器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、在freemaker文件中使用"><span class="nav-number">4.</span> <span class="nav-text">4、在freemaker文件中使用</span></a></li></ol></div>
             
 
           </div>
